@@ -177,17 +177,20 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 /* ── LEFT: BATTLEFIELD ── */
 #battlefield { flex:none; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
 
+#field-lanes {
+  flex:1 1 0; display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
 #opp-field {
   flex:1 1 0; display:flex; align-items:flex-end; justify-content:center;
   background:rgba(0,0,0,0.25); padding:4px 4px 2px;
   box-shadow:inset 0 -1px 0 rgba(192,57,43,0.2);
-  overflow:visible; min-height:0;
+  overflow:hidden; min-height:0;
 }
 #my-field {
   flex:1 1 0; display:flex; align-items:flex-start; justify-content:center;
   background:rgba(0,0,0,0.25); padding:2px 4px 4px;
   box-shadow:inset 0 1px 0 rgba(201,168,76,0.15);
-  overflow:visible; min-height:0;
+  overflow:hidden; min-height:0;
 }
 #hand-row {
   flex:0 0 21.09vh; display:flex; align-items:center;
@@ -197,8 +200,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 #hand-row::-webkit-scrollbar { height:2px; }
 #hand-row::-webkit-scrollbar-thumb { background:var(--gold); }
 #action-bar {
-  flex:0 0 5vh; display:flex; align-items:center; justify-content:space-between;
-  padding:0 12px; background:rgba(0,0,0,0.5);
+  flex:0 0 auto; display:flex; align-items:center; justify-content:space-between;
+  padding:4px 12px; padding-bottom:max(12px, env(safe-area-inset-bottom, 12px));
+  background:rgba(0,0,0,0.5);
   border-top:1px solid rgba(255,255,255,0.06); gap:8px;
 }
 
@@ -208,8 +212,8 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   gap:4px; width:100%; height:100%;
   justify-items:center; padding:0 2px; min-height:0;
 }
-.lanes.opp-lanes { align-items:end; }
-.lanes.my-lanes  { align-items:start; }
+.lanes.opp-lanes { align-items:center; }
+.lanes.my-lanes  { align-items:center; }
 
 /* ── RIGHT PANEL ── */
 #right-panel {
@@ -365,158 +369,6 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 .hcard .flvl  { width:18px;height:18px;font-size:9px;top:3px;right:3px; }
 .hcard .fsym  { font-size:11px;top:3px;left:3px; }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE CARDS — Ornate TCG-style card rendering
-   ══════════════════════════════════════════════════════════════════════════
-   When USE_TEMPLATE_CARDS = true, cards use the ornate template background
-   with positioned overlays for art, stats, badges, and level indicators.
-   Requires CARD_ASSETS to be populated with actual base64 image data.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Template card frame */
-.fcard.template, .hcard.template {
-  background-size: cover !important;
-  background-position: center !important;
-  border: none !important; /* Template has built-in border */
-  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
-}
-
-.fcard.template.spr, .hcard.template.spr {
-}
-
-.fcard.template.sol, .hcard.template.sol {
-}
-
-/* Template card title - positioned in top banner */
-.template .fname {
-  top: 15px;
-  bottom: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  letter-spacing: 2px;
-  font-weight: 700;
-  color: #f4e4c1;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.9);
-  white-space: nowrap;
-  width: 70%;
-}
-
-.hcard.template .fname {
-  font-size: 8px;
-  top: 10px;
-}
-
-/* Template art - centered in frame area */
-.template .fart {
-  top: 22%;
-  bottom: 35%;
-  left: 12%;
-  right: 12%;
-  inset: auto;
-  border-radius: 8px;
-}
-
-.hcard.template .fart {
-  top: 20%;
-  bottom: 38%;
-}
-
-/* Template level badge - top right, uses badge image */
-.template .flvl {
-  width: 45px;
-  height: 45px;
-  top: 15px;
-  right: 15px;
-  background-size: cover;
-  background-position: center;
-  border: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  color: #f4e4c1;
-  font-size: 20px;
-  /* Background image set via inline style using CARD_ASSETS.level_X */
-}
-
-.hcard.template .flvl {
-  width: 30px;
-  height: 30px;
-  top: 10px;
-  right: 10px;
-  font-size: 14px;
-}
-
-/* Template stat circles - positioned over template's bottom circles */
-.template .fstats {
-  bottom: 18px;
-  left: 18px;
-  right: 18px;
-  background: none;
-  border-radius: 0;
-  padding: 0;
-}
-
-.template .fa, .template .fc {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  /* Stats appear over template's pre-rendered circles */
-}
-
-.hcard.template .fa, .hcard.template .fc {
-  width: 45px;
-  height: 45px;
-  font-size: 20px;
-}
-
-.hcard.template .fstats {
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
-}
-
-/* Template keyword badges - positioned in badge slots between stats and art */
-.template .template-badges {
-  position: absolute;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 6px;
-  z-index: 8;
-}
-
-.template .template-badge {
-  width: 55px;
-  height: 55px;
-  background-size: cover;
-  background-position: center;
-  /* Background image set via inline style using CARD_ASSETS.badge_X */
-}
-
-.hcard.template .template-badges {
-  bottom: 60px;
-}
-
-.hcard.template .template-badge {
-  width: 38px;
-  height: 38px;
-}
-
-/* Hide faction symbol on template cards (already part of design) */
-.template .fsym {
-  display: none;
-}
-
-/* Hide old badge stack on template cards */
-.tpl .badge-stack {
-  display: none;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
 
 /* ══════════════════════════════════════════════════════════════════════════
    TPL (Template) CARD SYSTEM — Production-grade ornate card rendering
@@ -558,7 +410,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 /* Card name - sits in the title banner at top */
 .tpl-name {
   position: absolute;
-  top: 1%; left: 0; right: 0;
+  top: -1%; left: 0; right: 0;
   height: 6%;
   z-index: 6;
   display: flex;
@@ -1421,8 +1273,8 @@ const SFX = {
   flamethrower: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_flamethrower.mp3'),
   siennablaze: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_siennablaze.mp3'),
   doctor: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_doctor.m4a'),
-  triggerGuardians: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_trigger_guardians.mp3'),
-  pixiedust: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_pixie_dust.mp3'),
+  triggerDoctor: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_trigger_guardians.mp3'),
+  pixiedust: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_pixie_dust2.mp3'),
   safehouse: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_safehouse4.mp3'),
   ballin: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_ballin.mp3'),
 };
@@ -1430,7 +1282,12 @@ Object.values(SFX).forEach(a => { a.preload = 'auto'; a.volume = 0.20; });
 SFX.betsyboom.volume = 0.30;
 
 // Background music
-const BGM = new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_background_birdsdrums.m4a');
+const BGM_TRACKS = [
+  { name: 'Birds & Drums', src: 'https://dantzelevitch.github.io/Tcg/sounds/audio_background_birdsdrums.m4a' },
+  { name: 'Intense', src: 'https://dantzelevitch.github.io/Tcg/sounds/audio_background_intense.m4a' },
+];
+let _bgmIndex = 0;
+const BGM = new Audio(BGM_TRACKS[0].src);
 BGM.loop = true;
 BGM.volume = 0.3;
 BGM.preload = 'auto';
@@ -1441,6 +1298,7 @@ function startBGM() {
 }
 function exitToSplash() {
   stopBGM();
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   G.phase = 'over';
   G.winner = null;
   const splash = document.getElementById('splash');
@@ -1460,14 +1318,32 @@ function toggleMuteSFX() {
 }
 
 function toggleMuteBGM() {
-  _bgmMuted = !_bgmMuted;
   const btn = document.getElementById('btn-mute-bgm');
-  if(_bgmMuted) {
+  if(!_bgmMuted) {
+    // Currently playing — try next track
+    _bgmIndex++;
+    if(_bgmIndex >= BGM_TRACKS.length) {
+      // Past last track — mute
+      _bgmMuted = true;
+      BGM.pause();
+      BGM.currentTime = 0;
+      if(btn) btn.textContent = '🔇 Music Off';
+      return;
+    }
+    // Switch to next track
     BGM.pause();
-    if(btn) btn.textContent = '🔇 Music';
-  } else {
+    BGM.src = BGM_TRACKS[_bgmIndex].src;
+    BGM.currentTime = 0;
     BGM.play().catch(() => {});
-    if(btn) btn.textContent = '🎵 Music';
+    if(btn) btn.textContent = '🎵 ' + BGM_TRACKS[_bgmIndex].name;
+  } else {
+    // Currently muted — restart from first track
+    _bgmMuted = false;
+    _bgmIndex = 0;
+    BGM.src = BGM_TRACKS[0].src;
+    BGM.currentTime = 0;
+    BGM.play().catch(() => {});
+    if(btn) btn.textContent = '🎵 ' + BGM_TRACKS[0].name;
   }
 }
 
@@ -1522,11 +1398,11 @@ function applyDynamicLayout() {
     battlefield.style.width = Math.min(battlefieldW, vw - 140) + 'px';
   }
 
-  // Calculate card max-height from actual available field height
-  // Field = total height minus hand row (21.09vh) minus action bar (4vh)
-  // Divided by 2 for each field row
-  const handRowH  = vh * 0.2109;
-  const actionBarH = vh * 0.04;
+  // Calculate card max-height from actual rendered element heights
+  const handRowEl  = document.getElementById('hand-row');
+  const actionBarEl = document.getElementById('action-bar');
+  const handRowH   = handRowEl ? handRowEl.offsetHeight : vh * 0.2109;
+  const actionBarH = actionBarEl ? actionBarEl.offsetHeight : vh * 0.05;
   const fieldRowH = (vh - handRowH - actionBarH) / 2;
   const cardMaxH  = Math.round(fieldRowH * 0.95);
 
@@ -1608,14 +1484,37 @@ function updateFSButton() {
 document.addEventListener('fullscreenchange', updateFSButton);
 document.addEventListener('webkitfullscreenchange', updateFSButton);
 // ════════════════════════════════════════════════
-// DEADLY BEAUTIFUL — GAME OVERVIEW
+// PROJECT PULSE — GAME OVERVIEW
 // ════════════════════════════════════════════════
 //
-// ══ TEMPLATE MODE (new card visual style) ══
-// Set USE_TEMPLATE_CARDS = true to enable ornate card templates
-// TODO: Replace placeholder base64 strings below with actual image data
-const USE_TEMPLATE_CARDS = true;  // Template card rendering active
-
+// Project Pulse — "A TCG that finally feels different"
+//
+// Project Pulse is a tactical digital TCG built for players who think in turns,
+// not impulses. Two rival syndicates clash on a lane-based battlefield where
+// positioning, timing, and resource management—not chance alone—determine the
+// outcome of every match.
+//
+// FOUR FACTIONS. DISTINCT IDENTITIES.
+// Recruit your operatives from four core factions, each with a distinct mechanical
+// identity: the Guardians nurture, the Sparks burn, the Hackers disrupt, and the
+// Assassins eliminate. Squad composition and deck construction are tightly
+// interwoven, enabling deep synergy planning and strategic archetype building.
+//
+// TACTICAL, FAST, AND DYNAMIC.
+// A unique lane-based battlefield and an inventive in-game card leveling system
+// create shifting board states and adaptive win conditions. Matches are designed
+// to be short in duration but rich in decision density—every action matters.
+//
+// A LIVING UNIVERSE.
+// Project Pulse is an evolving competitive TCG ecosystem with an expanding roster,
+// a shifting meta, and a stylized comic-book world full of attitude. New factions,
+// operatives, and mechanics are introduced through ongoing seasonal expansions that
+// continuously reshape the strategic landscape.
+//
+// BUILT FOR THE LONG GAME.
+// Designed for players who never stopped looking for a TCG that rewards mastery,
+// adaptation, and long-term strategic depth.
+//
 const CARD_ASSETS = {
   // Card frame - same ornate template used for all factions (tinted via CSS per faction)
 
@@ -2325,7 +2224,6 @@ function startTargeting(mode, pid, sourceCard, callback, injectedTargetLane = un
   // Play trigger SFX
   if(!G_sim) {
     if(mode === 'deploy_siphon') playSFX('pixiedust');
-    else if(mode !== 'extra_cover' && sourceCard && sourceCard.faction === 'sol') playSFX('triggerGuardians');
   }
   // Glow the triggering card until selection is made
   if(sourceCard) {
@@ -2519,7 +2417,6 @@ const ABILITIES = {
       // Hand-Off: incoming agent also gets haste (Swift) per card update
       incoming.manic = true;
       incoming.dormant = false;
-      if(!G_sim) playSFX('triggerGuardians');
       log(`${card.name} hands off — ${incoming.name} gains +${card.currentPower} Power, +${card.currentHealth} Health, and Swift.`,'abi');
     }
   },
@@ -2548,6 +2445,8 @@ const ABILITIES = {
       let p = G[pid];
       if(!p.field.some(c => c !== null)) { if (onDone) onDone(); return; }
       
+      if(!G_sim) playSFX('triggerDoctor');
+
       // If targetLane provided (simulation/cpu mode), use it directly
       if (context.targetLane !== undefined) {
         let target = G[pid].field[context.targetLane];
@@ -4035,6 +3934,7 @@ function playToLane(lane, cardInstanceId = null) {
   if(!G_sim && card.cardId === 'SOL2') playSFX('ethereal');
   if(!G_sim && card.cardId === 'SOL4') playSFX('doctor');
   if(!G_sim && card.cardId === 'SOL6') playSFX('safehouse');
+  if(!G_sim && card.cardId === 'SOL5') playSFX('pixiedust');
   if(!G_sim && card.cardId === 'SPR6') playSFX('pairofqueens');
   if(!G_sim && card.cardId === 'SPR1') playSFX('betsyboom');
   if(!G_sim && card.cardId === 'SPR4') playSFX('ballin');
@@ -4571,42 +4471,7 @@ function fieldCardHTML(card, laneIdx, isOpp, canReplace, isMoveTarget, isElusive
   // Show currentPower (may be buffed)
   let displayProwess = card.currentPower !== undefined ? card.currentPower : card.basePower;
 
-  if (USE_TEMPLATE_CARDS) {
-    return templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess);
-  }
-
-  // ── CLASSIC card rendering ──
-  let badges = '';
-  if(card.manic)        badges += `<div class="fbadge-swift">⚡ SWIFT</div>`;
-  if(card.slippery > 0)  badges += `<div class="fbadge-veil">◈ ELUSIVE ${card.slippery}</div>`;
-  if(card.smash)       badges += `<div class="fbadge-breach">◆ BREACH</div>`;
-  if(card.veil > 0)     badges += `<div class="fbadge-veil">VEIL ${card.veil}</div>`;
-  if(card.recover > 0)  badges += `<div class="fbadge-recover">↑ RECOVER ${card.recover}</div>`;
-  if(card.ability==='tribal_prowess')        badges += `<div class="fbadge-buffed">♥ TRIBAL +${card.abilityX}</div>`;
-  if(card.ability==='adjacent_prowess')       badges += `<div class="fbadge-buffed">◈ ADJ +${card.abilityX}</div>`;
-  if(card.ability==='adjacent_swift_prowess') badges += `<div class="fbadge-buffed">◈ ADJ ⚡+${card.abilityX}</div>`;
-  if(card.ability==='deploy_siphon')          badges += `<div class="fbadge-recover">💧 GRANT LIFELINK</div>`;
-  if(card.ability==='on_compromise_prowess')  badges += `<div class="fbadge-buffed">🌱 GROW +${card.abilityX}</div>`;
-  if(card.lifelink)                             badges += `<div class="fbadge-recover">💧 LIFELINK</div>`;
-  if(card.ability==='deploy_twin_flames')            badges += `<div class="fbadge-breach">🔥 DOUBLE</div>`;
-  if(card.ability==='deploy_extra_cover')     badges += `<div class="fbadge-recover">🛡 +${card.abilityX} CVR</div>`;
-  if(card.ability==='healer')                 badges += `<div class="fbadge-recover">💊 HEALER +${card.abilityX}</div>`;
-  if(card.ability==='move_and_cover' || card.ability==='move_and_cover_all') badges += `<div class="fbadge-recover">🌊 +${card.abilityX} ON MOVE</div>`;
-  if(card.ability==='hand_off')               badges += `<div class="fbadge-buffed">🤝 HAND-OFF</div>`;
-  if(card.poisoned > 0) badges += `<div class="fbadge-poison">☠ TRACED ${card.poisoned}</div>`;
-  if(card.buffProwess > 0) badges += `<div class="fbadge-buffed">+${card.buffProwess} POWER</div>`;
-
-  return `<div class="fcard ${card.faction}${uc?' undercover':''}${repCls}${dormantCls}${elusiveSelCls}${moveTargetCls}${targetCls}" data-iid="${card.instanceId}" onclick="${clickFn}" ondblclick="${dblClickFn}" ${longPressAttr}>
-    <div class="fart">${card.art}</div>
-    <div class="fsym" style="color:${faction.color}">${faction.sym}</div>
-    <div class="flvl lv${card.level}">${card.level}</div>
-    <div class="fname">${card.name}</div>
-    ${badges?`<div class="badge-stack">${badges}</div>`:''}
-    <div class="fstats">
-      <span class="fa">${displayProwess}</span>
-      <span class="fc ${ccls(card)}">${card.currentHealth}</span>
-    </div>
-  </div>`;
+  return templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess);
 }
 
 // ── Template-mode field card renderer ──────────────────────────────────
@@ -4659,23 +4524,7 @@ function handCardHTML(card, pid) {
   let faction=CELLS[card.faction], uc=card.level===1;
   let isSel = G[pid].sel===card.instanceId;
 
-  if (USE_TEMPLATE_CARDS) {
-    return templateHandCard(card, pid, faction, uc, isSel);
-  }
-
-  // ── CLASSIC hand card ──
-  let hveil = card.veil > 0 ? `<div class="fbadge-veil">V${card.veil}</div>` : '';
-  return `<div class="hcard ${card.faction}${isSel?' sel':''}" onclick="selCard('${pid}','${card.instanceId}')" ondblclick="showZoom('${card.cardId}',${card.level},${card.poisoned||0})">
-    <div class="fart">${card.art}</div>
-    <div class="fsym" style="color:${faction.color}">${faction.sym}</div>
-    <div class="flvl lv${card.level}">${card.level}</div>
-    <div class="fname">${card.name}</div>
-    ${hveil}
-    <div class="fstats">
-      <span class="fa">${card.basePower}</span>
-      <span class="fc">${card.baseCover}</span>
-    </div>
-  </div>`;
+  return templateHandCard(card, pid, faction, uc, isSel);
 }
 
 // ── Template-mode hand card renderer ───────────────────────────────────
@@ -4845,8 +4694,8 @@ function render() {
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="btn btn-ghost" onclick="exitToSplash()">✕ Exit</button>
           <button class="btn btn-ghost" onclick="toggleMuteSFX()" id="btn-mute-sfx">🔊 SFX</button>
-          <button class="btn btn-ghost" onclick="toggleMuteBGM()" id="btn-mute-bgm">🎵 Music</button>
-          <button class="btn btn-ghost" onclick="toggleFullscreen()">⛶</button>
+          <button class="btn btn-ghost" onclick="toggleMuteBGM()" id="btn-mute-bgm">${_bgmMuted ? '🔇 Music Off' : '🎵 ' + BGM_TRACKS[_bgmIndex].name}</button>
+          <button class="btn btn-ghost" onclick="toggleFullscreen()">⛶ Full Screen</button>
           <button class="btn btn-ghost" onclick="openLog()">📋</button>
           ${_ptRecord.games >= 0 && _ptAwaitingResult ? '<button class="btn btn-ghost" onclick="ptExitGame()" style="font-size:8px;letter-spacing:1px;">✕ EXIT</button>' : ''}
           ${btn}
