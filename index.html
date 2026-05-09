@@ -859,7 +859,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
       <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
       <button onclick="splashPvP()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚔ PvP</button>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v329</div>
+    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v335</div>
     <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;margin-top:4px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Image Cache</button>
   </div>
 </div>
@@ -1039,7 +1039,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
                 <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;width:30%;">CARD</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:23%;">% OF GAMES</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:23%;">WIN RATE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:24%;">DRAW RATE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:24%;"># GAMES</th>
               </tr>
             </thead>
             <tbody id="sim-firstcard-body">
@@ -1071,9 +1071,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
         </div>
       </div>
 
-      <!-- Impact Scores -->
+      <!-- CPU Evaluation Scores -->
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#c9a84c;margin-bottom:10px;">IMPACT SCORES</div>
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#c9a84c;margin-bottom:10px;">CPU EVALUATION SCORES</div>
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:6px;overflow:hidden;">
           <table style="width:100%;border-collapse:collapse;font-family:'Cinzel',serif;font-size:12px;table-layout:fixed;">
             <thead>
@@ -1082,8 +1082,8 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">POWER</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">PASSIVE</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">ONGOING</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">LIFELINK</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">TOTAL</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">TOTAL FIELD THREAT</th>
+                <th style="padding:10px;text-align:center;color:rgba(140,180,255,0.6);font-weight:400;">PLANNING BONUS</th>
               </tr>
             </thead>
             <tbody id="sim-impact-body">
@@ -1648,12 +1648,11 @@ function agentFieldThreat(card, lane) {
                 : id === 'SPR5' ? (card.abilityX || 0) * jrMult
                 : id === 'SPR4' ? (card.abilityX || 0) * 2
                 : 0;
-  const ongoing = id === 'SOL4' ? (card.abilityX || 0) * 2
-               : (id.startsWith('SPR') && id !== 'SPR5') ? 1 // SPR base: board presence (excl. Johnny Rocket)
-               : 0;
-  const lifelink = card.lifelink ? pow * 0.50 : 0;
+  const lifelinkBonus = card.lifelink ? pow * 0.50 : 0;
+  const ongoing = (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
+                + lifelinkBonus;
 
-  return attack + passive + ongoing + lifelink;
+  return attack + passive + ongoing;
 }
 
 // ── cpuGetValidTargets ────────────────────────────────────────────────────
@@ -1780,7 +1779,21 @@ function planningBonus(pid) {
 
   // Durability: reward surviving cards with health (all factions)
   field.forEach(c => {
-    if(c) bonus += (c.currentHealth || c.baseCover || 0) * 0.10;
+    if(c) bonus += (c.currentHealth || c.baseCover || 0) * 0.20;
+  });
+
+  // Swift bonus: reward Sparks cards with haste on the field (excl. Johnny Rocket)
+  field.forEach(c => {
+    if(!c) return;
+    const cid = c.deckId ? c.deckId.split('_')[0] : '';
+    if(c.manic && cid.startsWith('SPR') && cid !== 'SPR5') bonus += 1;
+  });
+
+  // Doctor bonus: reward early engine deployment
+  field.forEach(c => {
+    if(!c) return;
+    const cid = c.deckId ? c.deckId.split('_')[0] : '';
+    if(cid === 'SOL4') bonus += 1;
   });
 
   if(faction === 'spr') {
@@ -1836,6 +1849,20 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     // Run battle on cloned state
     battle();
 
+    // Resolve end-of-turn targeted abilities (e.g. Doctor's healer)
+    // Pick highest-threat ally as target, same as CPU targeting logic
+    G[pid].field.forEach(c => {
+      if(!c || !c.ability) return;
+      const ab = ABILITIES[c.ability];
+      if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
+      const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
+      if(!occupied.length) return;
+      const best = occupied.reduce((b, i) =>
+        agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
+        occupied[0]);
+      ab.resolve(c, pid, { targetLane: best });
+    });
+
     // ── Score ──
     const marginAfter      = G[pid].player_health - G[oppPid].player_health;
     const deltaHealth      = marginAfter - marginBefore;
@@ -1855,10 +1882,22 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     });
 
     const planning = planningBonus(pid);
-    const score = deltaHealth + removalBonus + survivingAllyThreat + planning
+
+    // FirstTurnBonus: per-card adjustments that only apply on turn 1
+    let firstTurnBonus = 0;
+    if(G.turn === 1) {
+      G[pid].field.forEach(c => {
+        if(!c || c.isVirtualCopy) return;
+        const cid = c.deckId ? c.deckId.split('_')[0] : '';
+        if(cid === 'SPR6') firstTurnBonus -= 5; // Pair of Queens
+        if(cid === 'SPR1') firstTurnBonus -= 1; // Betsy Boom
+      });
+    }
+
+    const CPUEvalScore = deltaHealth + removalBonus + survivingAllyThreat + planning + firstTurnBonus
                 + (G[oppPid].player_health <= 0 ?  99999 : 0)
                 + (G[pid].player_health    <= 0 ? -99999 : 0);
-    return score;
+    return CPUEvalScore;
 
   } finally {
     G_sim = savedGsim;
@@ -1891,6 +1930,13 @@ function cpuRunEvaluator() {
   scored.sort((a, b) => b.score - a.score);
 
   if(CPU_DIFFICULTY === 'hard') {
+    // Turn 1 variety: 60% top pick, 40% random from ranks 2-4
+    if(G.turn === 1 && scored.length >= 2) {
+      if(Math.random() > 0.60) {
+        const pool = scored.slice(1, Math.min(4, scored.length));
+        return pool[Math.floor(Math.random() * pool.length)].combo;
+      }
+    }
     return scored[0].combo;
   }
 
@@ -2039,14 +2085,7 @@ function cpuResolveElusive() {
 }
 
 // ════════════════════════════════════════════════
-// FACTION REGISTRY
-// ════════════════════════════════════════════════
-const CELLS = {
-  spr:{key:'spr',sym:'♥',name:'Spirited',color:'#c0392b'},
-  sol:{key:'sol',sym:'♦',name:'Soleil',  color:'#c9a84c'},
-  rev:{key:'rev',sym:'♠',name:'Revelers',color:'#7c3aed'},
-  glm:{key:'glm',sym:'♣',name:'Glam',    color:'#059669'},
-};
+// CARD TEMPLATE REGISTRY
 
 // ════════════════════════════════════════════════
 // CARD TEMPLATE REGISTRY
@@ -2072,7 +2111,7 @@ const CARDS = {
   },
 
   // ── SPR3: Buffy ── Uncommon ×2
-  // Swift, Elusive 1, Tribal: all OTHER friendly Spirited agents get +X Power (presence)
+  // Swift, Elusive 1, Tribal: all OTHER friendly Sparks agents get +X Power (presence)
   SPR3:{id:'SPR3',faction:'spr',name:'Sienna Blaze',art:'🌟',rarity:'Uncommon',cardArt:'art_spr3',
     L1:{power:4, health:4, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'tribal_prowess', abilityX:3},
     L2:{power:6, health:6, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'tribal_prowess', abilityX:4},
@@ -2102,11 +2141,11 @@ const CARDS = {
   // On deploy: player chooses any adjacent empty lane → activate virtual copy
   SPR6:{id:'SPR6',faction:'spr',name:'Pair of Queens',art:'🔥',rarity:'Mythic',cardArt:'art_spr6',
     L1:{power:5,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
-    L2:{power:7,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
-    L3:{power:9,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
+    L2:{power:6,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
+    L3:{power:7,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
   },
 
-  // ── SOL1: Soleil Sister 1 ── Common ×2
+  // ── SOL1: Guardians Sister 1 ── Common ×2
   SOL1:{id:'SOL1',faction:'sol',name:'The Archer',art:'☀️',rarity:'Common',cardArt:'art_sol1',
     L1:{power:5, health:5,  manic:false, slippery:0, veil:0, recover:0, smash:false},
     L2:{power:7, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false},
@@ -2124,8 +2163,8 @@ const CARDS = {
   // ── SOL3: Extra Health ── Uncommon ×2
   // On deploy: target a friendly agent → grant +X Health permanently
   SOL3:{id:'SOL3',faction:'sol',name:'Chardonnay',art:'🛡️',rarity:'Uncommon',cardArt:'art_sol3',
-    L1:{power:2, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:3},
-    L2:{power:4, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:5},
+    L1:{power:3, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:3},
+    L2:{power:5, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:5},
     L3:{power:6, health:13, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:7},
   },
 
@@ -2178,7 +2217,7 @@ const NEXT = {
   'GLM1_L1':'GLM1_L2','GLM1_L2':'GLM1_L3',
 };
 
-// Spirited theme deck: 2x each = 12 cards
+// Sparks theme deck: 2x each = 12 cards
 const SPR_DECK = [
   'SPR1_L1','SPR1_L1',
   'SPR2_L1','SPR2_L1',
@@ -2188,7 +2227,7 @@ const SPR_DECK = [
   'SPR6_L1','SPR6_L1',
 ];
 
-// Soleil theme deck: 2x each = 12 cards
+// Guardians theme deck: 2x each = 12 cards
 const SOL_DECK = [
   'SOL1_L1','SOL1_L1',
   'SOL2_L1','SOL2_L1',
@@ -2623,6 +2662,7 @@ function renderImpactScores() {
       currentHealth: s.health, baseCover: s.health,
       abilityX: s.abilityX || 0,
       lifelink: def.id === 'SOL2', // Siphoner has native lifelink
+      manic: s.manic || false,
       ability: s.ability || null,
       level: 1
     };
@@ -2635,11 +2675,21 @@ function renderImpactScores() {
                   : id === 'SPR5' ? (card.abilityX || 0) * jrMult_mid
                   : id === 'SPR4' ? (card.abilityX || 0) * 2
                   : 0;
-    const ongoing = id === 'SOL4' ? (card.abilityX || 0) * 2
-                  : (id.startsWith('SPR') && id !== 'SPR5') ? 1
-                  : 0;
-    const lifelink = card.lifelink ? pow * 0.50 : 0;
-    const total = pow + passive + ongoing + lifelink;
+    const lifelinkBonus = card.lifelink ? pow * 0.50 : 0;
+    const ongoing = (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
+                  + lifelinkBonus;
+    const total = pow + passive + ongoing;
+
+    // Planning bonus (per-card components only; positional bonuses excluded)
+    let planning = 0;
+    // Swift bonus
+    if(card.manic && id.startsWith('SPR') && id !== 'SPR5') planning += 1;
+    // Durability
+    planning += (card.currentHealth || 0) * 0.20;
+    // Breach bonus for Betsy Boom / Ballin'
+    if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.25;
+    // Doctor bonus: early engine deployment
+    if(id === 'SOL4') planning += 1;
 
     const fac = id.startsWith('SPR') ? 'spr' : 'sol';
     const rowBg = fac === 'spr' ? 'background:rgba(192,57,43,0.12);' : 'background:rgba(201,168,76,0.1);';
@@ -2650,8 +2700,8 @@ function renderImpactScores() {
       + '<td>' + pow + '</td>'
       + '<td>' + (passive > 0 ? passive.toFixed(1) : '—') + '</td>'
       + '<td>' + (ongoing > 0 ? ongoing.toFixed(1) : '—') + '</td>'
-      + '<td>' + (lifelink > 0 ? lifelink.toFixed(1) : '—') + '</td>'
       + '<td style="font-weight:500;">' + total.toFixed(1) + '</td>'
+      + '<td style="color:rgba(140,180,255,0.7);">' + planning.toFixed(1) + '</td>'
       + '</tr>';
   });
   body.innerHTML = html;
@@ -2725,6 +2775,7 @@ function ptPlay(firstMode) {
   _ptGameDeploysP2 = {};
   _ptFirstCard = null;
   _ptAwaitingResult = true;
+  _ptResultRecorded = false;
 
   // Init session agg on first game
   if(!_ptAgg) ptInitAgg(myFaction, cpuFaction, myDiff, cpuDiff);
@@ -2735,9 +2786,11 @@ function ptPlay(firstMode) {
 
 function ptExitGame() {
   _ptAwaitingResult = false;
+  stopBGM();
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   G.phase = 'over';
   G.winner = null;
-  document.getElementById('sim-screen').style.display = 'block';
+  ptReturnToDevTools();
 }
 
 function ptNewGame() {
@@ -2776,9 +2829,10 @@ function ptUpdateDisplay() {
 }
 
 let _ptAwaitingResult = false;
+let _ptResultRecorded = false;
 function ptRecordResult(winner, turns) {
-  if(!_ptAwaitingResult) return;
-  _ptAwaitingResult = false;
+  if(!_ptAwaitingResult || _ptResultRecorded) return;
+  _ptResultRecorded = true;
   _ptRecord.games++;
   _ptRecord.totalTurns += turns;
   if(winner === 'p1')        _ptRecord.wins++;
@@ -2816,7 +2870,7 @@ function ptRecordResult(winner, turns) {
   if(_ptFirstCard) {
     if(!agg.firstCards[_ptFirstCard]) agg.firstCards[_ptFirstCard] = {games:0, wins:0, draws:0};
     agg.firstCards[_ptFirstCard].games++;
-    if(winner === 'p1') agg.firstCards[_ptFirstCard].wins++;
+    if(winner === G._ptLastFirst) agg.firstCards[_ptFirstCard].wins++;
     else if(winner === 'draw') agg.firstCards[_ptFirstCard].draws++;
   }
 
@@ -3173,7 +3227,7 @@ function simRun() {
         const fc = result.firstCard;
         if(!agg.firstCards[fc]) agg.firstCards[fc] = {games:0, wins:0, draws:0};
         agg.firstCards[fc].games++;
-        if(result.winner === 'p1') agg.firstCards[fc].wins++;
+        if(result.winner === result.first) agg.firstCards[fc].wins++;
         else if(result.winner === 'draw') agg.firstCards[fc].draws++;
       }
 
@@ -3315,7 +3369,7 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
   cards.forEach(([name, s]) => {
     const avgPlays   = (s.totalDeploys / total).toFixed(2);
     const winRate    = s.deployGames > 0 ? pct(s.winGames    / s.deployGames)  : '—';
-    const mvpRate    = s.deployGames > 0 ? pct(s.mvpCount    / s.deployGames)  : '—';
+    const mvpRate    = total > 0 ? pct(s.mvpCount    / total)  : '—';
     const mvpWin     = s.mvpCount    > 0 ? pct(s.mvpWinCount / s.mvpCount)     : '—';
     const faction    = cardFaction[name] || '';
     const rowBg      = faction === 'spr' ? 'background:rgba(192,57,43,0.12);'
@@ -3434,16 +3488,25 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
     const fcEntries = Object.entries(agg.firstCards).sort((a,b) => b[1].games - a[1].games);
     const fcFaction = {};
     Object.values(CARDS).forEach(c => { fcFaction[c.name] = c.faction; });
+    // Count how many games each faction went first
+    const factionFirstGames = {};
+    if(p1Faction === p2Faction) {
+      factionFirstGames[p1Faction] = total;
+    } else {
+      factionFirstGames[p1Faction] = (factionFirstGames[p1Faction] || 0) + agg.fm.p1.first.games;
+      factionFirstGames[p2Faction] = (factionFirstGames[p2Faction] || 0) + agg.fm.p2.first.games;
+    }
     let fcHtml = '';
     fcEntries.forEach(([name, s]) => {
       const faction = fcFaction[name] || '';
+      const denom = factionFirstGames[faction] || total;
       const rowBg   = faction === 'spr' ? 'background:rgba(192,57,43,0.12);' : faction === 'sol' ? 'background:rgba(201,168,76,0.1);' : '';
       const nameCol = faction === 'spr' ? 'color:#e07060;' : faction === 'sol' ? 'color:#c9a84c;' : '';
       fcHtml += `<tr style="${rowBg}">
         <td style="${nameCol}">${name}</td>
-        <td>${Math.round(s.games / total * 100)}%</td>
+        <td>${Math.round(s.games / denom * 100)}%</td>
         <td>${s.games > 0 ? Math.round(s.wins  / s.games * 100) + '%' : '—'}</td>
-        <td>${s.games > 0 ? Math.round(s.draws / s.games * 100) + '%' : '—'}</td>
+        <td>${s.games}</td>
       </tr>`;
     });
     fcBody.innerHTML = fcHtml || '<tr><td colspan="4" style="text-align:center;color:rgba(237,229,216,0.25);">No data</td></tr>';
@@ -3515,7 +3578,7 @@ function simTest3() {
       const fc = result.firstCard;
       if(!agg.firstCards[fc]) agg.firstCards[fc] = {games:0, wins:0, draws:0};
       agg.firstCards[fc].games++;
-      if(result.winner === 'p1') agg.firstCards[fc].wins++;
+      if(result.winner === result.first) agg.firstCards[fc].wins++;
       else if(result.winner === 'draw') agg.firstCards[fc].draws++;
     }
 
@@ -3695,7 +3758,7 @@ function simExportCSV() {
       name,
       (s.totalDeploys/n).toFixed(2),
       s.deployGames>0 ? Math.round(s.winGames/s.deployGames*100)+'%' : '—',
-      s.deployGames>0 ? Math.round(s.mvpCount/s.deployGames*100)+'%' : '—',
+      s.deployGames>0 ? Math.round(s.mvpCount/n*100)+'%' : '—',
       s.mvpCount>0    ? Math.round(s.mvpWinCount/s.mvpCount*100)+'%' : '—',
     ]);
   });
@@ -3766,7 +3829,7 @@ function simPrintLog() {
     const col0 = (faction + ' ' + name).padEnd(22);
     const col1 = ((s.totalDeploys / n).toFixed(2)).padEnd(11);
     const col2 = (s.deployGames > 0 ? pct(s.winGames/s.deployGames) : '—').padEnd(11);
-    const col3 = (s.deployGames > 0 ? pct(s.mvpCount/s.deployGames) : '—').padEnd(11);
+    const col3 = (n > 0 ? pct(s.mvpCount/n) : '—').padEnd(11);
     const col4 = s.mvpCount > 0 ? pct(s.mvpWinCount/s.mvpCount) : '—';
     lines.push(`${col0} ${col1}${col2}${col3}${col4}`);
   });
@@ -3775,16 +3838,25 @@ function simPrintLog() {
   // First card played
   lines.push('FIRST CARD PLAYED');
   lines.push('─────────────────────────────────────────────────────');
-  lines.push(`${'Card'.padEnd(22)} ${'% of Games'.padEnd(13)} ${'Win Rate'.padEnd(13)} Draw Rate`);
+  lines.push(`${'Card'.padEnd(22)} ${'% of Games'.padEnd(13)} ${'Win Rate'.padEnd(13)} # Games`);
   const fcFaction2 = {};
   Object.values(CARDS).forEach(c => { fcFaction2[c.name] = c.faction; });
+  const fcFirstGames2 = {};
+  if(factions.p1 === factions.p2) {
+    fcFirstGames2[factions.p1] = n;
+  } else {
+    fcFirstGames2[factions.p1] = (fcFirstGames2[factions.p1] || 0) + agg.fm.p1.first.games;
+    fcFirstGames2[factions.p2] = (fcFirstGames2[factions.p2] || 0) + agg.fm.p2.first.games;
+  }
   const fcEntries2 = Object.entries(agg.firstCards).sort((a,b) => b[1].games - a[1].games);
   fcEntries2.forEach(([name, s]) => {
-    const faction = fcFaction2[name] === 'spr' ? '[SPR]' : '[SOL]';
+    const fac = fcFaction2[name] || '';
+    const denom = fcFirstGames2[fac] || n;
+    const faction = fac === 'spr' ? '[SPR]' : '[SOL]';
     const col0 = (faction + ' ' + name).padEnd(22);
-    const col1 = (Math.round(s.games / n * 100) + '%').padEnd(13);
+    const col1 = (Math.round(s.games / denom * 100) + '%').padEnd(13);
     const col2 = (s.games > 0 ? Math.round(s.wins  / s.games * 100) + '%' : '—').padEnd(13);
-    const col3 = s.games > 0 ? Math.round(s.draws / s.games * 100) + '%' : '—';
+    const col3 = s.games;
     lines.push(`${col0} ${col1}${col2}${col3}`);
   });
   lines.push('');
@@ -4111,13 +4183,19 @@ function battle() {
   if(!G_sim) {
     if(_combatOccurred) {
       if(_dmgOnlyToP2 > _dmgOnlyToP1) {
-        const sfxKey = G.p1.faction === 'spr' ? 'damageSparks' : 'damageGuardians';
-        SFX[sfxKey].volume = _dmgOnlyToP2 >= 15 ? 0.20 : 0.08;
+        const faction = G.p1.faction;
+        const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
+        SFX[sfxKey].volume = faction === 'spr'
+          ? (_dmgOnlyToP2 >= 15 ? 0.17 : 0.07)
+          : (_dmgOnlyToP2 >= 15 ? 0.20 : 0.10);
         playSFX(sfxKey);
       }
       else if(_dmgOnlyToP1 > _dmgOnlyToP2) {
-        const sfxKey = G.p2.faction === 'spr' ? 'damageSparks' : 'damageGuardians';
-        SFX[sfxKey].volume = _dmgOnlyToP1 >= 15 ? 0.20 : 0.08;
+        const faction = G.p2.faction;
+        const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
+        SFX[sfxKey].volume = faction === 'spr'
+          ? (_dmgOnlyToP1 >= 15 ? 0.17 : 0.07)
+          : (_dmgOnlyToP1 >= 15 ? 0.20 : 0.10);
         playSFX(sfxKey);
       }
       else playSFX('combatBlock');
@@ -4393,7 +4471,7 @@ function applyPresenceBuffs(pid) {
   // Step 1: Reset all presence buffs to zero
   p.field.forEach(c => { if(c) { c.buffProwess = 0; c.grantedSwift = false; } });
 
-  // Step 2: Buffy tribal_prowess — all OTHER friendly Spirited agents get +X
+  // Step 2: Buffy tribal_prowess — all OTHER friendly Sparks agents get +X
   p.field.forEach((buffy, bi) => {
     if(!buffy || buffy.ability !== 'tribal_prowess') return;
     p.field.forEach((c, ci) => {
@@ -4490,7 +4568,7 @@ function icls(v){return v<=10?'crit':v<=25?'warn':'ok';}
 function ccls(c){let p=c.currentHealth/c.maxHealth;return p<=0.25?'crit':p<=0.5?'dmg':'';}
 
 function fieldCardHTML(card, laneIdx, isOpp, canReplace, isMoveTarget, isElusiveSel, pid) {
-  let faction = CELLS[card.faction], uc = card.level===1;
+  let uc = card.level===1;
   let repCls      = (!isOpp && canReplace && !G_target) ? ' replaceable' : '';
   let dormantCls  = card.dormant ? ' dormant-card' : '';
   let elusiveSelCls = isElusiveSel ? ' elusive-sel' : '';
@@ -4519,11 +4597,11 @@ function fieldCardHTML(card, laneIdx, isOpp, canReplace, isMoveTarget, isElusive
   // Show currentPower (may be buffed)
   let displayProwess = card.currentPower !== undefined ? card.currentPower : card.basePower;
 
-  return templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess);
+  return templateFieldCard(card, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess);
 }
 
 // ── Template-mode field card renderer ──────────────────────────────────
-function templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess) {
+function templateFieldCard(card, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess) {
   const frameImg = CARD_ASSETS[card.cardArt];
   const levelImg = getLevelImg(card.faction, card.level);
 
@@ -4544,7 +4622,7 @@ function templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls,
   const coverCls = ccls(card);
 
   // For cards with art: art is background, transparent frame overlays on top
-  // For cards without art: frame is background (Spirited style)
+  // For cards without art: frame is background (Sparks style)
 
     const flashCls = (G._flashIds && G._flashIds.has(card.instanceId)) ? ' card-flash' : '';
     const glowCls       = (G._glowIds  && G._glowIds.has(card.instanceId))  ? ' card-glow'  : '';
@@ -4569,14 +4647,14 @@ function templateFieldCard(card, faction, uc, repCls, dormantCls, elusiveSelCls,
 }
 
 function handCardHTML(card, pid) {
-  let faction=CELLS[card.faction], uc=card.level===1;
+  let uc=card.level===1;
   let isSel = G[pid].sel===card.instanceId;
 
-  return templateHandCard(card, pid, faction, uc, isSel);
+  return templateHandCard(card, pid, uc, isSel);
 }
 
 // ── Template-mode hand card renderer ───────────────────────────────────
-function templateHandCard(card, pid, faction, uc, isSel) {
+function templateHandCard(card, pid, uc, isSel) {
   const frameImg = CARD_ASSETS[card.cardArt];
   const levelImg = getLevelImg(card.faction, card.level);
 
@@ -4690,16 +4768,14 @@ function render() {
     btn=`<button class="btn btn-red" onclick="endTurn()">END TURN →</button>`;
   } else if(G.phase==='over'){
     if(_ptRecord.games > 0) {
-      btn = `<button class="btn btn-gold" onclick="ptNewGame()">NEW OPERATION</button>`
-          + `<button class="btn btn-ghost" onclick="ptReturnToDevTools()" style="font-size:8px;letter-spacing:1px;">← DEV TOOLS</button>`;
+      btn = `<button class="btn btn-gold" onclick="ptNewGame()">NEW OPERATION</button>`;
     } else {
       btn = `<button class="btn btn-gold" onclick="init()">NEW OPERATION</button>`;
     }
   }
 
   // Right panel
-  let meCell=CELLS[me.faction], oppCell=CELLS[opp.faction];
-  function pBlock(p, cellObj, label) {
+  function pBlock(p, label) {
     let ic=icls(p.player_health);
     const hqImg = p.faction === 'spr' ? CARD_ASSETS.hq_sparks : CARD_ASSETS.hq_guardians;
     const isOpp = p === opp;
@@ -4736,19 +4812,18 @@ function render() {
           <span style="color:#aaa;">Turn ${G.turn}</span>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
-          <button class="btn btn-ghost" onclick="exitToSplash()">✕ Exit</button>
+          ${!_ptAwaitingResult ? '<button class="btn btn-ghost" onclick="exitToSplash()">✕ Exit</button>' : '<button class="btn btn-ghost" onclick="ptExitGame()">✕ Exit / View Stats</button>'}
           <button class="btn btn-ghost" onclick="toggleMuteSFX()" id="btn-mute-sfx">🔊 SFX</button>
           <button class="btn btn-ghost" onclick="toggleMuteBGM()" id="btn-mute-bgm">${_bgmMuted ? '🔇 Music Off' : '🎵 ' + BGM_TRACKS[_bgmIndex].name}</button>
           <button class="btn btn-ghost" onclick="toggleFullscreen()">⛶ Full Screen</button>
           <button class="btn btn-ghost" onclick="openLog()">📋</button>
-          ${_ptRecord.games >= 0 && _ptAwaitingResult ? '<button class="btn btn-ghost" onclick="ptExitGame()" style="font-size:8px;letter-spacing:1px;">✕ EXIT</button>' : ''}
           ${btn}
         </div>
       </div>
     </div>
     <div id="right-panel">
-      ${pBlock(opp, oppCell, 'OPPONENT')}
-      ${pBlock(me, meCell, 'YOU')}
+      ${pBlock(opp, 'OPPONENT')}
+      ${pBlock(me, 'YOU')}
     </div>
   `;
 
@@ -4786,7 +4861,6 @@ function showZoom(cardId, level, poisoned) {
   _zoomLevel  = level || 1;
   _zoomPoisoned = poisoned || 0;
   let t=CARDS[cardId]; if(!t) return;
-  let faction=CELLS[t.faction];
   let zp=_zoomPoisoned;
   let s=t[`L${_zoomLevel}`]; // Show current level
 
@@ -4851,7 +4925,7 @@ function showZoom(cardId, level, poisoned) {
     deploy_extra_cover:      `On Deploy, give a target Agent +${s.abilityX} Health.`,
     healer:                  `At the end of each of your turns, give a target Agent +${s.abilityX}/+${s.abilityX}.`,
     deploy_siphon:           `On Deploy, give a target Agent Harvest.`,
-    hand_off:                `On Replace: The incoming Agent gains this Agent’s Attack and Health, and gains Manic.`,
+    hand_off:                `When this agent is replaced on the field, the incoming agent gains this agent's Attack and Health, and gains Manic.`,
     adjacent_prowess:        `Agents to the left and right have +${s.abilityX} Attack.`,
     move_and_cover:          `Gain +${s.abilityX} Health when this Agent moves.`,
     move_and_cover_all:      `All friendly Agents gain +${s.abilityX} Health when this Agent moves.`,
