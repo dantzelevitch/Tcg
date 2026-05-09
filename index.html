@@ -859,7 +859,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
       <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
       <button onclick="splashPvP()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚔ PvP</button>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v321</div>
+    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v326</div>
     <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;margin-top:4px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Image Cache</button>
   </div>
 </div>
@@ -1292,6 +1292,9 @@ const SFX = {
   safehouse: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_safehouse4.mp3'),
   ballin: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_ballin.mp3'),
   archer: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_archer.mp3'),
+  damageSparks: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_damage_sparks.mp3'),
+  damageGuardians: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_damage_guardians.mp3'),
+  combatBlock: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_block2_female.m4a'),
 };
 Object.values(SFX).forEach(a => { a.preload = 'auto'; a.volume = 0.20; });
 SFX.betsyboom.volume = 0.30;
@@ -3993,10 +3996,16 @@ function battle() {
   applyPresenceBuffs('p1');
   applyPresenceBuffs('p2');
 
+  // Sound logic only: track direct HQ damage (breach + uncontested lane), excludes lifelink and traced
+  let _dmgOnlyToP1 = 0;
+  let _dmgOnlyToP2 = 0;
+
   // Capture all field card instanceIds before combat (to detect deaths)
   const _preCombatIids = [...G.p1.field, ...G.p2.field]
     .filter(c => c !== null)
     .map(c => c.instanceId);
+
+  let _combatOccurred = false;
 
   for(let i = 0; i < 5; i++){
     let a = G.p1.field[i], b = G.p2.field[i];
@@ -4005,6 +4014,7 @@ function battle() {
       const bActive = !b.dormant || b.grantedSwift;
       // Contested lane: if either card is active, both fight
       const anyActive = aActive || bActive;
+      if(anyActive) _combatOccurred = true;
       let rawDmgToA = anyActive ? b.currentPower : 0;
       let rawDmgToB = anyActive ? a.currentPower : 0;
       let dA = Math.max(0, rawDmgToA - a.veil);
@@ -4024,7 +4034,7 @@ function battle() {
         let overKill = Math.max(0, -b.currentHealth);
         if(overKill > 0) { 
           G.p2.player_health -= overKill;
-          playSFX('damageOpponent');
+          _dmgOnlyToP2 += overKill;
           log(`  BREACH — ${a.name} bleeds ${overKill} through to P2 Player_Health!`,'bat'); 
           // Trigger Grow when breach damages opponent Player_Health
           if(a.ability === 'on_compromise_prowess') a._growEarned = (a._growEarned || 0) + a.abilityX;
@@ -4034,6 +4044,7 @@ function battle() {
         let overKill = Math.max(0, -a.currentHealth);
         if(overKill > 0) { 
           G.p1.player_health -= overKill;
+          _dmgOnlyToP1 += overKill;
           log(`  BREACH — ${b.name} bleeds ${overKill} through to P1 Player_Health!`,'bat'); 
           // Trigger Grow when breach damages opponent Player_Health
           if(b.ability === 'on_compromise_prowess') b._growEarned = (b._growEarned || 0) + b.abilityX;
@@ -4052,17 +4063,20 @@ function battle() {
     } else if(a) {
       if(a.dormant && !a.grantedSwift){ log(`Lane ${i+1}: ${a.name} is Dormant — cannot compromise opponent.`); }
       else {
+        _combatOccurred = true;
         G.p2.player_health -= a.currentPower;
-        playSFX('damageOpponent');
+        _dmgOnlyToP2 += a.currentPower;
         if(a.ability === 'on_compromise_prowess') a._growEarned = (a._growEarned || 0) + a.abilityX;
         if(a.lifelink) { G.p1.player_health += a.currentPower; log(`  LIFELINK — ${a.name} grants +${a.currentPower} Player_Health to P1!`,'abi'); }
-        if(a.poisoned > 0) { G.p2.player_health -= a.poisoned; playSFX('damageOpponent'); log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health + ${a.poisoned} Traced.`,'inf'); }
+        if(a.poisoned > 0) { G.p2.player_health -= a.poisoned; log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health + ${a.poisoned} Traced.`,'inf'); }
         else { log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health.`,'inf'); }
       }
     } else if(b) {
       if(b.dormant && !b.grantedSwift){ log(`Lane ${i+1}: ${b.name} is Dormant — cannot compromise opponent.`); }
       else {
+        _combatOccurred = true;
         G.p1.player_health -= b.currentPower;
+        _dmgOnlyToP1 += b.currentPower;
         if(b.ability === 'on_compromise_prowess') b._growEarned = (b._growEarned || 0) + b.abilityX;
         if(b.lifelink) { G.p2.player_health += b.currentPower; log(`  LIFELINK — ${b.name} grants +${b.currentPower} Player_Health to P2!`,'abi'); }
         if(b.poisoned > 0) { G.p1.player_health -= b.poisoned; log(`Lane ${i+1}: ${b.name} COMPROMISES OPPONENT — P1 -${b.currentPower} Player_Health + ${b.poisoned} Traced.`,'inf'); }
@@ -4092,6 +4106,15 @@ function battle() {
   // Floor health after all lanes resolve
   G.p1.player_health = Math.max(0, G.p1.player_health);
   G.p2.player_health = Math.max(0, G.p2.player_health);
+
+  // Play faction-based combat sound based on net HQ damage
+  if(!G_sim) {
+    if(_combatOccurred) {
+      if(_dmgOnlyToP2 > _dmgOnlyToP1) playSFX(G.p1.faction === 'spr' ? 'damageSparks' : 'damageGuardians');
+      else if(_dmgOnlyToP1 > _dmgOnlyToP2) playSFX(G.p2.faction === 'spr' ? 'damageSparks' : 'damageGuardians');
+      else playSFX('combatBlock');
+    }
+  }
 
   checkWin();
   if(G.phase === 'over') { render(); return; }
