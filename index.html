@@ -857,7 +857,6 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
     <div style="display:flex;flex-direction:row;gap:12px;margin-top:20px;">
       <button onclick="openSim()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚙ Dev Tools</button>
       <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
-      <button onclick="splashPvP()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚔ PvP</button>
     </div>
     <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v335</div>
     <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;margin-top:4px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Image Cache</button>
@@ -929,7 +928,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 
       <!-- PLAY TESTING container -->
       <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;">
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#c9a84c;">PLAY TESTING</div>
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#c9a84c;">PLAY TESTING vs CPU</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:rgba(237,229,216,0.5);">MY FACTION</label>
           <select id="pt-my-deck" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
@@ -962,6 +961,23 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
           <button onclick="ptPlay('cpu')" style="flex:1;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;background:transparent;color:rgba(237,229,216,0.6);border:1px solid rgba(237,229,216,0.2);border-radius:4px;padding:8px;cursor:pointer;">CPU FIRST</button>
         </div>
         <button onclick="ptReset()" style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;background:transparent;color:rgba(237,229,216,0.3);border:1px solid rgba(237,229,216,0.1);border-radius:4px;padding:6px;cursor:pointer;">RESET RECORD</button>
+      </div>
+
+      <!-- PLAY TESTING PVP container -->
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#c9a84c;">PLAY TESTING PVP</div>
+        <div style="font-family:'Cinzel',serif;font-size:10px;color:rgba(237,229,216,0.4);letter-spacing:0.5px;">
+          Random factions · Random first player · Both sides human
+        </div>
+        <!-- W/L/D record -->
+        <div style="font-family:'Cinzel',serif;font-size:11px;color:rgba(237,229,216,0.5);text-align:center;letter-spacing:1px;">
+          <span style="color:#c0392b;">SPR</span> <span id="pvpt-spr-wins" style="color:#c0392b;">0</span> &nbsp;—&nbsp;
+          <span style="color:#c9a84c;">GDN</span> <span id="pvpt-sol-wins" style="color:#c9a84c;">0</span> &nbsp;—&nbsp;
+          D <span id="pvpt-draws" style="color:rgba(237,229,216,0.5);">0</span>
+          &nbsp;&nbsp;|&nbsp;&nbsp;Avg <span id="pvpt-turns">—</span> turns
+        </div>
+        <button onclick="pvptPlay()" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;background:rgba(201,168,76,0.15);color:#c9a84c;border:1px solid rgba(201,168,76,0.3);border-radius:4px;padding:10px;cursor:pointer;">START PVP MATCH</button>
+        <button onclick="pvptReset()" style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;background:transparent;color:rgba(237,229,216,0.3);border:1px solid rgba(237,229,216,0.1);border-radius:4px;padding:6px;cursor:pointer;">RESET RECORD</button>
       </div>
 
       <!-- Back -->
@@ -2131,8 +2147,8 @@ const CARDS = {
   // Swift, Elusive 1, NO Power (0)
   // Presence buff: agents immediately left and right have +X Power while on field
   SPR5:{id:'SPR5',faction:'spr',name:'Johnny Rocket',art:'🎯',rarity:'Rare',cardArt:'art_spr5',
-    L1:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:8},
-    L2:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:10},
+    L1:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:6},
+    L2:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:8},
     L3:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:12},
   },
 
@@ -2147,9 +2163,9 @@ const CARDS = {
 
   // ── SOL1: Guardians Sister 1 ── Common ×2
   SOL1:{id:'SOL1',faction:'sol',name:'The Archer',art:'☀️',rarity:'Common',cardArt:'art_sol1',
-    L1:{power:5, health:5,  manic:false, slippery:0, veil:0, recover:0, smash:false},
-    L2:{power:7, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false},
-    L3:{power:10, health:13, manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L1:{power:7, health:7,  manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L2:{power:9, health:9, manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L3:{power:12, health:12, manic:false, slippery:0, veil:0, recover:0, smash:false},
   },
 
   // ── SOL2: Siphoner ── Common ×2
@@ -2830,6 +2846,199 @@ function ptUpdateDisplay() {
   document.getElementById('pt-losses').textContent = _ptRecord.losses;
   document.getElementById('pt-draws').textContent  = _ptRecord.draws;
   document.getElementById('pt-turns').textContent  = _ptRecord.games > 0 ? (_ptRecord.totalTurns / _ptRecord.games).toFixed(1) : '—';
+}
+
+// ── PVP Play Testing ─────────────────────────────────────────────────────
+let _pvptAgg = null;
+let _pvptMode = false; // true when in PVP playtest
+
+function pvptPlay() {
+  _pvptMode = true;
+
+  // Random faction assignment
+  const factions = Math.random() < 0.5 ? ['spr','sol'] : ['sol','spr'];
+  const p1Faction = factions[0], p2Faction = factions[1];
+
+  // Random first player
+  const first = Math.random() < 0.5 ? 'p1' : 'p2';
+
+  // Init agg on first game
+  if(!_pvptAgg) pvptInitAgg();
+
+  // Set up game
+  MODE = 'ui';
+  const p1Deck = p1Faction === 'spr' ? SPR_DECK : SOL_DECK;
+  const p2Deck = p2Faction === 'spr' ? SPR_DECK : SOL_DECK;
+
+  document.getElementById('sim-screen').style.display = 'none';
+
+  G = {
+    turn: 1, phase: 'combat_play', playsLeft: 1,
+    active: first, winner: null, log: [], elusiveSel: null,
+    p1: { id:'p1', name:'Player 1', faction: p1Faction, player_health:50, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p2: { id:'p2', name:'Player 2', faction: p2Faction, player_health:50, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+  };
+  G_target = null;
+  G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
+  G._p1HadTurn1 = false;
+  document.getElementById('target-banner').classList.remove('open');
+  deal(G[first], 4);
+  log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
+
+  G._ptLastFirst = first;
+  G._pvptP1Faction = p1Faction;
+  G._pvptP2Faction = p2Faction;
+
+  _ptGameDeploys = {};
+  _ptGameDeploysP1 = {};
+  _ptGameDeploysP2 = {};
+  _ptFirstCard = null;
+  _ptAwaitingResult = true;
+  _ptResultRecorded = false;
+
+  render();
+  startBGM();
+}
+
+function pvptInitAgg() {
+  _pvptAgg = {
+    total:0, p1wins:0, p2wins:0, draws:0, totalTurns:0,
+    sprWins:0, solWins:0,
+    fm: {
+      p1:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0}},
+      p2:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0}},
+    },
+    fmFaction: {
+      spr:{first:{games:0,wins:0,draws:0,turns:0},second:{games:0,wins:0,draws:0,turns:0}},
+      sol:{first:{games:0,wins:0,draws:0,turns:0},second:{games:0,wins:0,draws:0,turns:0}},
+    },
+    cards: {},
+    firstCards: {},
+    turnDist: {p1wins:{}, p2wins:{}, draws:{}},
+    levelups: {p1:{l2:0,l3:0}, p2:{l2:0,l3:0}},
+    _p1Faction:'spr', _p2Faction:'sol', _p1Diff:'hard', _p2Diff:'hard',
+  };
+}
+
+function pvptRecordResult(winner, turns) {
+  if(!_pvptAgg) return;
+  const agg = _pvptAgg;
+  agg.total++;
+  agg.totalTurns += turns;
+
+  const p1Fac = G._pvptP1Faction;
+  const p2Fac = G._pvptP2Faction;
+
+  if(winner === 'p1') { agg.p1wins++; agg[p1Fac === 'spr' ? 'sprWins' : 'solWins']++; }
+  else if(winner === 'p2') { agg.p2wins++; agg[p2Fac === 'spr' ? 'sprWins' : 'solWins']++; }
+  else agg.draws++;
+
+  // First mover by faction
+  const first = G._ptLastFirst;
+  const firstFac = first === 'p1' ? p1Fac : p2Fac;
+  const secondFac = first === 'p1' ? p2Fac : p1Fac;
+  const firstWon = winner === first;
+  const secondPid = first === 'p1' ? 'p2' : 'p1';
+  const secondWon = winner === secondPid;
+
+  const fmFirst = agg.fmFaction[firstFac].first;
+  fmFirst.games++; fmFirst.turns += turns;
+  if(firstWon) fmFirst.wins++;
+  else if(winner === 'draw') fmFirst.draws++;
+
+  const fmSecond = agg.fmFaction[secondFac].second;
+  fmSecond.games++; fmSecond.turns += turns;
+  if(secondWon) fmSecond.wins++;
+  else if(winner === 'draw') fmSecond.draws++;
+
+  // Turn distribution
+  const _t = Math.min(turns, 50);
+  if(winner === 'p1')      agg.turnDist.p1wins[_t] = (agg.turnDist.p1wins[_t] || 0) + 1;
+  else if(winner === 'p2') agg.turnDist.p2wins[_t] = (agg.turnDist.p2wins[_t] || 0) + 1;
+  else                     agg.turnDist.draws[_t]  = (agg.turnDist.draws[_t]  || 0) + 1;
+
+  // Card deploys
+  ['p1','p2'].forEach(pid => {
+    const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
+    if(!deploys) return;
+    Object.entries(deploys).forEach(([name, count]) => {
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      const a = agg.cards[name];
+      if(count > 0) a.deployGames++;
+      a.totalDeploys += count;
+      if(winner === pid) a.winGames++;
+    });
+  });
+
+  // MVP
+  ['p1','p2'].forEach(pid => {
+    const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
+    if(!deploys) return;
+    const names = Object.keys(deploys);
+    if(!names.length) return;
+    const maxCount = Math.max(...names.map(n => deploys[n]));
+    names.filter(n => deploys[n] === maxCount).forEach(name => {
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      agg.cards[name].mvpCount++;
+      if(winner === pid) agg.cards[name].mvpWinCount++;
+    });
+  });
+
+  // First card played
+  if(_ptFirstCard) {
+    if(!agg.firstCards[_ptFirstCard]) agg.firstCards[_ptFirstCard] = {games:0, wins:0, draws:0};
+    agg.firstCards[_ptFirstCard].games++;
+    if(winner === G._ptLastFirst) agg.firstCards[_ptFirstCard].wins++;
+    else if(winner === 'draw') agg.firstCards[_ptFirstCard].draws++;
+  }
+
+  pvptUpdateDisplay();
+}
+
+function pvptExitGame() {
+  _ptAwaitingResult = false;
+  _pvptMode = false;
+  stopBGM();
+  if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  G.phase = 'over';
+  G.winner = null;
+  pvptReturnToDevTools();
+}
+
+function pvptReturnToDevTools() {
+  document.getElementById('sim-screen').style.display = 'block';
+  if(_pvptAgg && _pvptAgg.total > 0) {
+    window._simAgg = _pvptAgg;
+    // Use spr as p1, sol as p2 for display consistency
+    document.getElementById('ss-p1label').textContent = 'Sparks WINS';
+    document.getElementById('ss-p2label').textContent = 'Guardians WINS';
+    // Remap agg for simRenderResults: sprWins → p1wins, solWins → p2wins
+    const displayAgg = Object.assign({}, _pvptAgg, {
+      p1wins: _pvptAgg.sprWins,
+      p2wins: _pvptAgg.solWins,
+      fm: {
+        p1: { first: _pvptAgg.fmFaction.spr.first, second: _pvptAgg.fmFaction.spr.second },
+        p2: { first: _pvptAgg.fmFaction.sol.first, second: _pvptAgg.fmFaction.sol.second },
+      },
+    });
+    simRenderResults(displayAgg, 'spr', 'sol', 'hard', 'hard', _pvptAgg.total);
+  }
+}
+
+function pvptNewGame() {
+  pvptPlay();
+}
+
+function pvptUpdateDisplay() {
+  document.getElementById('pvpt-spr-wins').textContent = _pvptAgg ? _pvptAgg.sprWins : 0;
+  document.getElementById('pvpt-sol-wins').textContent = _pvptAgg ? _pvptAgg.solWins : 0;
+  document.getElementById('pvpt-draws').textContent    = _pvptAgg ? _pvptAgg.draws : 0;
+  document.getElementById('pvpt-turns').textContent    = _pvptAgg && _pvptAgg.total > 0 ? (_pvptAgg.totalTurns / _pvptAgg.total).toFixed(1) : '—';
+}
+
+function pvptReset() {
+  _pvptAgg = null;
+  pvptUpdateDisplay();
 }
 
 let _ptAwaitingResult = false;
@@ -4320,7 +4529,10 @@ function checkWin() {
   if(G.p1.player_health<=0 && G.p2.player_health<=0){G.winner='draw';G.phase='over';log('⚜ STALEMATE','win');}
   else if(G.p1.player_health<=0){G.winner='p2';G.phase='over';log(`⚜ ${G.p2.name} WINS`,'win');}
   else if(G.p2.player_health<=0){G.winner='p1';G.phase='over';log(`⚜ ${G.p1.name} WINS`,'win');}
-  if(G.phase === 'over' && _ptAwaitingResult) ptRecordResult(G.winner, G.turn);
+  if(G.phase === 'over' && _ptAwaitingResult) {
+    if(_pvptMode) pvptRecordResult(G.winner, G.turn);
+    else ptRecordResult(G.winner, G.turn);
+  }
 }
 
 function flashCard(instanceId) {
@@ -4771,7 +4983,9 @@ function render() {
   } else if(G.phase==='endturn_confirm' && !G_target){
     btn=`<button class="btn btn-red" onclick="endTurn()">END TURN →</button>`;
   } else if(G.phase==='over'){
-    if(_ptRecord.games > 0) {
+    if(_pvptMode) {
+      btn = `<button class="btn btn-gold" onclick="pvptNewGame()">NEW MATCH</button>`;
+    } else if(_ptRecord.games > 0) {
       btn = `<button class="btn btn-gold" onclick="ptNewGame()">NEW OPERATION</button>`;
     } else {
       btn = `<button class="btn btn-gold" onclick="init()">NEW OPERATION</button>`;
@@ -4816,7 +5030,7 @@ function render() {
           <span style="color:#aaa;">Turn ${G.turn}</span>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
-          ${!_ptAwaitingResult ? '<button class="btn btn-ghost" onclick="exitToSplash()">✕ Exit</button>' : '<button class="btn btn-ghost" onclick="ptExitGame()">✕ Exit / View Stats</button>'}
+          ${!_ptAwaitingResult ? '<button class="btn btn-ghost" onclick="exitToSplash()">✕ Exit</button>' : _pvptMode ? '<button class="btn btn-ghost" onclick="pvptExitGame()">✕ Exit / View Stats</button>' : '<button class="btn btn-ghost" onclick="ptExitGame()">✕ Exit / View Stats</button>'}
           <button class="btn btn-ghost" onclick="toggleMuteSFX()" id="btn-mute-sfx">🔊 SFX</button>
           <button class="btn btn-ghost" onclick="toggleMuteBGM()" id="btn-mute-bgm">${_bgmMuted ? '🔇 Music Off' : '🎵 ' + BGM_TRACKS[_bgmIndex].name}</button>
           <button class="btn btn-ghost" onclick="toggleFullscreen()">⛶ Full Screen</button>
