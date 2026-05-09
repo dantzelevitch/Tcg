@@ -344,7 +344,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   display:flex; align-items:center; justify-content:center;
   font-size:26px; color:rgba(201,168,76,0.1); transition:all 0.2s;
 }
-.eslot.playable { border-color:rgba(201,168,76,0.55); background:rgba(201,168,76,0.05); color:rgba(201,168,76,0.45); cursor:pointer; animation:gslot 2s ease-in-out infinite; }
+.eslot.playable { border-color:rgba(201,168,76,0.55); background:rgba(201,168,76,0.08); color:rgba(201,168,76,0.45); cursor:pointer; animation:gslot 2s ease-in-out infinite; }
 @keyframes gslot{0%,100%{box-shadow:0 0 8px rgba(201,168,76,0.1)} 50%{box-shadow:0 0 20px rgba(201,168,76,0.3)}}
 .eslot.copy-slot { border-color:rgba(167,139,250,0.6); background:rgba(124,58,237,0.06); color:rgba(167,139,250,0.5); cursor:crosshair; animation:cslot 1s ease-in-out infinite; }
 @keyframes cslot{0%,100%{box-shadow:0 0 8px rgba(167,139,250,0.2)} 50%{box-shadow:0 0 20px rgba(167,139,250,0.5)}}
@@ -859,7 +859,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
       <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
       <button onclick="splashPvP()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚔ PvP</button>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v326</div>
+    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v329</div>
     <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;margin-top:4px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Image Cache</button>
   </div>
 </div>
@@ -3387,7 +3387,7 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
 
     // Bars
     turns.forEach((t, idx) => {
-      const x = padL + idx * barGroupW + barGroupW * 0.05;
+      const x = padL + idx * barGroupW + barGroupW * 0.08;
       const p1w = agg.turnDist.p1wins[t] || 0;
       const p2w = agg.turnDist.p2wins[t] || 0;
       const dr  = agg.turnDist.draws[t]  || 0;
@@ -4110,8 +4110,16 @@ function battle() {
   // Play faction-based combat sound based on net HQ damage
   if(!G_sim) {
     if(_combatOccurred) {
-      if(_dmgOnlyToP2 > _dmgOnlyToP1) playSFX(G.p1.faction === 'spr' ? 'damageSparks' : 'damageGuardians');
-      else if(_dmgOnlyToP1 > _dmgOnlyToP2) playSFX(G.p2.faction === 'spr' ? 'damageSparks' : 'damageGuardians');
+      if(_dmgOnlyToP2 > _dmgOnlyToP1) {
+        const sfxKey = G.p1.faction === 'spr' ? 'damageSparks' : 'damageGuardians';
+        SFX[sfxKey].volume = _dmgOnlyToP2 >= 15 ? 0.20 : 0.08;
+        playSFX(sfxKey);
+      }
+      else if(_dmgOnlyToP1 > _dmgOnlyToP2) {
+        const sfxKey = G.p2.faction === 'spr' ? 'damageSparks' : 'damageGuardians';
+        SFX[sfxKey].volume = _dmgOnlyToP1 >= 15 ? 0.20 : 0.08;
+        playSFX(sfxKey);
+      }
       else playSFX('combatBlock');
     }
   }
