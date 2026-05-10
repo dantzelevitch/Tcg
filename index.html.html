@@ -1682,6 +1682,7 @@ let MODE = window.location.hash.slice(1) || 'ui';
 // CPU BRAIN
 // ════════════════════════════════════════════════
 const CPU_DELAY = 1000; // ms between CPU actions
+const STARTING_HEALTH = 60;
 
 // ── AgentFieldThreat ─────────────────────────────────────────────────────
 // Rates any agent (friendly or opponent) as a field threat.
@@ -1829,7 +1830,7 @@ function planningBonus(pid) {
 
   // Durability: reward surviving cards with health (all factions)
   field.forEach(c => {
-    if(c) bonus += (c.currentHealth || c.baseCover || 0) * 0.20;
+    if(c) bonus += (c.currentHealth || c.baseCover || 0) * 0;
   });
 
   // Swift bonus: reward Sparks cards with haste on the field (excl. Johnny Rocket)
@@ -1843,7 +1844,9 @@ function planningBonus(pid) {
   field.forEach(c => {
     if(!c) return;
     const cid = c.deckId ? c.deckId.split('_')[0] : '';
-    if(cid === 'SOL4') bonus += 1;
+    if(cid === 'SOL4') bonus += 2;
+    // Pixie Dust penalty
+    if(cid === 'SOL5') bonus -= 1;
   });
 
   if(faction === 'spr') {
@@ -1881,6 +1884,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
   G._glowTargetId = null;
 
   G_sim = true;
+  setSimLog(true);
 
   try {
     // Snapshot opponent field before combat (to detect removals)
@@ -1939,7 +1943,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       G[pid].field.forEach(c => {
         if(!c || c.isVirtualCopy) return;
         const cid = c.deckId ? c.deckId.split('_')[0] : '';
-        if(cid === 'SPR6') firstTurnBonus -= 3; // Pair of Queens
+        if(cid === 'SPR6') firstTurnBonus -= 0; // Pair of Queens
         if(cid === 'SPR1') firstTurnBonus -= 1; // Betsy Boom
         if(cid === 'SPR3') firstTurnBonus -= 99; // Sienna Blaze
         if(cid === 'SPR5') firstTurnBonus -= 99; // Johnny Rocket
@@ -1953,6 +1957,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
 
   } finally {
     G_sim = savedGsim;
+    setSimLog(savedGsim);
     G = savedG;
   }
 }
@@ -2192,8 +2197,8 @@ const CARDS = {
   // Swift, Elusive 1, NO Power (0)
   // Presence buff: agents immediately left and right have +X Power while on field
   SPR5:{id:'SPR5',faction:'spr',name:'Johnny Rocket',art:'🎯',rarity:'Rare',cardArt:'art_spr5',
-    L1:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:6},
-    L2:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:8},
+    L1:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:8},
+    L2:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:10},
     L3:{power:0,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'adjacent_swift_prowess', abilityX:12},
   },
 
@@ -2202,15 +2207,15 @@ const CARDS = {
   // On deploy: player chooses any adjacent empty lane → activate virtual copy
   SPR6:{id:'SPR6',faction:'spr',name:'Pair of Queens',art:'🔥',rarity:'Mythic',cardArt:'art_spr6',
     L1:{power:5,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
-    L2:{power:5,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
-    L3:{power:5,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
+    L2:{power:7,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
+    L3:{power:9,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
   },
 
   // ── SOL1: Guardians Sister 1 ── Common ×2
   SOL1:{id:'SOL1',faction:'sol',name:'The Archer',art:'☀️',rarity:'Common',cardArt:'art_sol1',
-    L1:{power:7, health:7,  manic:false, slippery:0, veil:0, recover:0, smash:false},
-    L2:{power:9, health:9, manic:false, slippery:0, veil:0, recover:0, smash:false},
-    L3:{power:12, health:12, manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L1:{power:6, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L2:{power:8, health:8, manic:false, slippery:0, veil:0, recover:0, smash:false},
+    L3:{power:10, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false},
   },
 
   // ── SOL2: Siphoner ── Common ×2
@@ -2278,24 +2283,24 @@ const NEXT = {
   'GLM1_L1':'GLM1_L2','GLM1_L2':'GLM1_L3',
 };
 
-// Sparks theme deck: 2x each = 12 cards
+// Sparks theme deck: 3x each = 18 cards
 const SPR_DECK = [
-  'SPR1_L1','SPR1_L1',
-  'SPR2_L1','SPR2_L1',
-  'SPR3_L1','SPR3_L1',
-  'SPR4_L1','SPR4_L1',
-  'SPR5_L1','SPR5_L1',
-  'SPR6_L1','SPR6_L1',
+  'SPR1_L1','SPR1_L1','SPR1_L1',
+  'SPR2_L1','SPR2_L1','SPR2_L1',
+  'SPR3_L1','SPR3_L1','SPR3_L1',
+  'SPR4_L1','SPR4_L1','SPR4_L1',
+  'SPR5_L1','SPR5_L1','SPR5_L1',
+  'SPR6_L1','SPR6_L1','SPR6_L1',
 ];
 
-// Guardians theme deck: 2x each = 12 cards
+// Guardians theme deck: 3x each = 18 cards
 const SOL_DECK = [
-  'SOL1_L1','SOL1_L1',
-  'SOL2_L1','SOL2_L1',
-  'SOL3_L1','SOL3_L1',
-  'SOL4_L1','SOL4_L1',
-  'SOL5_L1','SOL5_L1',
-  'SOL6_L1','SOL6_L1',
+  'SOL1_L1','SOL1_L1','SOL1_L1',
+  'SOL2_L1','SOL2_L1','SOL2_L1',
+  'SOL3_L1','SOL3_L1','SOL3_L1',
+  'SOL4_L1','SOL4_L1','SOL4_L1',
+  'SOL5_L1','SOL5_L1','SOL5_L1',
+  'SOL6_L1','SOL6_L1','SOL6_L1',
 ];
 
 // ════════════════════════════════════════════════
@@ -2746,11 +2751,13 @@ function renderImpactScores() {
     // Swift bonus
     if(card.manic && id.startsWith('SPR') && id !== 'SPR5') planning += 1;
     // Durability
-    planning += (card.currentHealth || 0) * 0.20;
+    planning += (card.currentHealth || 0) * 0;
     // Breach bonus for Betsy Boom / Ballin'
     if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.25;
     // Doctor bonus: early engine deployment
-    if(id === 'SOL4') planning += 1;
+    if(id === 'SOL4') planning += 2;
+    // Pixie Dust penalty
+    if(id === 'SOL5') planning -= 1;
 
     const fac = id.startsWith('SPR') ? 'spr' : 'sol';
     const rowBg = fac === 'spr' ? 'background:rgba(192,57,43,0.12);' : 'background:rgba(201,168,76,0.1);';
@@ -2790,7 +2797,10 @@ function ptInitAgg(p1Faction, p2Faction, p1Diff, p2Diff) {
   };
 }
 
+let _ptFirstMode = 'random';
+
 function ptPlay(firstMode) {
+  _ptFirstMode = firstMode;
   // Determine decks
   const myVal  = document.getElementById('pt-my-deck').value;
   const cpuVal = document.getElementById('pt-cpu-deck').value;
@@ -2819,14 +2829,14 @@ function ptPlay(firstMode) {
   G = {
     turn: 1, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
-    p1: { id:'p1', name:'Player 1', faction: myFaction,  player_health:50, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
-    p2: { id:'p2', name:'Player 2', faction: cpuFaction, player_health:50, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p1: { id:'p1', name:'Player 1', faction: myFaction,  player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p2: { id:'p2', name:'Player 2', faction: cpuFaction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
   };
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
   G._glowTargetId = null; G._p1HadTurn1 = false;
   document.getElementById('target-banner').classList.remove('open');
-  deal(G[first], 4);
+  deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
 
   // Hook into game over to record result
@@ -2859,10 +2869,9 @@ function ptExitGame() {
 }
 
 function ptNewGame() {
-  // Start another game with same matchup — alternate who goes first
-  const lastFirst = G._ptLastFirst || 'p1';
-  const nextFirst = lastFirst === 'p1' ? 'p2' : 'p1';
-  ptPlay(nextFirst === 'p1' ? 'me' : 'cpu');
+  // Start another game with same matchup — respect original first-player choice
+  const mode = _ptFirstMode || 'random';
+  ptPlay(mode);
 }
 
 function ptReturnToDevTools() {
@@ -2920,14 +2929,14 @@ function pvptPlay() {
   G = {
     turn: 1, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
-    p1: { id:'p1', name:'Player 1', faction: p1Faction, player_health:50, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
-    p2: { id:'p2', name:'Player 2', faction: p2Faction, player_health:50, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p1: { id:'p1', name:'Player 1', faction: p1Faction, player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p2: { id:'p2', name:'Player 2', faction: p2Faction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
   };
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
   G._p1HadTurn1 = false;
   document.getElementById('target-banner').classList.remove('open');
-  deal(G[first], 4);
+  deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
 
   G._ptLastFirst = first;
@@ -3171,6 +3180,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   const savedG   = G;
   const savedMode = MODE;
   G_sim = true;
+  setSimLog(true);
   MODE  = 'cpu';
 
   try {
@@ -3180,9 +3190,9 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].split('_')[0].toLowerCase().replace(/\d/g,'') || 'spr',
-            player_health:50, deck: buildDeck(p1DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+            player_health:STARTING_HEALTH, deck: buildDeck(p1DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
       p2: { id:'p2', name:'P2', faction: p2DeckIds[0].split('_')[0].toLowerCase().replace(/\d/g,'') || 'sol',
-            player_health:50, deck: buildDeck(p2DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+            player_health:STARTING_HEALTH, deck: buildDeck(p2DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     };
     G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null; G._p1HadTurn1 = false;
     G_target = null;
@@ -3191,7 +3201,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
     G.p1.faction = p1DeckIds[0].startsWith('SPR') ? 'spr' : 'sol';
     G.p2.faction = p2DeckIds[0].startsWith('SPR') ? 'spr' : 'sol';
 
-    deal(G.p1, 4); deal(G.p2, 4);
+    deal(G[first], 5);
 
     // Per-card tracking: { deployCount, winGames, mvpCount, mvpWinCount, totalImpact, impactCount }
     const cardStats = {};
@@ -3321,6 +3331,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 
   } finally {
     G_sim  = false;
+    setSimLog(false);
     MODE   = savedMode;
     G      = savedG;
     G_target = null;
@@ -3420,6 +3431,7 @@ function simEvaluateCombo(combo, marginBefore, pid) {
 // ── simRun ────────────────────────────────────────────────────────────────
 // Runs all games in batches (async via setTimeout to keep UI responsive).
 function simRun() {
+  const _simStartTime = performance.now();
   const total    = parseInt(document.getElementById('sim-count').value);
   const p1Val = document.getElementById('sim-p1-deck').value;
   const p2Val = document.getElementById('sim-p2-deck').value;
@@ -3526,7 +3538,8 @@ function simRun() {
       setTimeout(runBatch, 0);
     } else {
       simRenderResults(agg, p1Faction, p2Faction, p1Difficulty, p2Difficulty, total);
-      document.getElementById('sim-progress-label').textContent = 'SIM COMPLETE — ' + total + ' games';
+      const _simElapsed = ((performance.now() - _simStartTime) / 1000).toFixed(1);
+      document.getElementById('sim-progress-label').textContent = 'SIM COMPLETE — ' + total + ' games — ' + _simElapsed + 's';
     }
   }
 
@@ -3888,15 +3901,15 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].startsWith('SPR') ? 'spr' : 'sol',
-            player_health:50, deck:buildDeck(p1DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+            player_health:STARTING_HEALTH, deck:buildDeck(p1DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
       p2: { id:'p2', name:'P2', faction: p2DeckIds[0].startsWith('SPR') ? 'spr' : 'sol',
-            player_health:50, deck:buildDeck(p2DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+            player_health:STARTING_HEALTH, deck:buildDeck(p2DeckIds), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     };
     G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
     G._p1HadTurn1 = false;
     G_target = null;
 
-    deal(G.p1, 4); deal(G.p2, 4);
+    deal(G[first], 5);
 
     // G_sim=true throughout — sync engine paths. G_test3=true enables logging.
     G_sim = true;
@@ -4144,8 +4157,8 @@ function init() {
     playsLeft: 1,
     active: first,
     winner: null, log: [], elusiveSel: null,
-    p1:{id:'p1',name:'Player 1',faction:p1Faction,player_health:50,deck:buildDeck(p1Deck),hand:[],discard:[],field:[null,null,null,null,null],sel:null},
-    p2:{id:'p2',name:'Player 2',faction:p2Faction,player_health:50,deck:buildDeck(p2Deck),hand:[],discard:[],field:[null,null,null,null,null],sel:null},
+    p1:{id:'p1',name:'Player 1',faction:p1Faction,player_health:STARTING_HEALTH,deck:buildDeck(p1Deck),hand:[],discard:[],field:[null,null,null,null,null],sel:null},
+    p2:{id:'p2',name:'Player 2',faction:p2Faction,player_health:STARTING_HEALTH,deck:buildDeck(p2Deck),hand:[],discard:[],field:[null,null,null,null,null],sel:null},
   };
   G_target = null;
   G._flashIds = new Set();
@@ -4154,7 +4167,7 @@ function init() {
   G._glowTargetId = null;
   G._p1HadTurn1 = false;
   document.getElementById('target-banner').classList.remove('open');
-  deal(G[first], 4);
+  deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
   render();
   if(MODE === 'cpu' && G.active === 'p2') setTimeout(cpuTakeTurn, CPU_DELAY);
@@ -4174,7 +4187,10 @@ function deal(p, n) {
 }
 
 let G_test3 = false; // true during test3 games — allows logging even with G_sim=true
-function log(msg,cls=''){if(G_sim && !G_test3)return;G.log.unshift({msg,cls});const _logMax=G_test3?500:80;if(G.log.length>_logMax)G.log.pop();}
+const _logReal = function(msg,cls=''){G.log.unshift({msg,cls});const _logMax=G_test3?500:80;if(G.log.length>_logMax)G.log.pop();};
+const _logNoop = function(){};
+let log = _logReal;
+function setSimLog(isSim) { log = (isSim && !G_test3) ? _logNoop : _logReal; }
 
 // ════════════════════════════════════════════════
 // GAME ACTIONS
@@ -4295,7 +4311,7 @@ function playToLane(lane, cardInstanceId = null) {
   if(!G_sim && card.cardId === 'SPR2') playSFX('flamethrower');
   if(!G_sim && card.cardId === 'SPR3') playSFX('siennablaze');
   // Play testing: track deploys
-  if(_ptAwaitingResult) {
+  if(_ptAwaitingResult && !G_sim) {
     const _ptName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
     _ptGameDeploys[_ptName] = (_ptGameDeploys[_ptName] || 0) + 1;
     if(!_ptFirstCard) _ptFirstCard = _ptName;
@@ -4448,7 +4464,7 @@ function battle() {
         const faction = G.p1.faction;
         const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
         SFX[sfxKey].volume = faction === 'spr'
-          ? (_dmgOnlyToP2 >= 15 ? 0.17 : 0.07)
+          ? (_dmgOnlyToP2 >= 15 ? 0.15 : 0.05)
           : (_dmgOnlyToP2 >= 15 ? 0.20 : 0.10);
         playSFX(sfxKey);
       }
@@ -4456,7 +4472,7 @@ function battle() {
         const faction = G.p2.faction;
         const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
         SFX[sfxKey].volume = faction === 'spr'
-          ? (_dmgOnlyToP1 >= 15 ? 0.17 : 0.07)
+          ? (_dmgOnlyToP1 >= 15 ? 0.15 : 0.05)
           : (_dmgOnlyToP1 >= 15 ? 0.20 : 0.10);
         playSFX(sfxKey);
       }
@@ -4760,7 +4776,7 @@ function finalizeTurn(ap, op) {
     if(c) { c.hasMoved = false; c.justDeployed = false; }
   }));
 
-  deal(nextP, 4);
+  deal(nextP, 5);
   G.playsLeft = 2;
   G.phase = 'combat_play';
   G._glowTargetId = null;
@@ -5704,8 +5720,8 @@ function tutorialStart() {
   G = {
     turn: 1, phase: 'combat_play', playsLeft: 1,
     active: 'p2', winner: null, log: [], elusiveSel: null,
-    p1: { id:'p1', name:'Player 1', faction:'sol', player_health:50, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
-    p2: { id:'p2', name:'Player 2', faction:'spr', player_health:50, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p1: { id:'p1', name:'Player 1', faction:'sol', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
+    p2: { id:'p2', name:'Player 2', faction:'spr', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
   };
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
