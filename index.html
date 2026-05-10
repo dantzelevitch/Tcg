@@ -1130,8 +1130,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
               <tr style="border-bottom:1px solid rgba(201,168,76,0.15);">
                 <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;width:24%;">CARD</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">POWER</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">PASSIVE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">ONGOING</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">ABILITY</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">ACTIVE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">DURABILITY</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">TOTAL FIELD THREAT</th>
                 <th style="padding:10px;text-align:center;color:rgba(140,180,255,0.6);font-weight:400;">PLANNING BONUS</th>
               </tr>
@@ -1692,18 +1693,20 @@ function agentFieldThreat(card, lane) {
   if(!card) return 0;
   const id  = card.deckId ? card.deckId.split('_')[0] : '';
   const pow = card.currentPower || card.basePower || 0;
+  const hp = card.currentHealth || card.baseCover || 0;
 
   const attack  = pow;
-  const jrMult = (lane === 0 || lane === 4) ? 0.5 : 1.2;
-  const passive = id === 'SPR3' ? (card.abilityX || 0) * 2.1
-                : id === 'SPR5' ? (card.abilityX || 0) * jrMult
-                : id === 'SPR4' ? (card.abilityX || 0) * 2
-                : 0;
-  const lifelinkBonus = card.lifelink ? pow * 0.50 : 0;
-  const ongoing = (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                + lifelinkBonus;
+  const jrMult = (lane === 0 || lane === 4) ? 0.5 : 1.3;
+  const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.1
+                      : id === 'SPR5' ? (card.abilityX || 0) * jrMult
+                      : id === 'SPR4' ? (card.abilityX || 0) * 2
+                      : 0)
+                     + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
+                     + (card.lifelink ? pow * 0.5 : 0);
+  const activeBonus = !card.dormant ? attack * 0.2 : 0;
+  const durability = hp * 0.3;
 
-  return attack + passive + ongoing;
+  return attack + abilityBonus + activeBonus + durability;
 }
 
 // ── cpuGetValidTargets ────────────────────────────────────────────────────
@@ -1828,25 +1831,11 @@ function planningBonus(pid) {
   const faction = G[pid].faction;
   let bonus = 0;
 
-  // Durability: reward surviving cards with health (all factions)
-  field.forEach(c => {
-    if(c) bonus += (c.currentHealth || c.baseCover || 0) * 0;
-  });
-
-  // Swift bonus: reward Sparks cards with haste on the field (excl. Johnny Rocket)
-  field.forEach(c => {
-    if(!c) return;
-    const cid = c.deckId ? c.deckId.split('_')[0] : '';
-    if(c.manic && cid.startsWith('SPR') && cid !== 'SPR5') bonus += 1;
-  });
-
   // Doctor bonus: reward early engine deployment
   field.forEach(c => {
     if(!c) return;
     const cid = c.deckId ? c.deckId.split('_')[0] : '';
-    if(cid === 'SOL4') bonus += 2;
-    // Pixie Dust penalty
-    if(cid === 'SOL5') bonus -= 1;
+    if(cid === 'SOL4') bonus += 3;
   });
 
   if(faction === 'spr') {
@@ -1887,9 +1876,6 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
   setSimLog(true);
 
   try {
-    // Snapshot opponent field before combat (to detect removals)
-    const oppFieldBefore = G[oppPid].field.map((c, lane) => c ? { instanceId: c.instanceId, threat: agentFieldThreat(c, lane) } : null);
-
     // Execute each play in the combo
     for(const play of combo) {
       if(G.playsLeft <= 0) break;
@@ -1921,13 +1907,11 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     const marginAfter      = G[pid].player_health - G[oppPid].player_health;
     const deltaHealth      = marginAfter - marginBefore;
 
-    // RemovalBonus
-    let removalBonus = 0;
-    for(const before of oppFieldBefore) {
-      if(!before) continue;
-      const stillAlive = G[oppPid].field.some(c => c && c.instanceId === before.instanceId);
-      if(!stillAlive) removalBonus += before.threat;
-    }
+    // SurvivingOppThreat: penalize for opponent cards still alive
+    let survivingOppThreat = 0;
+    G[oppPid].field.forEach((card, lane) => {
+      if(card) survivingOppThreat += agentFieldThreat(card, lane);
+    });
 
     // SurvivingAllyThreat
     let survivingAllyThreat = 0;
@@ -1935,11 +1919,72 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       if(card) survivingAllyThreat += agentFieldThreat(card, lane);
     });
 
+    // ── Look-ahead: second combat ──────────────────────────────────────
+    // If any lanes are contested (both sides survived), simulate a second
+    // round of combat on ONLY those lanes, with Doctor's healer in between.
+    // lookAheadBonus = allyThreatLH - oppThreatLH + netHQImpact (contested lanes only)
+    let lookAheadBonus = 0;
+    const contestedLanes = [];
+    for(let i = 0; i < 5; i++) {
+      if(G[pid].field[i] && G[oppPid].field[i]) contestedLanes.push(i);
+    }
+    if(contestedLanes.length > 0) {
+      // Resolve Doctor's healer for attacking side only
+      G[pid].field.forEach(c => {
+        if(!c || !c.ability) return;
+        const ab = ABILITIES[c.ability];
+        if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
+        const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
+        if(!occupied.length) return;
+        const best = occupied.reduce((b, i) =>
+          agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
+          occupied[0]);
+        ab.resolve(c, pid, { targetLane: best });
+      });
+
+      // Temporarily clear non-contested lanes so battle() only processes contested ones
+      const savedAlly = [], savedOpp = [];
+      for(let i = 0; i < 5; i++) {
+        if(!contestedLanes.includes(i)) {
+          savedAlly[i] = G[pid].field[i];
+          savedOpp[i] = G[oppPid].field[i];
+          G[pid].field[i] = null;
+          G[oppPid].field[i] = null;
+        }
+      }
+
+      // Snapshot health margin before second battle
+      const marginBeforeLH = G[pid].player_health - G[oppPid].player_health;
+
+      // Run second battle (contested lanes only)
+      G.phase = 'combat_play';
+      battle();
+
+      // Score look-ahead result (contested lanes only)
+      let allyThreatLH = 0;
+      let oppThreatLH = 0;
+      for(const i of contestedLanes) {
+        if(G[pid].field[i]) allyThreatLH += agentFieldThreat(G[pid].field[i], i);
+        if(G[oppPid].field[i]) oppThreatLH += agentFieldThreat(G[oppPid].field[i], i);
+      }
+      const netHQImpactLH = (G[pid].player_health - G[oppPid].player_health) - marginBeforeLH;
+
+      lookAheadBonus = allyThreatLH - oppThreatLH + netHQImpactLH;
+
+      // Restore non-contested lanes
+      for(let i = 0; i < 5; i++) {
+        if(!contestedLanes.includes(i)) {
+          G[pid].field[i] = savedAlly[i];
+          G[oppPid].field[i] = savedOpp[i];
+        }
+      }
+    }
+
     const planning = planningBonus(pid);
 
-    // FirstTurnBonus: per-card adjustments that only apply on turn 1
+    // FirstTurnBonus: per-card adjustments that only apply on absolute turn 1
     let firstTurnBonus = 0;
-    if(G.turn === 1) {
+    if(G.absoluteTurn === 1) {
       G[pid].field.forEach(c => {
         if(!c || c.isVirtualCopy) return;
         const cid = c.deckId ? c.deckId.split('_')[0] : '';
@@ -1947,12 +1992,24 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
         if(cid === 'SPR1') firstTurnBonus -= 1; // Betsy Boom
         if(cid === 'SPR3') firstTurnBonus -= 99; // Sienna Blaze
         if(cid === 'SPR5') firstTurnBonus -= 99; // Johnny Rocket
+        if(cid === 'SOL1') firstTurnBonus += 3; // The Archer
+        if(cid === 'SOL2') firstTurnBonus -= 2; // Siphoner
+        if(cid === 'SOL4') firstTurnBonus += 2; // Doctor
       });
     }
 
-    const CPUEvalScore = deltaHealth + removalBonus + survivingAllyThreat + planning + firstTurnBonus
+    const CPUEvalScore = deltaHealth - survivingOppThreat + survivingAllyThreat + planning + firstTurnBonus + lookAheadBonus
                 + (G[oppPid].player_health <= 0 ?  99999 : 0)
                 + (G[pid].player_health    <= 0 ? -99999 : 0);
+
+    // Store breakdown for test3 logging
+    if(G_test3) {
+      window._lastEvalBreakdown = {
+        deltaHealth, survivingOppThreat, survivingAllyThreat, planning,
+        firstTurnBonus, lookAheadBonus, total: CPUEvalScore
+      };
+    }
+
     return CPUEvalScore;
 
   } finally {
@@ -1987,10 +2044,10 @@ function cpuRunEvaluator() {
   scored.sort((a, b) => b.score - a.score);
 
   if(CPU_DIFFICULTY === 'hard') {
-    // Turn 1 weighted lottery: rank 1 = 6 balls, rank 2 = 5, rank 3 = 3, rank 4 = 2
+    // Turn 1 weighted lottery: 30%, 30%, 25%, 15%
     // Only consider combos with positive scores
-    if(G.turn === 1 && scored.length >= 2) {
-      const weights = [6, 5, 3, 2];
+    if(G.absoluteTurn === 1 && scored.length >= 2) {
+      const weights = [30, 30, 25, 15];
       const positive = scored.filter(s => s.score > 0);
       const pool = positive.slice(0, Math.min(weights.length, positive.length));
       if(pool.length > 0) {
@@ -2729,6 +2786,7 @@ function renderImpactScores() {
       abilityX: s.abilityX || 0,
       lifelink: def.id === 'SOL2', // Siphoner has native lifelink
       manic: s.manic || false,
+      dormant: !(s.manic || false),
       ability: s.ability || null,
       level: 1
     };
@@ -2736,28 +2794,24 @@ function renderImpactScores() {
     const pow = s.power;
 
     // Replicate agentFieldThreat logic for display
-    const jrMult_mid = 1.2;
-    const passive = id === 'SPR3' ? (card.abilityX || 0) * 2.1
-                  : id === 'SPR5' ? (card.abilityX || 0) * jrMult_mid
-                  : id === 'SPR4' ? (card.abilityX || 0) * 2
-                  : 0;
-    const lifelinkBonus = card.lifelink ? pow * 0.50 : 0;
-    const ongoing = (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                  + lifelinkBonus;
-    const total = pow + passive + ongoing;
+    const jrMult_mid = 1.3;
+    const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.1
+                        : id === 'SPR5' ? (card.abilityX || 0) * jrMult_mid
+                        : id === 'SPR4' ? (card.abilityX || 0) * 2
+                        : 0)
+                       + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
+                       + (card.lifelink ? pow * 0.5 : 0);
+    const activeBonus = !card.dormant ? pow * 0.2 : 0;
+    const durability = (card.currentHealth || 0) * 0.3;
+    const total = pow + abilityBonus + activeBonus + durability;
 
     // Planning bonus (per-card components only; positional bonuses excluded)
     let planning = 0;
-    // Swift bonus
-    if(card.manic && id.startsWith('SPR') && id !== 'SPR5') planning += 1;
-    // Durability
-    planning += (card.currentHealth || 0) * 0;
     // Breach bonus for Betsy Boom / Ballin'
     if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.25;
     // Doctor bonus: early engine deployment
-    if(id === 'SOL4') planning += 2;
-    // Pixie Dust penalty
-    if(id === 'SOL5') planning -= 1;
+    if(id === 'SOL4') planning += 3;
+    
 
     const fac = id.startsWith('SPR') ? 'spr' : 'sol';
     const rowBg = fac === 'spr' ? 'background:rgba(192,57,43,0.12);' : 'background:rgba(201,168,76,0.1);';
@@ -2766,8 +2820,9 @@ function renderImpactScores() {
     html += '<tr style="' + rowBg + '">'
       + '<td style="' + nameCol + '">' + def.name + '</td>'
       + '<td>' + pow + '</td>'
-      + '<td>' + (passive > 0 ? passive.toFixed(1) : '—') + '</td>'
-      + '<td>' + (ongoing > 0 ? ongoing.toFixed(1) : '—') + '</td>'
+      + '<td>' + (abilityBonus > 0 ? abilityBonus.toFixed(1) : '—') + '</td>'
+      + '<td>' + (activeBonus > 0 ? activeBonus.toFixed(1) : '—') + '</td>'
+      + '<td>' + durability.toFixed(1) + '</td>'
       + '<td style="font-weight:500;">' + total.toFixed(1) + '</td>'
       + '<td style="color:rgba(140,180,255,0.7);">' + planning.toFixed(1) + '</td>'
       + '</tr>';
@@ -2827,7 +2882,7 @@ function ptPlay(firstMode) {
   document.getElementById('sim-screen').style.display = 'none';
 
   G = {
-    turn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction: myFaction,  player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction: cpuFaction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
@@ -2927,7 +2982,7 @@ function pvptPlay() {
   document.getElementById('sim-screen').style.display = 'none';
 
   G = {
-    turn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction: p1Faction, player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction: p2Faction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
@@ -3153,7 +3208,7 @@ function ptRecordResult(winner, turns) {
     });
   });
 
-  // MVP: card with highest deploy count per side
+  // MVP: card with highest deploy count per side (ties share MVP)
   ['p1','p2'].forEach(pid => {
     const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
     const names = Object.keys(deploys);
@@ -3186,7 +3241,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   try {
     const first = Math.random() < 0.5 ? 'p1' : 'p2';
     G = {
-      turn: 1, phase: 'combat_play', playsLeft: 1,
+      turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].split('_')[0].toLowerCase().replace(/\d/g,'') || 'spr',
@@ -3406,11 +3461,10 @@ function simEvaluateCombo(combo, marginBefore, pid) {
       : G.p2.player_health - G.p1.player_health;
     const deltaHealth = marginAfter - marginBefore;
 
-    let removalBonus = 0;
-    for(const before of oppFieldBefore) {
-      if(!before) continue;
-      if(!G[oppPid].field.some(c => c && c.instanceId === before.instanceId)) removalBonus += before.threat;
-    }
+    let survivingOppThreat = 0;
+    G[oppPid].field.forEach((card, lane) => {
+      if(card) survivingOppThreat += agentFieldThreat(card, lane);
+    });
 
     let survivingAllyThreat = 0;
     G[pid].field.forEach((card, lane) => {
@@ -3418,7 +3472,7 @@ function simEvaluateCombo(combo, marginBefore, pid) {
     });
 
     const planning = planningBonus(pid);
-    return deltaHealth + removalBonus + survivingAllyThreat + planning
+    return deltaHealth - survivingOppThreat + survivingAllyThreat + planning
          + (G[oppPid].player_health <= 0 ?  99999 : 0)
          + (G[pid].player_health    <= 0 ? -99999 : 0);
   } finally {
@@ -3897,7 +3951,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   try {
     const first = Math.random() < 0.5 ? 'p1' : 'p2';
     G = {
-      turn: 1, phase: 'combat_play', playsLeft: 1,
+      turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].startsWith('SPR') ? 'spr' : 'sol',
@@ -3951,6 +4005,12 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
         if(bestCombo.length === 0) {
           G.playsLeft = 0;
         } else {
+          // Re-evaluate winning combo to capture breakdown for logging
+          window._lastEvalBreakdown = null;
+          const _savedTest3 = G_test3; G_test3 = true;
+          cpuEvaluateCombo(bestCombo, marginBefore, pid);
+          G_test3 = _savedTest3;
+
           for(const play of bestCombo) {
             if(G.playsLeft <= 0) break;
             const card = G[pid].hand.find(c => c.instanceId === play.instanceId);
@@ -3966,6 +4026,11 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
             G._evalTargetLane = play.target;
             playToLane(play.lane, play.instanceId);
             G._evalTargetLane = undefined;
+          }
+          // Log eval breakdown
+          if(window._lastEvalBreakdown) {
+            const b = window._lastEvalBreakdown;
+            log(`  📊 CPUEval: ${b.total.toFixed(1)} = ΔHP:${b.deltaHealth.toFixed(1)} -OppThreat:${b.survivingOppThreat.toFixed(1)} +AllyThreat:${b.survivingAllyThreat.toFixed(1)} +Plan:${b.planning.toFixed(1)} +T1:${b.firstTurnBonus} +LA:${b.lookAheadBonus.toFixed(1)}`);
           }
         }
       }
@@ -4464,16 +4529,16 @@ function battle() {
         const faction = G.p1.faction;
         const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
         SFX[sfxKey].volume = faction === 'spr'
-          ? (_dmgOnlyToP2 >= 15 ? 0.15 : 0.05)
-          : (_dmgOnlyToP2 >= 15 ? 0.20 : 0.10);
+          ? (_dmgOnlyToP2 >= 15 ? 0.10 : 0.03)
+          : (_dmgOnlyToP2 >= 15 ? 0.15 : 0.07);
         playSFX(sfxKey);
       }
       else if(_dmgOnlyToP1 > _dmgOnlyToP2) {
         const faction = G.p2.faction;
         const sfxKey = faction === 'spr' ? 'damageSparks' : 'damageGuardians';
         SFX[sfxKey].volume = faction === 'spr'
-          ? (_dmgOnlyToP1 >= 15 ? 0.15 : 0.05)
-          : (_dmgOnlyToP1 >= 15 ? 0.20 : 0.10);
+          ? (_dmgOnlyToP1 >= 15 ? 0.10 : 0.03)
+          : (_dmgOnlyToP1 >= 15 ? 0.15 : 0.07);
         playSFX(sfxKey);
       }
       else playSFX('combatBlock');
@@ -4751,6 +4816,7 @@ function finalizeTurn(ap, op) {
   // Advance turn counter after P2's turn
   let switchingToP2 = G.active === 'p1';
   if(!switchingToP2) G.turn++;
+  G.absoluteTurn++;
 
   // Reshuffle every 3 full turns (after turn 3, 6, 9...)
   if(!switchingToP2 && G.turn > 1 && (G.turn - 1) % 3 === 0) {
@@ -5718,7 +5784,7 @@ function tutorialStart() {
   // Set up a fake game state — P1 = Guardians (human), P2 = Sparks (CPU)
   MODE = 'cpu';
   G = {
-    turn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
     active: 'p2', winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction:'sol', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction:'spr', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
