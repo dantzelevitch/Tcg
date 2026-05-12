@@ -783,13 +783,6 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 .dv-l1-hdr { color:rgba(140,200,140,0.6) !important; }
 .dv-l2-hdr { color:rgba(140,160,255,0.6) !important; }
 .dv-l3-hdr { color:rgba(255,180,100,0.6) !important; }
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  align-items:center;
-  justify-content:center;
-}
 #endturn-modal.open { display:flex; }
 #endturn-modal-backdrop {
   position:absolute;
@@ -1106,16 +1099,20 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
           <table style="width:100%;border-collapse:collapse;font-family:'Cinzel',serif;font-size:12px;table-layout:fixed;">
             <thead>
               <tr style="border-bottom:1px solid rgba(201,168,76,0.15);">
-                <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;width:22%;">CARD</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:13%;">AVG PLAYS</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:13%;">WIN RATE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:13%;">MVP RATE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:13%;">MVP WIN</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;width:13%;">AVG IMPACT</th>
+                <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;">CARD</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">AVG PLAYS</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">WIN RATE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MVP RATE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MVP WIN</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">EFF DMG</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">HQ DMG</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">LIFE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">H BUFF</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">BLOCKED</th>
               </tr>
             </thead>
             <tbody id="sim-card-body">
-              <tr><td colspan="6" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
+              <tr><td colspan="10" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
             </tbody>
           </table>
         </div>
@@ -1620,12 +1617,14 @@ const CARD_ASSETS = {
   art_spr4: 'https://dantzelevitch.github.io/Tcg/images/spr_basketball.png',
   art_spr5: 'https://dantzelevitch.github.io/Tcg/images/spr_motorcycle.png',
   art_spr6: 'https://dantzelevitch.github.io/Tcg/images/spr_flamingqueen.png',
+  art_spr7: 'https://dantzelevitch.github.io/Tcg/images/spr_fuse.jpeg',
   art_sol1: 'https://dantzelevitch.github.io/Tcg/images/grd_bow_arrow.png',
   art_sol2: 'https://dantzelevitch.github.io/Tcg/images/grd_goldenhat.png',
   art_sol3: 'https://dantzelevitch.github.io/Tcg/images/grd_forcefield.png',
   art_sol4: 'https://dantzelevitch.github.io/Tcg/images/grd_maledoctor.png',
   art_sol5: 'https://dantzelevitch.github.io/Tcg/images/grd_pixiedust.png',
   art_sol6: 'https://dantzelevitch.github.io/Tcg/images/grd_safehouse.png',
+  art_sol7: 'https://dantzelevitch.github.io/Tcg/images/grd_karate.jpeg',
   badge_dormant: 'https://dantzelevitch.github.io/Tcg/images/badge_dormant.png',
 };
 //
@@ -1702,9 +1701,9 @@ function agentFieldThreat(card, lane) {
                       : id === 'SPR4' ? (card.abilityX || 0) * 2
                       : 0)
                      + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                     + (card.lifelink ? pow * 0.5 : 0);
-  const activeBonus = !card.dormant ? attack * 0.2 : 0;
-  const durability = hp * 0.3;
+                     + (card.lifelink ? pow * 0.5 + hp * 0.5 : 0);
+  const activeBonus = !card.dormant ? attack * 0.25 : 0;
+  const durability = hp * 0.4;
 
   return attack + abilityBonus + activeBonus + durability;
 }
@@ -1730,6 +1729,16 @@ function cpuGetValidTargets(card, lane, pid) {
     for(const offset of [-1, 1]) {
       const adj = lane + offset;
       if(adj >= 0 && adj < 5 && !p.field[adj]) targets.push(adj);
+    }
+    return targets.length > 0 ? targets : [null];
+  }
+
+  if(ability === 'deploy_fuse') {
+    // Adjacent occupied lanes to the played lane
+    const targets = [];
+    for(const offset of [-1, 1]) {
+      const adj = lane + offset;
+      if(adj >= 0 && adj < 5 && p.field[adj]) targets.push(adj);
     }
     return targets.length > 0 ? targets : [null];
   }
@@ -1819,6 +1828,17 @@ function cpuGetValidTargetsOnField(card, lane, field, pid) {
     return targets.length > 0 ? targets : [null];
   }
 
+  if(ability === 'deploy_fuse') {
+    const tempField = [...field];
+    tempField[lane] = card;
+    const targets = [];
+    for(const offset of [-1, 1]) {
+      const adj = lane + offset;
+      if(adj >= 0 && adj < 5 && tempField[adj] && adj !== lane) targets.push(adj);
+    }
+    return targets.length > 0 ? targets : [null];
+  }
+
   return [null];
 }
 
@@ -1836,6 +1856,7 @@ function planningBonus(pid) {
     if(!c) return;
     const cid = c.deckId ? c.deckId.split('_')[0] : '';
     if(cid === 'SOL4') bonus += 3;
+    if(cid === 'SOL7' && (c._combatDmgTaken || 0) > 0) bonus += c._combatDmgTaken; // Karma: reward surviving damage
   });
 
   if(faction === 'spr') {
@@ -1876,6 +1897,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
   setSimLog(true);
 
   try {
+    G._trackStats = false; // Don't track stats during eval clones
     // Execute each play in the combo
     for(const play of combo) {
       if(G.playsLeft <= 0) break;
@@ -1889,17 +1911,37 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     // Run battle on cloned state
     battle();
 
-    // Resolve end-of-turn targeted abilities (e.g. Doctor's healer)
-    // Pick highest-threat ally as target, same as CPU targeting logic
+    // Resolve end-of-turn targeted abilities (e.g. Doctor's healer, Karma)
+    // Pick ally with highest POST-BUFF threat
     G[pid].field.forEach(c => {
       if(!c || !c.ability) return;
       const ab = ABILITIES[c.ability];
       if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
       const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
       if(!occupied.length) return;
-      const best = occupied.reduce((b, i) =>
-        agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
-        occupied[0]);
+      // Determine buff amount based on ability type
+      const buffAmt = c.ability === 'karma' ? (c._combatDmgTaken || 0)
+                    : c.ability === 'healer' ? (c.abilityX || 0)
+                    : 0;
+      let best;
+      if(buffAmt > 0) {
+        // Evaluate each ally with buff applied
+        let bestThreat = -Infinity;
+        best = occupied[0];
+        for(const i of occupied) {
+          const ally = G[pid].field[i];
+          ally.currentPower += buffAmt; ally.basePower += buffAmt;
+          ally.currentHealth += buffAmt; ally.maxHealth += buffAmt;
+          const threat = agentFieldThreat(ally, i);
+          ally.currentPower -= buffAmt; ally.basePower -= buffAmt;
+          ally.currentHealth -= buffAmt; ally.maxHealth -= buffAmt;
+          if(threat > bestThreat) { bestThreat = threat; best = i; }
+        }
+      } else {
+        best = occupied.reduce((b, i) =>
+          agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
+          occupied[0]);
+      }
       ab.resolve(c, pid, { targetLane: best });
     });
 
@@ -1929,16 +1971,35 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       if(G[pid].field[i] && G[oppPid].field[i]) contestedLanes.push(i);
     }
     if(contestedLanes.length > 0) {
-      // Resolve Doctor's healer for attacking side only
+      // Resolve Doctor's healer / Karma for attacking side only
+      // Pick ally with highest POST-BUFF threat
       G[pid].field.forEach(c => {
         if(!c || !c.ability) return;
         const ab = ABILITIES[c.ability];
         if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
         const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
         if(!occupied.length) return;
-        const best = occupied.reduce((b, i) =>
-          agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
-          occupied[0]);
+        const buffAmt = c.ability === 'karma' ? (c._combatDmgTaken || 0)
+                      : c.ability === 'healer' ? (c.abilityX || 0)
+                      : 0;
+        let best;
+        if(buffAmt > 0) {
+          let bestThreat = -Infinity;
+          best = occupied[0];
+          for(const i of occupied) {
+            const ally = G[pid].field[i];
+            ally.currentPower += buffAmt; ally.basePower += buffAmt;
+            ally.currentHealth += buffAmt; ally.maxHealth += buffAmt;
+            const threat = agentFieldThreat(ally, i);
+            ally.currentPower -= buffAmt; ally.basePower -= buffAmt;
+            ally.currentHealth -= buffAmt; ally.maxHealth -= buffAmt;
+            if(threat > bestThreat) { bestThreat = threat; best = i; }
+          }
+        } else {
+          best = occupied.reduce((b, i) =>
+            agentFieldThreat(G[pid].field[i], i) > agentFieldThreat(G[pid].field[b], b) ? i : b,
+            occupied[0]);
+        }
         ab.resolve(c, pid, { targetLane: best });
       });
 
@@ -1988,17 +2049,20 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       G[pid].field.forEach(c => {
         if(!c || c.isVirtualCopy) return;
         const cid = c.deckId ? c.deckId.split('_')[0] : '';
-        if(cid === 'SPR6') firstTurnBonus -= 0; // Pair of Queens
+        if(cid === 'SPR6') firstTurnBonus -= 5; // Pair of Queens
         if(cid === 'SPR1') firstTurnBonus -= 1; // Betsy Boom
         if(cid === 'SPR3') firstTurnBonus -= 99; // Sienna Blaze
         if(cid === 'SPR5') firstTurnBonus -= 99; // Johnny Rocket
+        if(cid === 'SPR7') firstTurnBonus -= 99; // Fuse (no adjacent on turn 1)
+        if(cid === 'SOL7') firstTurnBonus -= 99; // Karma (dormant, no combat on turn 1)
         if(cid === 'SOL1') firstTurnBonus += 3; // The Archer
         if(cid === 'SOL2') firstTurnBonus -= 2; // Siphoner
         if(cid === 'SOL4') firstTurnBonus += 2; // Doctor
       });
     }
 
-    const CPUEvalScore = deltaHealth - survivingOppThreat + survivingAllyThreat + planning + firstTurnBonus + lookAheadBonus
+    const deltaHealthWeight = G[pid].faction === 'spr' ? 1.0 : 0.80;
+    const CPUEvalScore = (deltaHealth * deltaHealthWeight) - survivingOppThreat + survivingAllyThreat + planning + firstTurnBonus + lookAheadBonus
                 + (G[oppPid].player_health <= 0 ?  99999 : 0)
                 + (G[pid].player_health    <= 0 ? -99999 : 0);
 
@@ -2268,6 +2332,14 @@ const CARDS = {
     L3:{power:9,health:1, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_twin_flames', abilityX:1},
   },
 
+  // ── SPR7: Fuse ── Rare ×2
+  // Swift. On deploy: copies power and health of a target adjacent agent (no abilities).
+  SPR7:{id:'SPR7',faction:'spr',name:'Fuse',art:'❤️‍🔥',rarity:'Rare',cardArt:'art_spr7',
+    L1:{power:0,health:0, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_fuse', abilityX:1},
+    L2:{power:0,health:0, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_fuse', abilityX:1},
+    L3:{power:0,health:0, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_fuse', abilityX:1},
+  },
+
   // ── SOL1: Guardians Sister 1 ── Common ×2
   SOL1:{id:'SOL1',faction:'sol',name:'The Archer',art:'☀️',rarity:'Common',cardArt:'art_sol1',
     L1:{power:6, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false},
@@ -2315,6 +2387,14 @@ const CARDS = {
     L3:{power:6, health:18, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'hand_off', abilityX:0},
   },
 
+  // ── SOL7: Karma ── Rare ×2
+  // At end of turn, grant target agent +X/+X equal to damage taken from enemy agent
+  SOL7:{id:'SOL7',faction:'sol',name:'Karma',art:'🦵',rarity:'Rare',cardArt:'art_sol7',
+    L1:{power:2, health:7,  manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'karma', abilityX:1},
+    L2:{power:3, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'karma', abilityX:1},
+    L3:{power:4, health:13, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'karma', abilityX:1},
+  },
+
   // ── GLM1: Move and Health ── Rare ×0 (Glam — future deck)
   GLM1:{id:'GLM1',faction:'glm',name:'Move and Health',art:'🌊',rarity:'Rare',
     L1:{power:2, health:7,  manic:false, slippery:1, veil:0, recover:0, smash:false, ability:'move_and_cover_all', abilityX:3},
@@ -2331,33 +2411,37 @@ const NEXT = {
   'SPR4_L1':'SPR4_L2','SPR4_L2':'SPR4_L3',
   'SPR5_L1':'SPR5_L2','SPR5_L2':'SPR5_L3',
   'SPR6_L1':'SPR6_L2','SPR6_L2':'SPR6_L3',
+  'SPR7_L1':'SPR7_L2','SPR7_L2':'SPR7_L3',
   'SOL1_L1':'SOL1_L2','SOL1_L2':'SOL1_L3',
   'SOL2_L1':'SOL2_L2','SOL2_L2':'SOL2_L3',
   'SOL3_L1':'SOL3_L2','SOL3_L2':'SOL3_L3',
   'SOL4_L1':'SOL4_L2','SOL4_L2':'SOL4_L3',
   'SOL5_L1':'SOL5_L2','SOL5_L2':'SOL5_L3',
   'SOL6_L1':'SOL6_L2','SOL6_L2':'SOL6_L3',
+  'SOL7_L1':'SOL7_L2','SOL7_L2':'SOL7_L3',
   'GLM1_L1':'GLM1_L2','GLM1_L2':'GLM1_L3',
 };
 
-// Sparks theme deck: 3x each = 18 cards
+// Sparks theme deck: 2x each = 14 cards
 const SPR_DECK = [
-  'SPR1_L1','SPR1_L1','SPR1_L1',
-  'SPR2_L1','SPR2_L1','SPR2_L1',
-  'SPR3_L1','SPR3_L1','SPR3_L1',
-  'SPR4_L1','SPR4_L1','SPR4_L1',
-  'SPR5_L1','SPR5_L1','SPR5_L1',
-  'SPR6_L1','SPR6_L1','SPR6_L1',
+  'SPR1_L1','SPR1_L1',
+  'SPR2_L1','SPR2_L1',
+  'SPR3_L1','SPR3_L1',
+  'SPR4_L1','SPR4_L1',
+  'SPR5_L1','SPR5_L1',
+  'SPR6_L1','SPR6_L1',
+  'SPR7_L1','SPR7_L1',
 ];
 
-// Guardians theme deck: 3x each = 18 cards
+// Guardians theme deck: 2x each = 14 cards
 const SOL_DECK = [
-  'SOL1_L1','SOL1_L1','SOL1_L1',
-  'SOL2_L1','SOL2_L1','SOL2_L1',
-  'SOL3_L1','SOL3_L1','SOL3_L1',
-  'SOL4_L1','SOL4_L1','SOL4_L1',
-  'SOL5_L1','SOL5_L1','SOL5_L1',
-  'SOL6_L1','SOL6_L1','SOL6_L1',
+  'SOL1_L1','SOL1_L1',
+  'SOL2_L1','SOL2_L1',
+  'SOL3_L1','SOL3_L1',
+  'SOL4_L1','SOL4_L1',
+  'SOL5_L1','SOL5_L1',
+  'SOL6_L1','SOL6_L1',
+  'SOL7_L1','SOL7_L1',
 ];
 
 // ════════════════════════════════════════════════
@@ -2398,6 +2482,9 @@ function startTargeting(mode, pid, sourceCard, callback, injectedTargetLane = un
     'deploy_twin_flames_copy':  `${sourceCard.name.toUpperCase()} — Select an adjacent empty lane for your double`,
     'extra_cover':       `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard.abilityX} Health`,
     'healer_recover':    `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard.abilityX}/+${sourceCard.abilityX} Power & Health`,
+    'deploy_fuse':       `${sourceCard.name.toUpperCase()} — Select an adjacent agent to copy its stats`,
+    'kickback_buff':     `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard._combatDmgDealt || 0}/+${sourceCard._combatDmgDealt || 0}`,
+    'karma_buff':        `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard._combatDmgTaken || 0}/+${sourceCard._combatDmgTaken || 0}`,
     'deploy_siphon':     `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant Lifelink`,
   }[mode] || 'SELECT A TARGET';
   document.getElementById('target-msg').textContent = msg;
@@ -2422,12 +2509,43 @@ function autoPickTarget(mode, pid, sourceCard) {
   const p = G[pid];
   const occupiedLanes = p.field.map((c, i) => c ? i : null).filter(i => i !== null);
 
-  if (mode === 'extra_cover' || mode === 'healer_recover' || mode === 'booster_swift') {
-    // Target the highest-threat friendly — buff the most dangerous card
+  if (mode === 'extra_cover' || mode === 'booster_swift') {
+    // Target the highest-threat friendly
     if(!occupiedLanes.length) return null;
     return occupiedLanes.reduce((best, i) =>
       agentFieldThreat(p.field[i], i) > agentFieldThreat(p.field[best], best) ? i : best
     , occupiedLanes[0]);
+  }
+
+  if (mode === 'healer_recover' || mode === 'karma_buff') {
+    // Evaluate each ally WITH the buff applied, pick highest post-buff threat
+    if(!occupiedLanes.length) return null;
+    const buffAmt = mode === 'healer_recover'
+      ? (sourceCard.abilityX || 0)
+      : (sourceCard._combatDmgTaken || 0);
+    if(buffAmt === 0) return occupiedLanes[0];
+
+    let bestLane = occupiedLanes[0];
+    let bestThreat = -Infinity;
+    for(const i of occupiedLanes) {
+      const c = p.field[i];
+      // Temporarily apply buff
+      c.currentPower += buffAmt;
+      c.basePower += buffAmt;
+      c.currentHealth += buffAmt;
+      c.maxHealth += buffAmt;
+      const threat = agentFieldThreat(c, i);
+      // Undo buff
+      c.currentPower -= buffAmt;
+      c.basePower -= buffAmt;
+      c.currentHealth -= buffAmt;
+      c.maxHealth -= buffAmt;
+      if(threat > bestThreat) {
+        bestThreat = threat;
+        bestLane = i;
+      }
+    }
+    return bestLane;
   }
 
   if (mode === 'deploy_siphon') {
@@ -2447,6 +2565,20 @@ function autoPickTarget(mode, pid, sourceCard) {
       if (adj >= 0 && adj < 5 && !p.field[adj]) return adj;
     }
     return null;
+  }
+
+  if (mode === 'deploy_fuse') {
+    // Pick adjacent agent with highest power
+    const srcLane = sourceCard._deployedLane ?? null;
+    if (srcLane === null) return null;
+    let best = null;
+    for (const offset of [-1, 1]) {
+      const adj = srcLane + offset;
+      if (adj >= 0 && adj < 5 && p.field[adj]) {
+        if (best === null || (p.field[adj].currentPower || 0) > (p.field[best].currentPower || 0)) best = adj;
+      }
+    }
+    return best;
   }
 
   return null;
@@ -2489,7 +2621,7 @@ function isTargetEligible(laneIdx, pid) {
   if(mode === 'extra_cover' || mode === 'deploy_siphon') {
     return p.field[laneIdx] !== null;
   }
-  if(mode === 'healer_recover') {
+  if(mode === 'healer_recover' || mode === 'kickback_buff' || mode === 'karma_buff') {
     // Any friendly agent on field
     return p.field[laneIdx] !== null;
   }
@@ -2498,6 +2630,12 @@ function isTargetEligible(laneIdx, pid) {
     let srcLane = sourceCard._deployedLane;
     let dist = Math.abs(laneIdx - srcLane);
     return dist <= sourceCard.abilityX && dist > 0 && p.field[laneIdx] === null;
+  }
+  if(mode === 'deploy_fuse') {
+    // Adjacent occupied lane to Fuse
+    let srcLane = sourceCard._deployedLane;
+    let dist = Math.abs(laneIdx - srcLane);
+    return dist === 1 && p.field[laneIdx] !== null;
   }
   return false;
 }
@@ -2510,6 +2648,46 @@ function isTargetEligible(laneIdx, pid) {
 // resolve(card, pid, context) — context varies by trigger type
 // ════════════════════════════════════════════════
 const ABILITIES = {
+
+  deploy_fuse: {
+    trigger: 'play',
+    resolve(card, pid, context = {}) {
+      let p = G[pid];
+      // Check for adjacent agents
+      const srcLane = card._deployedLane;
+      const adjacent = [];
+      for (const offset of [-1, 1]) {
+        const adj = srcLane + offset;
+        if (adj >= 0 && adj < 5 && p.field[adj]) adjacent.push(adj);
+      }
+      if(!adjacent.length) { log(`${card.name} — no adjacent agents to fuse with.`,'abi'); return; }
+
+      // If targetLane provided (simulation mode), use it directly
+      if (context.targetLane !== undefined) {
+        let target = G[pid].field[context.targetLane];
+        if(!target) return;
+        card.currentPower = target.currentPower || 0;
+        card.basePower = card.currentPower;
+        card.currentHealth = target.currentHealth || 0;
+        card.maxHealth = card.currentHealth;
+        card.baseCover = card.currentHealth;
+        log(`${card.name} — copies ${target.name}'s stats (${card.currentPower}/${card.currentHealth})!`,'abi');
+        return;
+      }
+
+      // UI mode: use targeting system
+      startTargeting('deploy_fuse', pid, card, (targetLane) => {
+        let target = G[pid].field[targetLane];
+        if(!target) return;
+        card.currentPower = target.currentPower || 0;
+        card.basePower = card.currentPower;
+        card.currentHealth = target.currentHealth || 0;
+        card.maxHealth = card.currentHealth;
+        card.baseCover = card.currentHealth;
+        log(`${card.name} — copies ${target.name}'s stats (${card.currentPower}/${card.currentHealth})!`,'abi');
+      });
+    }
+  },
 
   deploy_siphon: {
     trigger: 'play',
@@ -2573,6 +2751,7 @@ const ABILITIES = {
         if(!target) return;
         target.currentHealth += card.abilityX;
         target.maxHealth += card.abilityX;
+        if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
         log(`${card.name} — ${target.name} gains +${card.abilityX} Health permanently.`,'abi');
         return;
       }
@@ -2583,6 +2762,7 @@ const ABILITIES = {
         if(!target) return;
         target.currentHealth += card.abilityX;
         target.maxHealth += card.abilityX;
+        if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
         log(`${card.name} — ${target.name} gains +${card.abilityX} Health permanently.`,'abi');
       });
     }
@@ -2637,6 +2817,7 @@ const ABILITIES = {
           target.currentPower += card.abilityX;
           target.currentHealth += card.abilityX;
           target.maxHealth += card.abilityX;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
           log(`${card.name} — ${target.name} gains +${card.abilityX} Power, +${card.abilityX} Health permanently.`,'abi');
         }
         if (onDone) onDone();
@@ -2652,7 +2833,80 @@ const ABILITIES = {
           target.currentPower += card.abilityX;
           target.currentHealth += card.abilityX;
           target.maxHealth += card.abilityX;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
           log(`${card.name} — ${target.name} gains +${card.abilityX} Power, +${card.abilityX} Health permanently.`,'abi');
+        }
+        onDone();
+      });
+    }
+  },
+
+  // ── KICKBACK (disabled — kept for future use) ──
+  // kickback: {
+  //   trigger: 'combat_cleanup_targeted',
+  //   resolve(card, pid, context = {}) {
+  //     let { onDone } = context;
+  //     let p = G[pid];
+  //     const dmg = card._combatDmgDealt || 0;
+  //     if(dmg === 0) { if(onDone) onDone(); return; }
+  //     if(!p.field.some(c => c !== null)) { if(onDone) onDone(); return; }
+  //     if(context.targetLane !== undefined) {
+  //       let target = G[pid].field[context.targetLane];
+  //       if(target) {
+  //         target.basePower += dmg; target.currentPower += dmg;
+  //         target.currentHealth += dmg; target.maxHealth += dmg;
+  //         if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + dmg;
+  //         log(`${card.name} — ${target.name} gains +${dmg}/+${dmg} from Kickback!`,'abi');
+  //       }
+  //       if(onDone) onDone(); return;
+  //     }
+  //     startTargeting('kickback_buff', pid, card, (targetLane) => {
+  //       let target = G[pid].field[targetLane];
+  //       if(target) {
+  //         target.basePower += dmg; target.currentPower += dmg;
+  //         target.currentHealth += dmg; target.maxHealth += dmg;
+  //         if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + dmg;
+  //         log(`${card.name} — ${target.name} gains +${dmg}/+${dmg} from Kickback!`,'abi');
+  //       }
+  //       onDone();
+  //     });
+  //   }
+  // },
+
+  karma: {
+    trigger: 'combat_cleanup_targeted',
+    resolve(card, pid, context = {}) {
+      let { onDone } = context;
+      let p = G[pid];
+      const dmg = card._combatDmgTaken || 0;
+      if(dmg === 0) { if(onDone) onDone(); return; }
+      if(!p.field.some(c => c !== null)) { if(onDone) onDone(); return; }
+
+      // If targetLane provided (simulation/cpu mode), use it directly
+      if(context.targetLane !== undefined) {
+        let target = G[pid].field[context.targetLane];
+        if(target) {
+          target.basePower += dmg;
+          target.currentPower += dmg;
+          target.currentHealth += dmg;
+          target.maxHealth += dmg;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + dmg;
+          log(`${card.name} — ${target.name} gains +${dmg}/+${dmg} from Karma!`,'abi');
+        }
+        if(onDone) onDone();
+        return;
+      }
+
+      // UI mode: use targeting system
+      startTargeting('karma_buff', pid, card, (targetLane) => {
+        let target = G[pid].field[targetLane];
+        if(target) {
+          target.basePower += dmg;
+          target.currentPower += dmg;
+          target.currentHealth += dmg;
+          target.maxHealth += dmg;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + dmg;
+          log(`${card.name} — ${target.name} gains +${dmg}/+${dmg} from Karma!`,'abi');
         }
         onDone();
       });
@@ -2800,9 +3054,9 @@ function renderImpactScores() {
                         : id === 'SPR4' ? (card.abilityX || 0) * 2
                         : 0)
                        + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                       + (card.lifelink ? pow * 0.5 : 0);
-    const activeBonus = !card.dormant ? pow * 0.2 : 0;
-    const durability = (card.currentHealth || 0) * 0.3;
+                       + (card.lifelink ? pow * 0.5 + (card.currentHealth || 0) * 0.5 : 0);
+    const activeBonus = !card.dormant ? pow * 0.25 : 0;
+    const durability = (card.currentHealth || 0) * 0.4;
     const total = pow + abilityBonus + activeBonus + durability;
 
     // Planning bonus (per-card components only; positional bonuses excluded)
@@ -2811,6 +3065,7 @@ function renderImpactScores() {
     if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.25;
     // Doctor bonus: early engine deployment
     if(id === 'SOL4') planning += 3;
+    if(id === 'SOL7') planning += 0; // Karma: dynamic (based on damage taken in combat)
     
 
     const fac = id.startsWith('SPR') ? 'spr' : 'sol';
@@ -2882,7 +3137,7 @@ function ptPlay(firstMode) {
   document.getElementById('sim-screen').style.display = 'none';
 
   G = {
-    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, _trackStats: true, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction: myFaction,  player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction: cpuFaction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
@@ -2982,7 +3237,7 @@ function pvptPlay() {
   document.getElementById('sim-screen').style.display = 'none';
 
   G = {
-    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, _trackStats: true, phase: 'combat_play', playsLeft: 1,
     active: first, winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction: p1Faction, player_health:STARTING_HEALTH, deck:buildDeck(p1Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction: p2Faction, player_health:STARTING_HEALTH, deck:buildDeck(p2Deck), hand:[], discard:[], field:[null,null,null,null,null], sel:null },
@@ -3071,7 +3326,7 @@ function pvptRecordResult(winner, turns) {
     const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
     if(!deploys) return;
     Object.entries(deploys).forEach(([name, count]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
       const a = agg.cards[name];
       if(count > 0) a.deployGames++;
       a.totalDeploys += count;
@@ -3087,7 +3342,7 @@ function pvptRecordResult(winner, turns) {
     if(!names.length) return;
     const maxCount = Math.max(...names.map(n => deploys[n]));
     names.filter(n => deploys[n] === maxCount).forEach(name => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
       agg.cards[name].mvpCount++;
       if(winner === pid) agg.cards[name].mvpWinCount++;
     });
@@ -3100,6 +3355,20 @@ function pvptRecordResult(winner, turns) {
     if(winner === G._ptLastFirst) agg.firstCards[_ptFirstCard].wins++;
     else if(winner === 'draw') agg.firstCards[_ptFirstCard].draws++;
   }
+
+  // Harvest per-instance combat stats
+  ['p1','p2'].forEach(pid => {
+    const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+    allCards.forEach(c => {
+      const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      agg.cards[name].totalEffDmg += c._statEffDmg || 0;
+      agg.cards[name].totalHQDmg += c._statHQDmg || 0;
+      agg.cards[name].totalLifeHarvest += c._statLifeHarvest || 0;
+      agg.cards[name].totalHealthBuff += c._statHealthBuff || 0;
+      agg.cards[name].totalDmgBlocked += c._statDmgBlocked || 0;
+    });
+  });
 
   pvptUpdateDisplay();
 }
@@ -3200,7 +3469,7 @@ function ptRecordResult(winner, turns) {
   ['p1','p2'].forEach(pid => {
     const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
     Object.entries(deploys).forEach(([name, count]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
       const a = agg.cards[name];
       if(count > 0) a.deployGames++;
       a.totalDeploys += count;
@@ -3215,9 +3484,23 @@ function ptRecordResult(winner, turns) {
     if(!names.length) return;
     const maxCount = Math.max(...names.map(n => deploys[n]));
     names.filter(n => deploys[n] === maxCount).forEach(name => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
       agg.cards[name].mvpCount++;
       if(winner === pid) agg.cards[name].mvpWinCount++;
+    });
+  });
+
+  // Harvest per-instance combat stats
+  ['p1','p2'].forEach(pid => {
+    const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+    allCards.forEach(c => {
+      const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      agg.cards[name].totalEffDmg += c._statEffDmg || 0;
+      agg.cards[name].totalHQDmg += c._statHQDmg || 0;
+      agg.cards[name].totalLifeHarvest += c._statLifeHarvest || 0;
+      agg.cards[name].totalHealthBuff += c._statHealthBuff || 0;
+      agg.cards[name].totalDmgBlocked += c._statDmgBlocked || 0;
     });
   });
 }
@@ -3241,7 +3524,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   try {
     const first = Math.random() < 0.5 ? 'p1' : 'p2';
     G = {
-      turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
+      turn: 1, absoluteTurn: 1, _trackStats: true, phase: 'combat_play', playsLeft: 1,
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].split('_')[0].toLowerCase().replace(/\d/g,'') || 'spr',
@@ -3258,10 +3541,10 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 
     deal(G[first], 5);
 
-    // Per-card tracking: { deployCount, winGames, mvpCount, mvpWinCount, totalImpact, impactCount }
+    // Per-card tracking
     const cardStats = {};
     function ensureCard(name) {
-      if(!cardStats[name]) cardStats[name] = { deployCount:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0 };
+      if(!cardStats[name]) cardStats[name] = { deployCount:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0 };
     }
 
     // Track deploys per game per team
@@ -3309,8 +3592,6 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
               const cardName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
               ensureCard(cardName);
               cardStats[cardName].deployCount++;
-              cardStats[cardName].totalImpact += scored[0].score;
-              cardStats[cardName].impactCount++;
               if(!firstCard) firstCard = cardName;
               if(pid === 'p1') { p1Deploys[cardName]=(p1Deploys[cardName]||0)+1; if(card.level>=2)p1L.l2++; if(card.level>=3)p1L.l3++; }
               else             { p2Deploys[cardName]=(p2Deploys[cardName]||0)+1; if(card.level>=2)p2L.l2++; if(card.level>=3)p2L.l3++; }
@@ -3379,6 +3660,20 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
         ensureCard(name);
         cardStats[name].mvpCount++;
         if(didWin) cardStats[name].mvpWinCount++;
+      });
+    });
+
+    // Harvest per-instance combat stats from all card zones (including dead cards)
+    ['p1','p2'].forEach(pid => {
+      const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+      allCards.forEach(c => {
+        const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
+        ensureCard(name);
+        cardStats[name].totalEffDmg += c._statEffDmg || 0;
+        cardStats[name].totalHQDmg += c._statHQDmg || 0;
+        cardStats[name].totalLifeHarvest += c._statLifeHarvest || 0;
+        cardStats[name].totalHealthBuff += c._statHealthBuff || 0;
+        cardStats[name].totalDmgBlocked += c._statDmgBlocked || 0;
       });
     });
 
@@ -3560,15 +3855,19 @@ function simRun() {
 
       // Card stats
       Object.entries(result.cardStats).forEach(([name, s]) => {
-        if(!agg.cards[name]) agg.cards[name] = { deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalImpact:0, impactCount:0 };
+        if(!agg.cards[name]) agg.cards[name] = { deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0 };
         const a = agg.cards[name];
         if(s.deployCount > 0) a.deployGames++;
         a.totalDeploys += s.deployCount;
         if(s.winGames > 0)    a.winGames++;
         a.mvpCount    += s.mvpCount;
         a.mvpWinCount += s.mvpWinCount;
-        a.totalImpact += s.totalImpact;
-        a.impactCount += s.impactCount;
+        a.totalEffDmg += s.totalEffDmg || 0;
+        a.totalHQDmg += s.totalHQDmg || 0;
+        a.totalLifeHarvest += s.totalLifeHarvest || 0;
+        a.totalHealthBuff += s.totalHealthBuff || 0;
+        a.totalDmgBlocked += s.totalDmgBlocked || 0;
+        
       });
     }
     done = batchEnd;
@@ -3592,8 +3891,8 @@ function simRun() {
       setTimeout(runBatch, 0);
     } else {
       simRenderResults(agg, p1Faction, p2Faction, p1Difficulty, p2Difficulty, total);
-      const _simElapsed = ((performance.now() - _simStartTime) / 1000).toFixed(1);
-      document.getElementById('sim-progress-label').textContent = 'SIM COMPLETE — ' + total + ' games — ' + _simElapsed + 's';
+      const _simElapsed = ((performance.now() - _simStartTime) / 60000).toFixed(1);
+      document.getElementById('sim-progress-label').textContent = 'SIM COMPLETE — ' + total + ' games — ' + _simElapsed + ' min';
     }
   }
 
@@ -3685,7 +3984,7 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
 
   // Card performance table
   const cardBody = document.getElementById('sim-card-body');
-  const cards = Object.entries(agg.cards).sort((a,b) => b[1].deployGames - a[1].deployGames);
+  const cards = Object.entries(agg.cards).sort((a,b) => b[1].totalDeploys - a[1].totalDeploys);
   let cardHtml = '';
   // Name -> faction lookup for row color coding
   const cardFaction = {};
@@ -3696,6 +3995,11 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
     const winRate    = s.deployGames > 0 ? pct(s.winGames    / s.deployGames)  : '—';
     const mvpRate    = total > 0 ? pct(s.mvpCount    / total)  : '—';
     const mvpWin     = s.mvpCount    > 0 ? pct(s.mvpWinCount / s.mvpCount)     : '—';
+    const avgEffDmg  = s.totalDeploys > 0 ? (s.totalEffDmg / s.totalDeploys).toFixed(1) : '—';
+    const avgHQDmg   = s.totalDeploys > 0 ? (s.totalHQDmg / s.totalDeploys).toFixed(1) : '—';
+    const avgLife    = s.totalDeploys > 0 ? (s.totalLifeHarvest / s.totalDeploys).toFixed(1) : '—';
+    const avgHBuff   = s.totalDeploys > 0 ? (s.totalHealthBuff / s.totalDeploys).toFixed(1) : '—';
+    const avgBlocked = s.totalDeploys > 0 ? (s.totalDmgBlocked / s.totalDeploys).toFixed(1) : '—';
     const faction    = cardFaction[name] || '';
     const rowBg      = faction === 'spr' ? 'background:rgba(192,57,43,0.12);'
                      : faction === 'sol' ? 'background:rgba(201,168,76,0.1);'
@@ -3709,9 +4013,14 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
       <td>${winRate}</td>
       <td>${mvpRate}</td>
       <td>${mvpWin}</td>
+      <td>${avgEffDmg}</td>
+      <td>${avgHQDmg}</td>
+      <td>${avgLife}</td>
+      <td>${avgHBuff}</td>
+      <td>${avgBlocked}</td>
     </tr>`;
   });
-  cardBody.innerHTML = cardHtml || '<tr><td colspan="6" style="text-align:center;color:rgba(237,229,216,0.25);">No data</td></tr>';
+  cardBody.innerHTML = cardHtml || '<tr><td colspan="10" style="text-align:center;color:rgba(237,229,216,0.25);">No data</td></tr>';
 
   // Turns analysis histogram
   (function() {
@@ -3908,13 +4217,17 @@ function simTest3() {
     }
 
     Object.entries(result.cardStats).forEach(([name, s]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0,totalDeploys:0,winGames:0,mvpCount:0,mvpWinCount:0,totalImpact:0,impactCount:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0,totalDeploys:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0};
       const a = agg.cards[name];
       if(s.deployCount > 0) a.deployGames++;
       a.totalDeploys += s.deployCount;
       if(s.winGames > 0) a.winGames++;
       a.mvpCount += s.mvpCount; a.mvpWinCount += s.mvpWinCount;
-      a.totalImpact += s.totalImpact; a.impactCount += s.impactCount;
+      a.totalEffDmg += s.totalEffDmg || 0;
+      a.totalHQDmg += s.totalHQDmg || 0;
+      a.totalLifeHarvest += s.totalLifeHarvest || 0;
+      a.totalHealthBuff += s.totalHealthBuff || 0;
+        a.totalDmgBlocked += s.totalDmgBlocked || 0;
     });
   }
 
@@ -3951,7 +4264,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   try {
     const first = Math.random() < 0.5 ? 'p1' : 'p2';
     G = {
-      turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
+      turn: 1, absoluteTurn: 1, _trackStats: true, phase: 'combat_play', playsLeft: 1,
       active: first, winner: null, log: [],
       elusiveSel: null,
       p1: { id:'p1', name:'P1', faction: p1DeckIds[0].startsWith('SPR') ? 'spr' : 'sol',
@@ -3975,7 +4288,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 
     const cardStats = {};
     function ensureCard(name) {
-      if(!cardStats[name]) cardStats[name] = {deployCount:0,winGames:0,mvpCount:0,mvpWinCount:0,totalImpact:0,impactCount:0};
+      if(!cardStats[name]) cardStats[name] = {deployCount:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0};
     }
     const p1Deploys = {}, p2Deploys = {};
     const p1L = {l2:0,l3:0}, p2L = {l2:0,l3:0};
@@ -4018,8 +4331,6 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
             const cardName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
             ensureCard(cardName);
             cardStats[cardName].deployCount++;
-            cardStats[cardName].totalImpact += scored[0].score;
-            cardStats[cardName].impactCount++;
             if(!firstCard) firstCard = cardName;
             if(pid === 'p1') { p1Deploys[cardName]=(p1Deploys[cardName]||0)+1; if(card.level>=2)p1L.l2++; if(card.level>=3)p1L.l3++; }
             else             { p2Deploys[cardName]=(p2Deploys[cardName]||0)+1; if(card.level>=2)p2L.l2++; if(card.level>=3)p2L.l3++; }
@@ -4072,6 +4383,20 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
       });
     });
 
+    // Harvest per-instance combat stats from all card zones (including dead cards)
+    ['p1','p2'].forEach(pid => {
+      const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+      allCards.forEach(c => {
+        const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
+        ensureCard(name);
+        cardStats[name].totalEffDmg += c._statEffDmg || 0;
+        cardStats[name].totalHQDmg += c._statHQDmg || 0;
+        cardStats[name].totalLifeHarvest += c._statLifeHarvest || 0;
+        cardStats[name].totalHealthBuff += c._statHealthBuff || 0;
+        cardStats[name].totalDmgBlocked += c._statDmgBlocked || 0;
+      });
+    });
+
     return { winner, first, turns: G.turn, cardStats, p1L, p2L, firstCard, log: G.log.slice() };
 
   } finally {
@@ -4087,7 +4412,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 function simExportCSV() {
   const agg = window._simAgg;
   if(!agg) { alert('Run simulation first.'); return; }
-  const rows = [['Card','Avg Plays','Win Rate','MVP Rate','MVP Win Rate']];
+  const rows = [['Card','Avg Plays','Win Rate','MVP Rate','MVP Win Rate','Eff Dmg','HQ Dmg','Life','H Buff','Blocked']];
   Object.entries(agg.cards).forEach(([name, s]) => {
     const n = agg.total;
     rows.push([
@@ -4096,6 +4421,11 @@ function simExportCSV() {
       s.deployGames>0 ? Math.round(s.winGames/s.deployGames*100)+'%' : '—',
       s.deployGames>0 ? Math.round(s.mvpCount/n*100)+'%' : '—',
       s.mvpCount>0    ? Math.round(s.mvpWinCount/s.mvpCount*100)+'%' : '—',
+      s.totalDeploys>0 ? (s.totalEffDmg/s.totalDeploys).toFixed(1) : '—',
+      s.totalDeploys>0 ? (s.totalHQDmg/s.totalDeploys).toFixed(1) : '—',
+      s.totalDeploys>0 ? (s.totalLifeHarvest/s.totalDeploys).toFixed(1) : '—',
+      s.totalDeploys>0 ? (s.totalHealthBuff/s.totalDeploys).toFixed(1) : '—',
+      s.totalDeploys>0 ? (s.totalDmgBlocked/s.totalDeploys).toFixed(1) : '—',
     ]);
   });
   const csv = rows.map(r => r.join(',')).join('\n');
@@ -4156,18 +4486,23 @@ function simPrintLog() {
   // Card performance
   lines.push('CARD PERFORMANCE');
   lines.push('─────────────────────────────────────────────────────');
-  lines.push(`${'Card'.padEnd(22)} ${'Avg Plays'.padEnd(11)} ${'Win Rate'.padEnd(11)} ${'MVP Rate'.padEnd(11)} MVP Win`);
+  lines.push(`${'Card'.padEnd(22)} ${'Avg Plays'.padEnd(11)} ${'Win Rate'.padEnd(11)} ${'MVP Rate'.padEnd(11)} ${'MVP Win'.padEnd(11)} ${'Eff Dmg'.padEnd(9)} ${'HQ Dmg'.padEnd(9)} ${'Life'.padEnd(9)} ${'H Buff'.padEnd(9)} Blocked`);
   const cardFaction = {};
   Object.values(CARDS).forEach(c => { cardFaction[c.name] = c.faction; });
-  const cards = Object.entries(agg.cards).sort((a,b) => b[1].deployGames - a[1].deployGames);
+  const cards = Object.entries(agg.cards).sort((a,b) => b[1].totalDeploys - a[1].totalDeploys);
   cards.forEach(([name, s]) => {
     const faction = cardFaction[name] === 'spr' ? '[SPR]' : '[SOL]';
     const col0 = (faction + ' ' + name).padEnd(22);
     const col1 = ((s.totalDeploys / n).toFixed(2)).padEnd(11);
     const col2 = (s.deployGames > 0 ? pct(s.winGames/s.deployGames) : '—').padEnd(11);
     const col3 = (n > 0 ? pct(s.mvpCount/n) : '—').padEnd(11);
-    const col4 = s.mvpCount > 0 ? pct(s.mvpWinCount/s.mvpCount) : '—';
-    lines.push(`${col0} ${col1}${col2}${col3}${col4}`);
+    const col4 = (s.mvpCount > 0 ? pct(s.mvpWinCount/s.mvpCount) : '—').padEnd(11);
+    const col5 = (s.totalDeploys > 0 ? (s.totalEffDmg/s.totalDeploys).toFixed(1) : '—').padEnd(9);
+    const col6 = (s.totalDeploys > 0 ? (s.totalHQDmg/s.totalDeploys).toFixed(1) : '—').padEnd(9);
+    const col7 = (s.totalDeploys > 0 ? (s.totalLifeHarvest/s.totalDeploys).toFixed(1) : '—').padEnd(9);
+    const col8 = (s.totalDeploys > 0 ? (s.totalHealthBuff/s.totalDeploys).toFixed(1) : '—').padEnd(9);
+    const col9 = s.totalDeploys > 0 ? (s.totalDmgBlocked/s.totalDeploys).toFixed(1) : '—';
+    lines.push(`${col0} ${col1}${col2}${col3}${col4}${col5}${col6}${col7}${col8}${col9}`);
   });
   lines.push('');
 
@@ -4351,6 +4686,7 @@ function playToLane(lane, cardInstanceId = null) {
 
   // Place on field
   card.justDeployed = true;
+  card._deployedLane = lane;
   p.field[lane] = card;
   p.hand = p.hand.filter(c => c.instanceId !== card.instanceId);
 
@@ -4422,6 +4758,12 @@ function battle() {
 
   let _combatOccurred = false;
 
+  // Reset combat damage tracking for Karma ability
+  for(let i = 0; i < 5; i++) {
+    if(G.p1.field[i]) { G.p1.field[i]._combatDmgDealt = 0; G.p1.field[i]._combatDmgTaken = 0; }
+    if(G.p2.field[i]) { G.p2.field[i]._combatDmgDealt = 0; G.p2.field[i]._combatDmgTaken = 0; }
+  }
+
   for(let i = 0; i < 5; i++){
     let a = G.p1.field[i], b = G.p2.field[i];
     if(a && b){
@@ -4440,9 +4782,27 @@ function battle() {
       a.currentHealth -= dA;
       b.currentHealth -= dB;
 
+      // Track raw damage dealt/taken for Kickback/Karma abilities
+      if(anyActive) {
+        a._combatDmgDealt = (a._combatDmgDealt || 0) + dB;
+        b._combatDmgDealt = (b._combatDmgDealt || 0) + dA;
+        a._combatDmgTaken = (a._combatDmgTaken || 0) + dA;
+        b._combatDmgTaken = (b._combatDmgTaken || 0) + dB;
+      }
+
+      // Track combat stats (not during eval)
+      if(G._trackStats) {
+        const effDmgA = Math.min(dB, b.currentHealth + dB); // effective damage dealt by a
+        const effDmgB = Math.min(dA, a.currentHealth + dA); // effective damage dealt by b
+        a._statEffDmg = (a._statEffDmg || 0) + effDmgA;
+        b._statEffDmg = (b._statEffDmg || 0) + effDmgB;
+        a._statDmgBlocked = (a._statDmgBlocked || 0) + dA;
+        b._statDmgBlocked = (b._statDmgBlocked || 0) + dB;
+      }
+
       // Lifelink: damage dealt feeds owner's Player_Health immediately
-      if(dB > 0 && a.lifelink) { G.p1.player_health += dB; log(`  LIFELINK — ${a.name} grants +${dB} Player_Health to P1!`,'abi'); }
-      if(dA > 0 && b.lifelink) { G.p2.player_health += dA; log(`  LIFELINK — ${b.name} grants +${dA} Player_Health to P2!`,'abi'); }
+      if(dB > 0 && a.lifelink) { G.p1.player_health += dB; if(G._trackStats) a._statLifeHarvest = (a._statLifeHarvest || 0) + dB; log(`  LIFELINK — ${a.name} grants +${dB} Player_Health to P1!`,'abi'); }
+      if(dA > 0 && b.lifelink) { G.p2.player_health += dA; if(G._trackStats) b._statLifeHarvest = (b._statLifeHarvest || 0) + dA; log(`  LIFELINK — ${b.name} grants +${dA} Player_Health to P2!`,'abi'); }
 
       // Breach
       if(a.smash && dB > 0) {
@@ -4450,6 +4810,7 @@ function battle() {
         if(overKill > 0) { 
           G.p2.player_health -= overKill;
           _dmgOnlyToP2 += overKill;
+          if(G._trackStats) a._statHQDmg = (a._statHQDmg || 0) + overKill;
           log(`  BREACH — ${a.name} bleeds ${overKill} through to P2 Player_Health!`,'bat'); 
           // Trigger Grow when breach damages opponent Player_Health
           if(a.ability === 'on_compromise_prowess') a._growEarned = (a._growEarned || 0) + a.abilityX;
@@ -4460,6 +4821,7 @@ function battle() {
         if(overKill > 0) { 
           G.p1.player_health -= overKill;
           _dmgOnlyToP1 += overKill;
+          if(G._trackStats) b._statHQDmg = (b._statHQDmg || 0) + overKill;
           log(`  BREACH — ${b.name} bleeds ${overKill} through to P1 Player_Health!`,'bat'); 
           // Trigger Grow when breach damages opponent Player_Health
           if(b.ability === 'on_compromise_prowess') b._growEarned = (b._growEarned || 0) + b.abilityX;
@@ -4472,8 +4834,8 @@ function battle() {
 
       let aAlive = a.currentHealth > 0;
       let bAlive = b.currentHealth > 0;
-      if(!aAlive){ log(`  ${a.name} TERMINATED.`,'bat'); G.p1.field[i] = null; }
-      if(!bAlive){ log(`  ${b.name} TERMINATED.`,'bat'); G.p2.field[i] = null; }
+      if(!aAlive){ log(`  ${a.name} TERMINATED.`,'bat'); if(G._trackStats){if(!G.p1._deadCards)G.p1._deadCards=[];G.p1._deadCards.push(a);} G.p1.field[i] = null; }
+      if(!bAlive){ log(`  ${b.name} TERMINATED.`,'bat'); if(G._trackStats){if(!G.p2._deadCards)G.p2._deadCards=[];G.p2._deadCards.push(b);} G.p2.field[i] = null; }
 
     } else if(a) {
       if(a.dormant && !a.grantedSwift){ log(`Lane ${i+1}: ${a.name} is Dormant — cannot compromise opponent.`); }
@@ -4481,8 +4843,9 @@ function battle() {
         _combatOccurred = true;
         G.p2.player_health -= a.currentPower;
         _dmgOnlyToP2 += a.currentPower;
+        if(G._trackStats) a._statHQDmg = (a._statHQDmg || 0) + a.currentPower;
         if(a.ability === 'on_compromise_prowess') a._growEarned = (a._growEarned || 0) + a.abilityX;
-        if(a.lifelink) { G.p1.player_health += a.currentPower; log(`  LIFELINK — ${a.name} grants +${a.currentPower} Player_Health to P1!`,'abi'); }
+        if(a.lifelink) { G.p1.player_health += a.currentPower; if(G._trackStats) a._statLifeHarvest = (a._statLifeHarvest || 0) + a.currentPower; log(`  LIFELINK — ${a.name} grants +${a.currentPower} Player_Health to P1!`,'abi'); }
         if(a.poisoned > 0) { G.p2.player_health -= a.poisoned; log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health + ${a.poisoned} Traced.`,'inf'); }
         else { log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health.`,'inf'); }
       }
@@ -4492,8 +4855,9 @@ function battle() {
         _combatOccurred = true;
         G.p1.player_health -= b.currentPower;
         _dmgOnlyToP1 += b.currentPower;
+        if(G._trackStats) b._statHQDmg = (b._statHQDmg || 0) + b.currentPower;
         if(b.ability === 'on_compromise_prowess') b._growEarned = (b._growEarned || 0) + b.abilityX;
-        if(b.lifelink) { G.p2.player_health += b.currentPower; log(`  LIFELINK — ${b.name} grants +${b.currentPower} Player_Health to P2!`,'abi'); }
+        if(b.lifelink) { G.p2.player_health += b.currentPower; if(G._trackStats) b._statLifeHarvest = (b._statLifeHarvest || 0) + b.currentPower; log(`  LIFELINK — ${b.name} grants +${b.currentPower} Player_Health to P2!`,'abi'); }
         if(b.poisoned > 0) { G.p1.player_health -= b.poisoned; log(`Lane ${i+1}: ${b.name} COMPROMISES OPPONENT — P1 -${b.currentPower} Player_Health + ${b.poisoned} Traced.`,'inf'); }
         else { log(`Lane ${i+1}: ${b.name} COMPROMISES OPPONENT — P1 -${b.currentPower} Player_Health.`,'inf'); }
       }
@@ -5318,6 +5682,9 @@ function showZoom(cardId, level, poisoned) {
     on_compromise_prowess:   `Whenever this agent deals damage to the enemy HQ, it gains +${s.abilityX} Attack.`,
     adjacent_swift_prowess:  `Agents in adjacent Lanes have Manic and +${s.abilityX} Attack.`,
     deploy_twin_flames:             `On Deploy, Copy this Agent to an adjacent Lane.`,
+    deploy_fuse:                    `On Deploy, copy the Power and Health of an adjacent Agent.`,
+    kickback:                       `At the end of each of your turns, grant a target Agent +X/+X equal to the damage this Agent dealt to the enemy Agent.`,
+    karma:                          `When this Agent blocks on your turn, it harvests the damage it takes and gives it to a target Agent as +X/+X. This triggers at the end of your turn.`,
     deploy_extra_cover:      `On Deploy, give a target Agent +${s.abilityX} Health.`,
     healer:                  `At the end of each of your turns, give a target Agent +${s.abilityX}/+${s.abilityX}.`,
     deploy_siphon:           `On Deploy, give a target Agent Harvest.`,
@@ -5784,7 +6151,7 @@ function tutorialStart() {
   // Set up a fake game state — P1 = Guardians (human), P2 = Sparks (CPU)
   MODE = 'cpu';
   G = {
-    turn: 1, absoluteTurn: 1, phase: 'combat_play', playsLeft: 1,
+    turn: 1, absoluteTurn: 1, _trackStats: true, phase: 'combat_play', playsLeft: 1,
     active: 'p2', winner: null, log: [], elusiveSel: null,
     p1: { id:'p1', name:'Player 1', faction:'sol', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
     p2: { id:'p2', name:'Player 2', faction:'spr', player_health:STARTING_HEALTH, deck:[], hand:[], discard:[], field:[null,null,null,null,null], sel:null },
