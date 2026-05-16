@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta http-equiv="Expires" content="0">
-<title>Project Pulse: TCG</title>
+<title>Masquerades: TCG</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
 
@@ -14,7 +14,7 @@
 #splash {
   position:fixed; inset:0; z-index:500;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  align-items:center; justify-content:flex-end;
   background:#04040c;
   transition:opacity 0.8s ease;
 }
@@ -22,17 +22,8 @@
 
 #splash-bg {
   position:absolute; inset:0;
-  display:flex;
-}
-#splash-bg-sparks {
-  flex:1;
-  background-image: url('https://dantzelevitch.github.io/Tcg/images/hq_sparks.jpeg');
-  background-size:cover; background-position:center;
-}
-#splash-bg-guardians {
-  flex:1;
-  background-image: url('https://dantzelevitch.github.io/Tcg/images/hq_guardians.jpeg');
-  background-size:cover; background-position:center;
+  background-image: url('https://dantzelevitch.github.io/Tcg/images/splash_masquerades.jpeg');
+  background-size:contain; background-position:center top; background-repeat:no-repeat;
 }
 #splash-bg::after {
   content:''; position:absolute; inset:0;
@@ -40,13 +31,14 @@
 }
 #splash-content {
   position:relative; z-index:2;
-  display:flex; flex-direction:column;
-  align-items:center; gap:24px;
-  text-align:center; padding:40px 60px;
+  display:flex; flex-direction:row;
+  align-items:center; justify-content:center; gap:24px;
+  text-align:center; padding:20px 40px;
   background:rgba(4,4,12,0.6);
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
   border-radius:16px;
-  max-width:480px;
+  margin-bottom:40px;
+  max-width:90vw;
 }
 #splash-title {
   font-family:'Montserrat','Segoe UI',Roboto,sans-serif;
@@ -172,7 +164,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 }
 
 /* ── SHELL ── */
-#game { position:fixed; inset:0; display:flex; flex-direction:row; background-size:cover; background-position:center; }
+#game { position:fixed; inset:0; display:flex; flex-direction:row; background-size:cover; background-position:top center; }
 
 /* ── LEFT: BATTLEFIELD ── */
 #battlefield { flex:none; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
@@ -244,7 +236,6 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 .player_health-num.crit { color:var(--red); filter:drop-shadow(0 0 8px rgba(231,76,60,0.6)); }
 .player_health-lbl { font-family:'Cinzel',serif; font-size:12px; letter-spacing:2px; color:#fff; text-align:center; }
 .player-name { font-family:'Cinzel',serif; font-size:11px; letter-spacing:2px; color:#fff; text-align:center; font-weight:700; }
-.cell-badge { font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; padding:2px 8px; border-radius:10px; text-align:center; }
 .mini-stats { display:flex; gap:10px; justify-content:center; }
 .ms { text-align:center; }
 .ms-v { font-family:'Cinzel',serif; font-size:16px; color:#fff; line-height:1; }
@@ -325,15 +316,6 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 .fa { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#e74c3c; text-shadow:0 0 10px rgba(231,76,60,0.9); line-height:1; }
 .fc { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#2ecc71; text-shadow:0 0 10px rgba(46,204,113,0.9); line-height:1; }
 .fc.dmg{color:var(--orange);} .fc.crit{color:var(--red);}
-
-/* Badge stack */
-.badge-stack { position:absolute; bottom:24px; left:0; right:0; z-index:5; display:flex; flex-direction:column; align-items:center; gap:2px; pointer-events:none; }
-.fbadge-veil { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; color:#a78bfa; background:rgba(124,58,237,0.25); border:1px solid rgba(167,139,250,0.5); border-radius:3px; padding:1px 3px; line-height:1.2; white-space:nowrap; }
-.fbadge-poison { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; font-weight:700; color:#bbf7d0; background:rgba(5,78,22,0.9); border:1px solid #86efac; border-radius:3px; padding:1px 3px; line-height:1.4; white-space:nowrap; }
-.fbadge-recover { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; font-weight:700; color:#cffafe; background:rgba(8,51,68,0.9); border:1px solid #67e8f9; border-radius:3px; padding:1px 3px; line-height:1.4; white-space:nowrap; }
-.fbadge-breach { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; font-weight:700; color:#fde68a; background:rgba(120,53,15,0.9); border:1px solid #f59e0b; border-radius:3px; padding:1px 3px; line-height:1.4; white-space:nowrap; }
-.fbadge-swift { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; font-weight:700; color:#fff; background:rgba(192,57,43,0.8); border:1px solid #e74c3c; border-radius:3px; padding:1px 3px; line-height:1.4; white-space:nowrap; }
-.fbadge-buffed { font-family:'Cinzel',serif; font-size:6px; letter-spacing:0.5px; font-weight:700; color:#fde68a; background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.6); border-radius:3px; padding:1px 3px; line-height:1.4; white-space:nowrap; }
 
 /* ── EMPTY SLOT ── */
 .eslot {
@@ -647,6 +629,14 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 }
 .burn-away { animation:burn-away 0.5s ease-in forwards; pointer-events:none; }
 
+@keyframes kamikaze-vanish {
+  0%   { opacity:1; filter:brightness(1) saturate(1); transform:scale(1); box-shadow:none; }
+  25%  { opacity:0.9; filter:brightness(2.5) saturate(2) hue-rotate(-20deg); transform:scale(1.05); box-shadow:0 0 24px rgba(255,80,0,0.9); }
+  60%  { opacity:0.5; filter:brightness(3) saturate(1.5) hue-rotate(-30deg); transform:scale(0.95); box-shadow:0 0 40px rgba(255,40,0,0.6); }
+  100% { opacity:0; filter:brightness(4) saturate(0); transform:scale(0.8); box-shadow:none; }
+}
+.kamikaze-vanish { animation:kamikaze-vanish 3s ease-in forwards; pointer-events:none; }
+
 @keyframes lunge-up {
   0%   { transform: translateY(0); }
   40%  { transform: translateY(-10px); }
@@ -870,23 +860,21 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   <p>This app currently only supports browser mode.<br>Please reopen in Safari.</p>
 </div>
 <div id="splash">
-  <div id="splash-bg"><div id="splash-bg-sparks"></div><div id="splash-bg-guardians"></div></div>
+  <div id="splash-bg"></div>
   <div id="splash-content">
-    <div id="splash-title">PROJECT PULSE</div>
-    <div id="splash-tagline">A TCG that finally feels different</div>
-    <div id="splash-divider"></div>
-    <button id="splash-enter" onclick="splashPlay()" ontouchend="splashPlay()" style="min-width:200px;min-height:60px;-webkit-tap-highlight-color:rgba(0,0,0,0);">PLAY</button>
-    <div id="splash-difficulty" style="display:flex;flex-direction:row;gap:8px;margin-top:4px;">
+    <button id="splash-enter" onclick="splashPlay()" ontouchend="splashPlay()" style="min-width:160px;min-height:50px;-webkit-tap-highlight-color:rgba(0,0,0,0);">PLAY</button>
+    <div id="splash-difficulty" style="display:flex;flex-direction:column;gap:6px;">
       <button id="diff-standard" onclick="setDifficulty('standard')" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.4);background:transparent;color:rgba(237,229,216,0.5);transition:all 0.2s;">STANDARD</button>
       <button id="diff-hard"     onclick="setDifficulty('hard')"     style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.7);background:rgba(201,168,76,0.15);color:rgba(237,229,216,0.9);transition:all 0.2s;">HARD</button>
     </div>
-    <div style="flex:1;"></div>
-    <div style="display:flex;flex-direction:row;gap:12px;margin-top:20px;">
+    <div style="display:flex;flex-direction:column;gap:6px;">
       <button onclick="openSim()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚙ Dev Tools</button>
       <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);margin-top:12px;">db-v335</div>
-    <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;margin-top:4px;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Image Cache</button>
+    <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+      <div style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);">db-v335</div>
+      <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Cache</button>
+    </div>
   </div>
 </div>
 
@@ -947,7 +935,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
         <div style="display:flex;flex-direction:column;gap:8px;">
           <button onclick="simRun()" style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;background:linear-gradient(135deg,#0f6e56,#1d9e75);color:#fff;border:none;border-radius:4px;padding:12px;cursor:pointer;">⚡ RUN</button>
           <div style="display:flex;gap:6px;">
-            <button onclick="simTest3()" style="flex:1;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;background:transparent;color:rgba(201,168,76,0.7);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:8px;cursor:pointer;">⚗ TEST 3</button>
+            <button onclick="simTest3()" style="flex:1;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;background:transparent;color:rgba(201,168,76,0.7);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:8px;cursor:pointer;">⚗ TEST 50</button>
             <button onclick="simExportCSV()" style="flex:1;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;background:transparent;color:rgba(237,229,216,0.5);border:1px solid rgba(237,229,216,0.15);border-radius:4px;padding:8px;cursor:pointer;">↓ CSV</button>
           </div>
         </div>
@@ -1033,27 +1021,27 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
             <thead>
               <tr style="border-bottom:1px solid rgba(201,168,76,0.15);">
                 <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;width:120px;"></th>
-                <th colspan="5" style="padding:10px;text-align:center;color:#c9a84c;border-right:1px solid rgba(201,168,76,0.15);">GOES FIRST</th>
-                <th colspan="5" style="padding:10px;text-align:center;color:#c9a84c;">GOES SECOND</th>
+                <th colspan="6" style="padding:10px;text-align:center;color:#c9a84c;border-right:1px solid rgba(201,168,76,0.15);">GOES FIRST</th>
+                <th colspan="6" style="padding:10px;text-align:center;color:#c9a84c;">GOES SECOND</th>
               </tr>
               <tr style="border-bottom:1px solid rgba(201,168,76,0.15);">
                 <th style="padding:8px 14px;text-align:left;color:rgba(237,229,216,0.3);font-weight:400;"></th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">WIN</th>
-                <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">DRAW</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">TURNS</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">Avg L2</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">Avg L3</th>
+                <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">LIFE</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;border-right:1px solid rgba(201,168,76,0.15);">GAMES</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">WIN</th>
-                <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">DRAW</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">TURNS</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">Avg L2</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">Avg L3</th>
+                <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">LIFE</th>
                 <th style="padding:8px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">GAMES</th>
               </tr>
             </thead>
             <tbody id="sim-fm-body">
-              <tr><td colspan="13" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
+              <tr><td colspan="9" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
             </tbody>
           </table>
         </div>
@@ -1102,17 +1090,18 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
                 <th style="padding:10px 14px;text-align:left;color:rgba(237,229,216,0.4);font-weight:400;">CARD</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">AVG PLAYS</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">WIN RATE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MVP RATE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MVP WIN</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">EFF DMG</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MP RATE</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">MP WIN</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">AGENT DMG</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">HQ DMG</th>
                 <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">LIFE</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">H BUFF</th>
-                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">BLOCKED</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">BUFF</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">% L2</th>
+                <th style="padding:10px;text-align:center;color:rgba(237,229,216,0.4);font-weight:400;">% L3</th>
               </tr>
             </thead>
             <tbody id="sim-card-body">
-              <tr><td colspan="10" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
+              <tr><td colspan="9" style="padding:16px;text-align:center;color:rgba(237,229,216,0.25);font-size:12px;">Run simulation to see results</td></tr>
             </tbody>
           </table>
         </div>
@@ -1343,6 +1332,7 @@ const SFX = {
   damageSparks: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_damage_sparks.mp3'),
   damageGuardians: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_damage_guardians.mp3'),
   combatBlock: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_block2_female.m4a'),
+  kamikaze: new Audio('https://dantzelevitch.github.io/Tcg/sounds/audio_kamikaze.mp3'),
 };
 Object.values(SFX).forEach(a => { a.preload = 'auto'; a.volume = 0.20; });
 SFX.betsyboom.volume = 0.30;
@@ -1465,6 +1455,15 @@ function applyDynamicLayout() {
     battlefield.style.width = Math.min(battlefieldW, vw - 140) + 'px';
   }
 
+  // Center playmat background on battlefield area (offset for right panel)
+  const game = document.getElementById('game');
+  if (game && battlefield) {
+    const bfW = parseInt(battlefield.style.width) || vw;
+    const panelW = vw - bfW;
+    const offsetX = -(panelW / 2);
+    game.style.backgroundPosition = `calc(50% + ${offsetX}px) top`;
+  }
+
   // Card sizing now handled by CSS (height:100% + aspect-ratio)
   // No dynamic max-height injection needed
 
@@ -1554,61 +1553,54 @@ document.addEventListener('webkitfullscreenchange', updateFSButton);
 // PROJECT PULSE — GAME OVERVIEW
 // ════════════════════════════════════════════════
 //
-// Project Pulse — "A TCG that finally feels different"
+// Masquerades — "The TCG that doesn't behave."
 //
-// Project Pulse is a tactical digital TCG built for players who think in turns,
-// not impulses. Two rival syndicates clash on a lane-based battlefield where
-// positioning, timing, and resource management—not chance alone—determine the
-// outcome of every match.
+// A bunch of nobodies woke up with powers they can't explain.
+// They didn't train for this. They aren't ready. Neither are you.
 //
-// FOUR FACTIONS. DISTINCT IDENTITIES.
-// Recruit your operatives from four core factions, each with a distinct mechanical
-// identity: the Guardians nurture, the Sparks burn, the Hackers disrupt, and the
-// Assassins eliminate. Squad composition and deck construction are tightly
-// interwoven, enabling deep synergy planning and strategic archetype building.
+// FIVE FACTIONS. ZERO EXPLANATION.
+// Build your squad from five factions, each with a distinct identity:
+// the Saints heal, the Sparks burn, the Hackers disrupt, the Assassins
+// eliminate, and the Outlaws break every rule left. Nobody knows where
+// the powers came from. The Society stopped asking.
 //
-// TACTICAL, FAST, AND DYNAMIC.
-// A unique lane-based battlefield and an inventive in-game card leveling system
-// create shifting board states and adaptive win conditions. Matches are designed
-// to be short in duration but rich in decision density—every action matters.
+// FAST MATCHES. DEEP DECISIONS.
+// A lane-based battlefield and an in-game card leveling system create
+// shifting board states where every deploy matters. Matches are short.
+// The choices inside them are not.
 //
-// A LIVING UNIVERSE.
-// Project Pulse is an evolving competitive TCG ecosystem with an expanding roster,
-// a shifting meta, and a stylized comic-book world full of attitude. New factions,
-// operatives, and mechanics are introduced through ongoing seasonal expansions that
-// continuously reshape the strategic landscape.
+// A WORLD THAT DOESN'T BEHAVE.
+// Masquerades is a stylized comic-book universe full of attitude, dark
+// humor, and characters who have no business being this powerful. New
+// factions, agents, and classified incidents arrive through ongoing
+// expansions. The Society insists it is maintaining order. It is not.
 //
-// BUILT FOR THE LONG GAME.
-// Designed for players who never stopped looking for a TCG that rewards mastery,
-// adaptation, and long-term strategic depth.
+// BUILT FOR PLAYERS WHO WANT MORE.
+// A TCG that rewards positioning, timing, and adaptation — not luck.
+// If you've been looking for a card game with real strategic depth and
+// a personality that doesn't take itself too seriously, welcome to
+// Masquerades.
 //
 const CARD_ASSETS = {
   // Card frame - same ornate template used for all factions (tinted via CSS per faction)
 
-  // Level badges (I, II, III)
+  // Level badges (L1 faction-specific, L2/L3 unified)
   level_1: 'https://dantzelevitch.github.io/Tcg/images/level_1.jpg',
-  level_2: 'https://dantzelevitch.github.io/Tcg/images/level_2.jpg',
-  level_3: 'https://dantzelevitch.github.io/Tcg/images/level_3.jpg',
+  g_level_1: 'https://dantzelevitch.github.io/Tcg/images/g_level_1.png',
+  badge_level2: 'https://dantzelevitch.github.io/Tcg/images/badge_level2.png',
+  badge_level3: 'https://dantzelevitch.github.io/Tcg/images/badge_level3.png',
 
   // Keyword badges
-  badge_haste: 'https://dantzelevitch.github.io/Tcg/images/badge_haste.jpg',        // Swift
-  badge_breakthrough: 'https://dantzelevitch.github.io/Tcg/images/badge_breakthrough.jpg', // Breach
-  badge_lifelink: 'https://dantzelevitch.github.io/Tcg/images/badge_lifelink.jpg',     // Lifelink
-  badge_mobility: 'https://dantzelevitch.github.io/Tcg/images/badge_mobility.jpg',     // Elusive
-  badge_special: 'https://dantzelevitch.github.io/Tcg/images/badge_special.jpg',      // Unique abilities
-  // ── Guardians faction assets ──
-  g_badge_haste: 'https://dantzelevitch.github.io/Tcg/images/g_badge_haste.png',
-  g_badge_breakthrough: 'https://dantzelevitch.github.io/Tcg/images/g_badge_breakthrough.png',
-  g_badge_lifelink: 'https://dantzelevitch.github.io/Tcg/images/g_badge_lifelink.png',
-  g_badge_mobility: 'https://dantzelevitch.github.io/Tcg/images/g_badge_mobility.png',
-  g_level_1: 'https://dantzelevitch.github.io/Tcg/images/g_level_1.png',
-  g_level_2: 'https://dantzelevitch.github.io/Tcg/images/g_level_2.png',
-  g_level_3: 'https://dantzelevitch.github.io/Tcg/images/g_level_3.png',
+  badge_haste: 'https://dantzelevitch.github.io/Tcg/images/badge_haste.png',
+  badge_smash: 'https://dantzelevitch.github.io/Tcg/images/badge_smash.png',
+  badge_lifelink: 'https://dantzelevitch.github.io/Tcg/images/badge_lifelink.png',
+  badge_mobility: 'https://dantzelevitch.github.io/Tcg/images/badge_mobility.png',
+  badge_special: 'https://dantzelevitch.github.io/Tcg/images/badge_special.png',
 
   // ── Card art ──
 
   // ── Card art ──
-  bg_playmat: 'https://dantzelevitch.github.io/Tcg/images/bg_playmat.jpg',
+  bg_playmat: 'https://dantzelevitch.github.io/Tcg/images/playmat_theater.jpeg',
   hq_sparks: 'https://dantzelevitch.github.io/Tcg/images/hq_sparks.jpeg',
   hq_guardians: 'https://dantzelevitch.github.io/Tcg/images/hq_guardians.jpeg',
   art_spr1: 'https://dantzelevitch.github.io/Tcg/images/spr_pink_explosion.png',
@@ -1618,6 +1610,7 @@ const CARD_ASSETS = {
   art_spr5: 'https://dantzelevitch.github.io/Tcg/images/spr_motorcycle.png',
   art_spr6: 'https://dantzelevitch.github.io/Tcg/images/spr_flamingqueen.png',
   art_spr7: 'https://dantzelevitch.github.io/Tcg/images/spr_fuse.jpeg',
+  art_spr8: 'https://dantzelevitch.github.io/Tcg/images/spr_kamikaze.jpeg',
   art_sol1: 'https://dantzelevitch.github.io/Tcg/images/grd_bow_arrow.png',
   art_sol2: 'https://dantzelevitch.github.io/Tcg/images/grd_goldenhat.png',
   art_sol3: 'https://dantzelevitch.github.io/Tcg/images/grd_forcefield.png',
@@ -1695,13 +1688,13 @@ function agentFieldThreat(card, lane) {
   const hp = card.currentHealth || card.baseCover || 0;
 
   const attack  = pow;
-  const jrMult = (lane === 0 || lane === 4) ? 0.5 : 1.3;
-  const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.1
+  const jrMult = (lane === 0 || lane === 4) ? 0.5 : 1.2;
+  const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.2
                       : id === 'SPR5' ? (card.abilityX || 0) * jrMult
                       : id === 'SPR4' ? (card.abilityX || 0) * 2
                       : 0)
-                     + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                     + (card.lifelink ? pow * 0.5 + hp * 0.5 : 0);
+                     + (id === 'SOL4' ? (card.abilityX || 0) * 2.2 : 0)
+                     + (card.lifelink ? pow * 0.4 + hp * 0.3 : 0);
   const activeBonus = !card.dormant ? attack * 0.25 : 0;
   const durability = hp * 0.4;
 
@@ -1756,9 +1749,10 @@ function cpuGetValidTargets(card, lane, pid) {
 function cpuEnumerateCombos(pid) {
   pid = pid || G.active;
   const p      = G[pid];
+  const oppPid = pid === 'p1' ? 'p2' : 'p1';
   const hand   = p.hand;
   const combos = [];
-  const LANES  = [0,1,2,3,4];
+  const LANES = [0,1,2,3,4];
 
   // ── Null play ──
   combos.push([]);
@@ -1846,33 +1840,43 @@ function cpuGetValidTargetsOnField(card, lane, field, pid) {
 // Rewards board states that set up future combos.
 // Currently: Sparks gets +5 if two cards have exactly one empty lane between them
 // (gap for Johnny Rocket). All other factions default to 0.
-function planningBonus(pid) {
+function planningBonus(pid, deployedIds) {
   const field = G[pid].field;
   const faction = G[pid].faction;
+  const deployed = deployedIds || [];
   let bonus = 0;
 
-  // Doctor bonus: reward early engine deployment
+  // Card-specific bonuses — only apply to cards deployed THIS combo
   field.forEach(c => {
     if(!c) return;
+    if(deployed.length > 0 && !deployed.includes(c.instanceId)) return;
     const cid = c.deckId ? c.deckId.split('_')[0] : '';
-    if(cid === 'SOL4') bonus += 3;
-    if(cid === 'SOL7' && (c._combatDmgTaken || 0) > 0) bonus += c._combatDmgTaken; // Karma: reward surviving damage
+    if(cid === 'SOL7' && (c._combatDmgTaken || 0) > 0) bonus += c._combatDmgTaken * 1.0; // Karma: reward surviving damage
   });
 
   if(faction === 'spr') {
-    // Gap bonus: [card, empty, card] pattern — room for Johnny Rocket
+    // Gap bonus: [card, empty, card] pattern — room for Johnny Rocket (positional, always applies)
     for(let i = 0; i < 3; i++) {
-      if(field[i] && !field[i+1] && field[i+2]) bonus += 5;
+      if(field[i] && !field[i+1] && field[i+2]) bonus += 1;
     }
 
-    // Breach bonus: reward Betsy Boom and Ballin' on the field
+    // Card-specific Sparks bonuses — only for freshly deployed cards
     field.forEach(c => {
       if(!c) return;
+      if(deployed.length > 0 && !deployed.includes(c.instanceId)) return;
       const cid = c.deckId ? c.deckId.split('_')[0] : '';
       if(cid === 'SPR1' || cid === 'SPR4') {
-        bonus += (c.currentPower || c.basePower || 0) * 0.25;
+        bonus += (c.currentPower || c.basePower || 0) * 0.35;
       }
+      if(cid === 'SPR5') bonus -= 5; // Johnny Rocket
     });
+  }
+
+  if(faction === 'sol') {
+    // Central positioning tiebreaker: +0.1 per card in lanes 1,2,3
+    for(let i = 1; i <= 3; i++) {
+      if(field[i]) bonus += 0.1;
+    }
   }
 
   return bonus;
@@ -1903,7 +1907,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       if(G.playsLeft <= 0) break;
       const card = G[pid].hand.find(c => c.instanceId === play.instanceId);
       if(!card) continue;
-      G._evalTargetLane = play.target;
+      G._evalTargetLane = (play.target != null) ? play.target : undefined;
       playToLane(play.lane, play.instanceId);
       G._evalTargetLane = undefined;
     }
@@ -1964,7 +1968,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     // ── Look-ahead: second combat ──────────────────────────────────────
     // If any lanes are contested (both sides survived), simulate a second
     // round of combat on ONLY those lanes, with Doctor's healer in between.
-    // lookAheadBonus = allyThreatLH - oppThreatLH + netHQImpact (contested lanes only)
+    // lookAheadBonus = netHQImpactLH (contested lanes only)
     let lookAheadBonus = 0;
     const contestedLanes = [];
     for(let i = 0; i < 5; i++) {
@@ -2017,6 +2021,13 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       // Snapshot health margin before second battle
       const marginBeforeLH = G[pid].player_health - G[oppPid].player_health;
 
+      // Snapshot opponent threat on contested lanes before second battle
+      const oppThreatBefore = {};
+      for(const i of contestedLanes) {
+        const oc = G[oppPid].field[i];
+        if(oc) oppThreatBefore[i] = agentFieldThreat(oc, i);
+      }
+
       // Run second battle (contested lanes only)
       G.phase = 'combat_play';
       battle();
@@ -2024,13 +2035,19 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       // Score look-ahead result (contested lanes only)
       let allyThreatLH = 0;
       let oppThreatLH = 0;
+      let finishBonus = 0;
       for(const i of contestedLanes) {
         if(G[pid].field[i]) allyThreatLH += agentFieldThreat(G[pid].field[i], i);
-        if(G[oppPid].field[i]) oppThreatLH += agentFieldThreat(G[oppPid].field[i], i);
+        if(G[oppPid].field[i]) {
+          oppThreatLH += agentFieldThreat(G[oppPid].field[i], i);
+        } else if(oppThreatBefore[i]) {
+          // Opponent card destroyed in second battle — reward 50% of its threat
+          finishBonus += oppThreatBefore[i] * 0.5;
+        }
       }
       const netHQImpactLH = (G[pid].player_health - G[oppPid].player_health) - marginBeforeLH;
 
-      lookAheadBonus = allyThreatLH - oppThreatLH + netHQImpactLH;
+      lookAheadBonus = netHQImpactLH + finishBonus;
 
       // Restore non-contested lanes
       for(let i = 0; i < 5; i++) {
@@ -2041,7 +2058,8 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       }
     }
 
-    const planning = planningBonus(pid);
+    const deployedIds = combo.map(p => p.instanceId);
+    const planning = planningBonus(pid, deployedIds);
 
     // FirstTurnBonus: per-card adjustments that only apply on absolute turn 1
     let firstTurnBonus = 0;
@@ -2049,14 +2067,13 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       G[pid].field.forEach(c => {
         if(!c || c.isVirtualCopy) return;
         const cid = c.deckId ? c.deckId.split('_')[0] : '';
-        if(cid === 'SPR6') firstTurnBonus -= 5; // Pair of Queens
+        if(cid === 'SPR6') firstTurnBonus -= 8; // Pair of Queens
         if(cid === 'SPR1') firstTurnBonus -= 1; // Betsy Boom
         if(cid === 'SPR3') firstTurnBonus -= 99; // Sienna Blaze
         if(cid === 'SPR5') firstTurnBonus -= 99; // Johnny Rocket
         if(cid === 'SPR7') firstTurnBonus -= 99; // Fuse (no adjacent on turn 1)
         if(cid === 'SOL7') firstTurnBonus -= 99; // Karma (dormant, no combat on turn 1)
-        if(cid === 'SOL1') firstTurnBonus += 3; // The Archer
-        if(cid === 'SOL2') firstTurnBonus -= 2; // Siphoner
+        if(cid === 'SOL1') firstTurnBonus += 2; // Archer
         if(cid === 'SOL4') firstTurnBonus += 2; // Doctor
       });
     }
@@ -2068,10 +2085,37 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
 
     // Store breakdown for test3 logging
     if(G_test3) {
+      const allyFieldCount = G[pid].field.filter(c => c !== null).length;
       window._lastEvalBreakdown = {
         deltaHealth, survivingOppThreat, survivingAllyThreat, planning,
-        firstTurnBonus, lookAheadBonus, total: CPUEvalScore
+        firstTurnBonus, lookAheadBonus, total: CPUEvalScore, allyFieldCount
       };
+    }
+
+    // DEBUG: detect phantom cards in replace combos
+    const _dbgIsReplace = combo.length === 2 && combo[0].lane === combo[1].lane;
+    if(_dbgIsReplace) {
+      const _dbgAllyCards = G[pid].field.filter(c => c !== null);
+      const _dbgOppCards = G[oppPid].field.filter(c => c !== null);
+      if(!window._replaceDebug) window._replaceDebug = [];
+      window._replaceDebug.push({
+        comboIds: combo.map(p => p.instanceId).join(','),
+        comboLanes: combo.map(p => p.lane).join(','),
+        allyCards: _dbgAllyCards.map(c => `${c.name}(${c.currentPower}/${c.currentHealth})L${G[pid].field.indexOf(c)+1}`),
+        allyCount: _dbgAllyCards.length,
+        oppCards: _dbgOppCards.map(c => `${c.name}(${c.currentPower}/${c.currentHealth})L${G[oppPid].field.indexOf(c)+1}`),
+        oppCount: _dbgOppCards.length,
+        deltaHealth,
+        survivingOppThreat,
+        survivingAllyThreat,
+        planning,
+        firstTurnBonus,
+        lookAheadBonus,
+        score: CPUEvalScore,
+        handRemaining: G[pid].hand.length,
+        discardCount: G[pid].discard.length,
+        playsLeft: G.playsLeft
+      });
     }
 
     return CPUEvalScore;
@@ -2096,22 +2140,38 @@ const STANDARD_TOP_N = 5;
 // Returns the selected combo based on CPU_DIFFICULTY:
 //   hard     → scored[0]
 //   standard → random pick from top STANDARD_TOP_N
-function cpuRunEvaluator() {
-  const marginBefore = G.p2.player_health - G.p1.player_health;
-  const combos = cpuEnumerateCombos();
+// ── cpuSelectCombo ────────────────────────────────────────────────────────
+// Unified CPU brain. All modes call this single function.
+// Returns { combo, scored, marginBefore } so callers can log/inspect.
+function cpuSelectCombo(pid, difficulty) {
+  pid = pid || G.active;
+  const oppPid = pid === 'p1' ? 'p2' : 'p1';
+  const marginBefore = G[pid].player_health - G[oppPid].player_health;
+  const combos = cpuEnumerateCombos(pid);
 
   const scored = [];
   for(const combo of combos) {
-    const score = cpuEvaluateCombo(combo, marginBefore);
-    scored.push({ combo, score });
+    const evalScore = cpuEvaluateCombo(combo, marginBefore, pid);
+    // DEBUG: log return value for replace combos
+    if(combo.length === 2 && combo[0].lane === combo[1].lane) {
+      if(!window._replaceScores) window._replaceScores = [];
+      window._replaceScores.push({
+        ids: combo.map(p => p.instanceId).join(','),
+        lanes: combo.map(p => p.lane).join(','),
+        returnedScore: evalScore
+      });
+    }
+    scored.push({ combo, score: evalScore });
   }
-  scored.sort((a, b) => b.score - a.score);
+  scored.sort((a, b) => b.score - a.score || (Math.random() - 0.5));
 
-  if(CPU_DIFFICULTY === 'hard') {
-    // Turn 1 weighted lottery: 30%, 30%, 25%, 15%
-    // Only consider combos with positive scores
+  let bestCombo;
+
+  if(difficulty === 'hard') {
+    // Turn 1 weighted lottery: faction-specific weights
     if(G.absoluteTurn === 1 && scored.length >= 2) {
-      const weights = [30, 30, 25, 15];
+      const faction = G[pid].faction;
+      const weights = faction === 'sol' ? [30, 30, 20, 20] : [30, 30, 25, 15];
       const positive = scored.filter(s => s.score > 0);
       const pool = positive.slice(0, Math.min(weights.length, positive.length));
       if(pool.length > 0) {
@@ -2119,17 +2179,27 @@ function cpuRunEvaluator() {
         let roll = Math.random() * totalWeight;
         for(let i = 0; i < pool.length; i++) {
           roll -= weights[i];
-          if(roll <= 0) return pool[i].combo;
+          if(roll <= 0) { bestCombo = pool[i].combo; break; }
         }
-        return pool[pool.length - 1].combo;
+        if(!bestCombo) bestCombo = pool[pool.length - 1].combo;
+      } else {
+        bestCombo = scored[0].combo;
       }
+    } else {
+      bestCombo = scored[0].combo;
     }
-    return scored[0].combo;
+  } else {
+    // standard: random from top N
+    const pool = scored.slice(0, Math.min(STANDARD_TOP_N, scored.length));
+    bestCombo = pool[Math.floor(Math.random() * pool.length)].combo;
   }
 
-  // standard: random from top N (or fewer if not enough combos)
-  const pool = scored.slice(0, Math.min(STANDARD_TOP_N, scored.length));
-  return pool[Math.floor(Math.random() * pool.length)].combo;
+  return { combo: bestCombo, scored, marginBefore };
+}
+
+// Legacy wrapper for live CPU play
+function cpuRunEvaluator() {
+  return cpuSelectCombo('p2', CPU_DIFFICULTY).combo;
 }
 
 // ── cpuExecuteCombo ───────────────────────────────────────────────────────
@@ -2151,7 +2221,10 @@ function cpuExecuteCombo(combo, playIndex, onDone) {
   G._cpuTargetLane = undefined;
   render();
 
-  setTimeout(() => cpuExecuteCombo(combo, playIndex + 1, onDone), 1500);
+  // Per-card delay from registry (for voice lines / deploy effects), default 1500ms
+  const def = CARDS[card.cardId];
+  const delay = (def && def.deployDelay) || 1500;
+  setTimeout(() => cpuExecuteCombo(combo, playIndex + 1, onDone), delay);
 }
 
 function cpuTakeTurn() {
@@ -2340,6 +2413,14 @@ const CARDS = {
     L3:{power:0,health:0, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_fuse', abilityX:1},
   },
 
+  // ── SPR8: Kamikaze ── Rare ×2
+  // Swift, Smash. Vanishes after combat.
+  SPR8:{id:'SPR8',faction:'spr',name:'Kamikaze',art:'🚀',rarity:'Rare',cardArt:'art_spr8',deployDelay:3000,
+    L1:{power:12,health:1, manic:true, slippery:0, veil:0, recover:0, smash:true, ability:'kamikaze', abilityX:0},
+    L2:{power:15,health:1, manic:true, slippery:0, veil:0, recover:0, smash:true, ability:'kamikaze', abilityX:0},
+    L3:{power:20,health:1, manic:true, slippery:0, veil:0, recover:0, smash:true, ability:'kamikaze', abilityX:0},
+  },
+
   // ── SOL1: Guardians Sister 1 ── Common ×2
   SOL1:{id:'SOL1',faction:'sol',name:'The Archer',art:'☀️',rarity:'Common',cardArt:'art_sol1',
     L1:{power:6, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false},
@@ -2412,6 +2493,7 @@ const NEXT = {
   'SPR5_L1':'SPR5_L2','SPR5_L2':'SPR5_L3',
   'SPR6_L1':'SPR6_L2','SPR6_L2':'SPR6_L3',
   'SPR7_L1':'SPR7_L2','SPR7_L2':'SPR7_L3',
+  'SPR8_L1':'SPR8_L2','SPR8_L2':'SPR8_L3',
   'SOL1_L1':'SOL1_L2','SOL1_L2':'SOL1_L3',
   'SOL2_L1':'SOL2_L2','SOL2_L2':'SOL2_L3',
   'SOL3_L1':'SOL3_L2','SOL3_L2':'SOL3_L3',
@@ -2422,24 +2504,24 @@ const NEXT = {
   'GLM1_L1':'GLM1_L2','GLM1_L2':'GLM1_L3',
 };
 
-// Sparks theme deck: 2x each = 14 cards
+// Sparks theme deck: 15 cards
 const SPR_DECK = [
   'SPR1_L1','SPR1_L1',
-  'SPR2_L1','SPR2_L1',
+  'SPR2_L1','SPR2_L1','SPR2_L1',
   'SPR3_L1','SPR3_L1',
   'SPR4_L1','SPR4_L1',
   'SPR5_L1','SPR5_L1',
   'SPR6_L1','SPR6_L1',
-  'SPR7_L1','SPR7_L1',
+  'SPR8_L1','SPR8_L1',
 ];
 
-// Guardians theme deck: 2x each = 14 cards
+// Guardians theme deck: 15 cards
 const SOL_DECK = [
   'SOL1_L1','SOL1_L1',
   'SOL2_L1','SOL2_L1',
   'SOL3_L1','SOL3_L1',
   'SOL4_L1','SOL4_L1',
-  'SOL5_L1','SOL5_L1',
+  'SOL5_L1','SOL5_L1','SOL5_L1',
   'SOL6_L1','SOL6_L1',
   'SOL7_L1','SOL7_L1',
 ];
@@ -2913,6 +2995,26 @@ const ABILITIES = {
     }
   },
 
+  kamikaze: {
+    trigger: 'combat_cleanup_passive',
+    resolve(card, pid) {
+      const lane = G[pid].field.indexOf(card);
+      if(lane === -1) return;
+      log(`${card.name} vanishes after combat!`,'abi');
+      if(G._trackStats) {
+        if(!G[pid]._deadCards) G[pid]._deadCards = [];
+        G[pid]._deadCards.push(card);
+      }
+      if(G_sim) {
+        // Sim: remove immediately
+        G[pid].field[lane] = null;
+      } else {
+        // UI: mark for vanish — render will add animation class
+        card._kamikazeVanishing = true;
+      }
+    }
+  },
+
   recover: {
     trigger: 'endturn_cleanup_passive',
     resolve(card) {
@@ -2966,7 +3068,10 @@ function resolveActions(actionType, pid, context={}) {
       G[p].field.forEach(card => {
         if(!card || !card.ability) return;
         let ab = ABILITIES[card.ability];
-        if(ab && ab.trigger === actionType) { flashCard(card.instanceId); ab.resolve(card, p, context); }
+        if(ab && ab.trigger === actionType) {
+          if(card.ability !== 'kamikaze') flashCard(card.instanceId);
+          ab.resolve(card, p, context);
+        }
       });
     });
     return;
@@ -3048,13 +3153,13 @@ function renderImpactScores() {
     const pow = s.power;
 
     // Replicate agentFieldThreat logic for display
-    const jrMult_mid = 1.3;
-    const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.1
+    const jrMult_mid = 1.0;
+    const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.2
                         : id === 'SPR5' ? (card.abilityX || 0) * jrMult_mid
                         : id === 'SPR4' ? (card.abilityX || 0) * 2
                         : 0)
-                       + (id === 'SOL4' ? (card.abilityX || 0) * 2 : 0)
-                       + (card.lifelink ? pow * 0.5 + (card.currentHealth || 0) * 0.5 : 0);
+                       + (id === 'SOL4' ? (card.abilityX || 0) * 2.2 : 0)
+                       + (card.lifelink ? pow * 0.5 + (card.currentHealth || 0) * 0.4 : 0);
     const activeBonus = !card.dormant ? pow * 0.25 : 0;
     const durability = (card.currentHealth || 0) * 0.4;
     const total = pow + abilityBonus + activeBonus + durability;
@@ -3062,10 +3167,13 @@ function renderImpactScores() {
     // Planning bonus (per-card components only; positional bonuses excluded)
     let planning = 0;
     // Breach bonus for Betsy Boom / Ballin'
-    if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.25;
+    if(id === 'SPR1' || id === 'SPR4') planning += pow * 0.35;
+    if(id === 'SPR5') planning -= 5; // Johnny Rocket
     // Doctor bonus: early engine deployment
+    if(id === 'SOL1') planning -= 1; // Archer
     if(id === 'SOL4') planning += 3;
-    if(id === 'SOL7') planning += 0; // Karma: dynamic (based on damage taken in combat)
+    if(id === 'SOL6') planning -= 3; // Safe House
+    if(id === 'SOL7') planning += 0; // Karma: dynamic (1.3x combatDmgTaken) // Karma: dynamic (based on damage taken in combat)
     
 
     const fac = id.startsWith('SPR') ? 'spr' : 'sol';
@@ -3097,8 +3205,8 @@ function ptInitAgg(p1Faction, p2Faction, p1Diff, p2Diff) {
   _ptAgg = {
     total:0, p1wins:0, p2wins:0, draws:0, totalTurns:0,
     fm: {
-      p1: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
-      p2: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
+      p1: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,lifeGain:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,lifeGain:0} },
+      p2: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,lifeGain:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,lifeGain:0} },
     },
     cards: {},
     firstCards: {},
@@ -3269,12 +3377,12 @@ function pvptInitAgg() {
     total:0, p1wins:0, p2wins:0, draws:0, totalTurns:0,
     sprWins:0, solWins:0,
     fm: {
-      p1:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0}},
-      p2:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0}},
+      p1:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}},
+      p2:{first:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0},second:{games:0,wins:0,draws:0,turns:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}},
     },
     fmFaction: {
-      spr:{first:{games:0,wins:0,draws:0,turns:0},second:{games:0,wins:0,draws:0,turns:0}},
-      sol:{first:{games:0,wins:0,draws:0,turns:0},second:{games:0,wins:0,draws:0,turns:0}},
+      spr:{first:{games:0,wins:0,draws:0,turns:0,lifeGain:0},second:{games:0,wins:0,draws:0,turns:0,lifeGain:0}},
+      sol:{first:{games:0,wins:0,draws:0,turns:0,lifeGain:0},second:{games:0,wins:0,draws:0,turns:0,lifeGain:0}},
     },
     cards: {},
     firstCards: {},
@@ -3315,6 +3423,17 @@ function pvptRecordResult(winner, turns) {
   if(secondWon) fmSecond.wins++;
   else if(winner === 'draw') fmSecond.draws++;
 
+  // Accumulate lifelink harvest into fm faction buckets
+  ['p1','p2'].forEach(pid => {
+    const fac = pid === 'p1' ? p1Fac : p2Fac;
+    const wentFirst = first === pid;
+    const bucket = wentFirst ? 'first' : 'second';
+    const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+    let sideLife = 0;
+    allCards.forEach(c => { sideLife += c._statLifeHarvest || 0; });
+    agg.fmFaction[fac][bucket].lifeGain += sideLife;
+  });
+
   // Turn distribution
   const _t = Math.min(turns, 50);
   if(winner === 'p1')      agg.turnDist.p1wins[_t] = (agg.turnDist.p1wins[_t] || 0) + 1;
@@ -3326,7 +3445,7 @@ function pvptRecordResult(winner, turns) {
     const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
     if(!deploys) return;
     Object.entries(deploys).forEach(([name, count]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       const a = agg.cards[name];
       if(count > 0) a.deployGames++;
       a.totalDeploys += count;
@@ -3342,7 +3461,7 @@ function pvptRecordResult(winner, turns) {
     if(!names.length) return;
     const maxCount = Math.max(...names.map(n => deploys[n]));
     names.filter(n => deploys[n] === maxCount).forEach(name => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       agg.cards[name].mvpCount++;
       if(winner === pid) agg.cards[name].mvpWinCount++;
     });
@@ -3361,12 +3480,15 @@ function pvptRecordResult(winner, turns) {
     const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
     allCards.forEach(c => {
       const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       agg.cards[name].totalEffDmg += c._statEffDmg || 0;
       agg.cards[name].totalHQDmg += c._statHQDmg || 0;
       agg.cards[name].totalLifeHarvest += c._statLifeHarvest || 0;
       agg.cards[name].totalHealthBuff += c._statHealthBuff || 0;
       agg.cards[name].totalDmgBlocked += c._statDmgBlocked || 0;
+      agg.cards[name].totalRawDmg += c._statRawDmg || 0;
+      agg.cards[name].totalL2 += c._statL2 || 0;
+      agg.cards[name].totalL3 += c._statL3 || 0;
     });
   });
 
@@ -3455,6 +3577,11 @@ function ptRecordResult(winner, turns) {
     fm.games++; fm.turns += turns;
     if(winner === pid) fm.wins++;
     else if(winner === 'draw') fm.draws++;
+    // Accumulate lifelink harvest for this side
+    const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
+    let sideLife = 0;
+    allCards.forEach(c => { sideLife += c._statLifeHarvest || 0; });
+    fm.lifeGain += sideLife;
   });
 
   // First card played
@@ -3469,7 +3596,7 @@ function ptRecordResult(winner, turns) {
   ['p1','p2'].forEach(pid => {
     const deploys = pid === 'p1' ? _ptGameDeploysP1 : _ptGameDeploysP2;
     Object.entries(deploys).forEach(([name, count]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       const a = agg.cards[name];
       if(count > 0) a.deployGames++;
       a.totalDeploys += count;
@@ -3484,7 +3611,7 @@ function ptRecordResult(winner, turns) {
     if(!names.length) return;
     const maxCount = Math.max(...names.map(n => deploys[n]));
     names.filter(n => deploys[n] === maxCount).forEach(name => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       agg.cards[name].mvpCount++;
       if(winner === pid) agg.cards[name].mvpWinCount++;
     });
@@ -3495,12 +3622,15 @@ function ptRecordResult(winner, turns) {
     const allCards = [...G[pid].field, ...G[pid].hand, ...G[pid].discard, ...(G[pid]._deadCards || [])].filter(c => c);
     allCards.forEach(c => {
       const name = CARDS[c.cardId] ? CARDS[c.cardId].name : c.name;
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       agg.cards[name].totalEffDmg += c._statEffDmg || 0;
       agg.cards[name].totalHQDmg += c._statHQDmg || 0;
       agg.cards[name].totalLifeHarvest += c._statLifeHarvest || 0;
       agg.cards[name].totalHealthBuff += c._statHealthBuff || 0;
       agg.cards[name].totalDmgBlocked += c._statDmgBlocked || 0;
+      agg.cards[name].totalRawDmg += c._statRawDmg || 0;
+      agg.cards[name].totalL2 += c._statL2 || 0;
+      agg.cards[name].totalL3 += c._statL3 || 0;
     });
   });
 }
@@ -3544,7 +3674,7 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
     // Per-card tracking
     const cardStats = {};
     function ensureCard(name) {
-      if(!cardStats[name]) cardStats[name] = { deployCount:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0 };
+      if(!cardStats[name]) cardStats[name] = { deployCount:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0 };
     }
 
     // Track deploys per game per team
@@ -3568,19 +3698,9 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
   
         // Play all cards for this half-turn
         while(G.playsLeft > 0 && G[pid].hand.length > 0 && G.phase !== 'over') {
-          const marginBefore = pid === 'p1'
-            ? G.p1.player_health - G.p2.player_health
-            : G.p2.player_health - G.p1.player_health;
-          const combos = cpuEnumerateCombos(pid);
-          const scored = [];
-          for(const combo of combos) {
-            scored.push({ combo, score: cpuEvaluateCombo(combo, marginBefore, pid) });
-          }
-          scored.sort((a,b) => b.score - a.score);
           const diff = pid === 'p1' ? p1Diff : p2Diff;
-          const topN = diff === 'standard' ? STANDARD_TOP_N : 1;
-          const pool = scored.slice(0, Math.min(topN, scored.length));
-          const bestCombo = pool[Math.floor(Math.random() * pool.length)].combo;
+          const result = cpuSelectCombo(pid, diff);
+          const bestCombo = result.combo;
 
           if(bestCombo.length === 0) {
             G.playsLeft = 0; // null play — done playing
@@ -3592,10 +3712,12 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
               const cardName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
               ensureCard(cardName);
               cardStats[cardName].deployCount++;
+              if(card.level >= 2) cardStats[cardName].totalL2++;
+              if(card.level >= 3) cardStats[cardName].totalL3++;
               if(!firstCard) firstCard = cardName;
               if(pid === 'p1') { p1Deploys[cardName]=(p1Deploys[cardName]||0)+1; if(card.level>=2)p1L.l2++; if(card.level>=3)p1L.l3++; }
               else             { p2Deploys[cardName]=(p2Deploys[cardName]||0)+1; if(card.level>=2)p2L.l2++; if(card.level>=3)p2L.l3++; }
-              G._evalTargetLane = play.target;
+              G._evalTargetLane = (play.target != null) ? play.target : undefined;
               playToLane(play.lane, play.instanceId);
               G._evalTargetLane = undefined;
             }
@@ -3674,10 +3796,22 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
         cardStats[name].totalLifeHarvest += c._statLifeHarvest || 0;
         cardStats[name].totalHealthBuff += c._statHealthBuff || 0;
         cardStats[name].totalDmgBlocked += c._statDmgBlocked || 0;
+        cardStats[name].totalRawDmg += c._statRawDmg || 0;
+      cardStats[name].totalL2 += c._statL2 || 0;
+      cardStats[name].totalL3 += c._statL3 || 0;
       });
     });
 
-    return { winner, first, turns: G.turn, cardStats, p1L, p2L, firstCard };
+    // Per-side damage totals for efficiency
+    const cardFactionMap = {};
+    Object.values(CARDS).forEach(c => { cardFactionMap[c.name] = c.faction; });
+    let p1Raw = 0, p1Useful = 0, p2Raw = 0, p2Useful = 0, p1Life = 0, p2Life = 0;
+    Object.entries(cardStats).forEach(([name, s]) => {
+      if(cardFactionMap[name] === G.p1.faction) { p1Raw += s.totalRawDmg; p1Useful += s.totalEffDmg + s.totalHQDmg; p1Life += s.totalLifeHarvest; }
+      else { p2Raw += s.totalRawDmg; p2Useful += s.totalEffDmg + s.totalHQDmg; p2Life += s.totalLifeHarvest; }
+    });
+
+    return { winner, first, turns: G.turn, cardStats, p1L, p2L, firstCard, p1Raw, p1Useful, p2Raw, p2Useful, p1Life, p2Life };
 
   } finally {
     G_sim  = false;
@@ -3744,7 +3878,7 @@ function simEvaluateCombo(combo, marginBefore, pid) {
       if(G.playsLeft <= 0) break;
       const card = G[pid].hand.find(c => c.instanceId === play.instanceId);
       if(!card) continue;
-      G._evalTargetLane = play.target;
+      G._evalTargetLane = (play.target != null) ? play.target : undefined;
       playToLane(play.lane, play.instanceId);
       G._evalTargetLane = undefined;
     }
@@ -3766,7 +3900,8 @@ function simEvaluateCombo(combo, marginBefore, pid) {
       if(card) survivingAllyThreat += agentFieldThreat(card, lane);
     });
 
-    const planning = planningBonus(pid);
+    const deployedIds = combo.map(p => p.instanceId);
+    const planning = planningBonus(pid, deployedIds);
     return deltaHealth - survivingOppThreat + survivingAllyThreat + planning
          + (G[oppPid].player_health <= 0 ?  99999 : 0)
          + (G[pid].player_health    <= 0 ? -99999 : 0);
@@ -3796,8 +3931,8 @@ function simRun() {
     total: 0, p1wins: 0, p2wins: 0, draws: 0, totalTurns: 0,
     // first mover: [p1faction, p2faction] × [first, second]
     fm: {
-      p1: { first: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
-      p2: { first: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
+      p1: { first: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}, second: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0} },
+      p2: { first: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}, second: {wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0} },
     },
     cards: {}, // cardName -> aggregated cardStats
     firstCards: {}, // cardName -> {games, wins, draws}
@@ -3839,6 +3974,17 @@ function simRun() {
         const lv = pid === 'p1' ? result.p1L : result.p2L;
         fm.l2 += lv.l2;
         fm.l3 += lv.l3;
+        // Efficiency: my raw/useful damage and opponent's
+        const myRaw = pid === 'p1' ? result.p1Raw : result.p2Raw;
+        const myUseful = pid === 'p1' ? result.p1Useful : result.p2Useful;
+        const oppRaw = pid === 'p1' ? result.p2Raw : result.p1Raw;
+        const oppUseful = pid === 'p1' ? result.p2Useful : result.p1Useful;
+        fm.rawDmg += myRaw || 0;
+        fm.usefulDmg += myUseful || 0;
+        fm.oppRawDmg += oppRaw || 0;
+        fm.oppUsefulDmg += oppUseful || 0;
+        const myLife = pid === 'p1' ? result.p1Life : result.p2Life;
+        fm.lifeGain += myLife || 0;
       });
 
       // First card played
@@ -3855,7 +4001,7 @@ function simRun() {
 
       // Card stats
       Object.entries(result.cardStats).forEach(([name, s]) => {
-        if(!agg.cards[name]) agg.cards[name] = { deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0 };
+        if(!agg.cards[name]) agg.cards[name] = { deployGames:0, totalDeploys:0, winGames:0, mvpCount:0, mvpWinCount:0, totalEffDmg:0, totalHQDmg:0, totalLifeHarvest:0, totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0 };
         const a = agg.cards[name];
         if(s.deployCount > 0) a.deployGames++;
         a.totalDeploys += s.deployCount;
@@ -3867,6 +4013,9 @@ function simRun() {
         a.totalLifeHarvest += s.totalLifeHarvest || 0;
         a.totalHealthBuff += s.totalHealthBuff || 0;
         a.totalDmgBlocked += s.totalDmgBlocked || 0;
+        a.totalRawDmg += s.totalRawDmg || 0;
+        a.totalL2 += s.totalL2 || 0;
+        a.totalL3 += s.totalL3 || 0;
         
       });
     }
@@ -3936,19 +4085,23 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
   let fmHtml = '';
   ['p1','p2'].forEach(pid => {
     const f = agg.fm[pid].first,  s = agg.fm[pid].second;
+    // const fAtkEff = f.rawDmg > 0 ? pct(f.usefulDmg / f.rawDmg) : '—';
+    // const fDefEff = f.oppRawDmg > 0 ? pct(1 - f.oppUsefulDmg / f.oppRawDmg) : '—';
+    // const sAtkEff = s.rawDmg > 0 ? pct(s.usefulDmg / s.rawDmg) : '—';
+    // const sDefEff = s.oppRawDmg > 0 ? pct(1 - s.oppUsefulDmg / s.oppRawDmg) : '—';
     fmHtml += `<tr>
       <td style="color:${fmColor[pid]};padding-left:12px;">${fmLabel[pid]}</td>
       <td>${f.games > 0 ? pct(f.wins/f.games)  : '—'}</td>
-      <td>${f.games > 0 ? pct(f.draws/f.games) : '—'}</td>
       <td>${avg(f.turns, f.games)}</td>
       <td>${f.games > 0 ? avg(f.l2, f.games)   : '—'}</td>
       <td>${f.games > 0 ? avg(f.l3, f.games)   : '—'}</td>
+      <td>${f.games > 0 ? avg(f.lifeGain, f.games) : '—'}</td>
       <td style="border-right:1px solid rgba(201,168,76,0.15);color:rgba(237,229,216,0.5);">${f.games}</td>
       <td>${s.games > 0 ? pct(s.wins/s.games)  : '—'}</td>
-      <td>${s.games > 0 ? pct(s.draws/s.games) : '—'}</td>
       <td>${avg(s.turns, s.games)}</td>
       <td>${s.games > 0 ? avg(s.l2, s.games)   : '—'}</td>
       <td>${s.games > 0 ? avg(s.l3, s.games)   : '—'}</td>
+      <td>${s.games > 0 ? avg(s.lifeGain, s.games) : '—'}</td>
       <td style="color:rgba(237,229,216,0.5);">${s.games}</td>
     </tr>`;
   });
@@ -3965,19 +4118,32 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
   const allFL3 = agg.fm.p1.first.l3  + agg.fm.p2.first.l3;
   const allSL2 = agg.fm.p1.second.l2 + agg.fm.p2.second.l2;
   const allSL3 = agg.fm.p1.second.l3 + agg.fm.p2.second.l3;
+  // Efficiency calcs — commented out for now
+  // const allFRaw = agg.fm.p1.first.rawDmg + agg.fm.p2.first.rawDmg;
+  // const allFUseful = agg.fm.p1.first.usefulDmg + agg.fm.p2.first.usefulDmg;
+  // const allFOppRaw = agg.fm.p1.first.oppRawDmg + agg.fm.p2.first.oppRawDmg;
+  // const allFOppUseful = agg.fm.p1.first.oppUsefulDmg + agg.fm.p2.first.oppUsefulDmg;
+  // const allSRaw = agg.fm.p1.second.rawDmg + agg.fm.p2.second.rawDmg;
+  // const allSUseful = agg.fm.p1.second.usefulDmg + agg.fm.p2.second.usefulDmg;
+  // const allSOppRaw = agg.fm.p1.second.oppRawDmg + agg.fm.p2.second.oppRawDmg;
+  // const allSOppUseful = agg.fm.p1.second.oppUsefulDmg + agg.fm.p2.second.oppUsefulDmg;
+
+  const allFLife = agg.fm.p1.first.lifeGain + agg.fm.p2.first.lifeGain;
+  const allSLife = agg.fm.p1.second.lifeGain + agg.fm.p2.second.lifeGain;
+
   fmHtml += `<tr style="border-top:1px solid rgba(201,168,76,0.2);color:rgba(237,229,216,0.45);">
     <td style="padding-left:12px;font-size:11px;">Overall</td>
     <td>${allFirst  > 0 ? pct(allFWins/allFirst)   : '—'}</td>
-    <td>${allFirst  > 0 ? pct(allFDraws/allFirst)  : '—'}</td>
     <td>${avg(allFTurns, allFirst)}</td>
     <td>${allFirst  > 0 ? avg(allFL2, allFirst)     : '—'}</td>
     <td>${allFirst  > 0 ? avg(allFL3, allFirst)     : '—'}</td>
+    <td>${allFirst  > 0 ? avg(allFLife, allFirst)   : '—'}</td>
     <td style="border-right:1px solid rgba(201,168,76,0.15);">${allFirst}</td>
     <td>${allSecond > 0 ? pct(allSWins/allSecond)  : '—'}</td>
-    <td>${allSecond > 0 ? pct(allSDraws/allSecond) : '—'}</td>
     <td>${avg(allSTurns, allSecond)}</td>
     <td>${allSecond > 0 ? avg(allSL2, allSecond)    : '—'}</td>
     <td>${allSecond > 0 ? avg(allSL3, allSecond)    : '—'}</td>
+    <td>${allSecond > 0 ? avg(allSLife, allSecond)  : '—'}</td>
     <td>${allSecond}</td>
   </tr>`;
   fmBody.innerHTML = fmHtml;
@@ -3992,6 +4158,8 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
 
   cards.forEach(([name, s]) => {
     const avgPlays   = (s.totalDeploys / total).toFixed(2);
+    const avgL2      = s.totalDeploys > 0 ? pct(s.totalL2 / s.totalDeploys) : '—';
+    const avgL3      = s.totalDeploys > 0 ? pct(s.totalL3 / s.totalDeploys) : '—';
     const winRate    = s.deployGames > 0 ? pct(s.winGames    / s.deployGames)  : '—';
     const mvpRate    = total > 0 ? pct(s.mvpCount    / total)  : '—';
     const mvpWin     = s.mvpCount    > 0 ? pct(s.mvpWinCount / s.mvpCount)     : '—';
@@ -3999,7 +4167,7 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
     const avgHQDmg   = s.totalDeploys > 0 ? (s.totalHQDmg / s.totalDeploys).toFixed(1) : '—';
     const avgLife    = s.totalDeploys > 0 ? (s.totalLifeHarvest / s.totalDeploys).toFixed(1) : '—';
     const avgHBuff   = s.totalDeploys > 0 ? (s.totalHealthBuff / s.totalDeploys).toFixed(1) : '—';
-    const avgBlocked = s.totalDeploys > 0 ? (s.totalDmgBlocked / s.totalDeploys).toFixed(1) : '—';
+    // const dmgEff     = s.totalRawDmg > 0 ? Math.round((s.totalEffDmg + s.totalHQDmg) / s.totalRawDmg * 100) + '%' : '—';
     const faction    = cardFaction[name] || '';
     const rowBg      = faction === 'spr' ? 'background:rgba(192,57,43,0.12);'
                      : faction === 'sol' ? 'background:rgba(201,168,76,0.1);'
@@ -4017,10 +4185,11 @@ function simRenderResults(agg, p1Faction, p2Faction, p1Diff, p2Diff, total) {
       <td>${avgHQDmg}</td>
       <td>${avgLife}</td>
       <td>${avgHBuff}</td>
-      <td>${avgBlocked}</td>
+      <td>${avgL2}</td>
+      <td>${avgL3}</td>
     </tr>`;
   });
-  cardBody.innerHTML = cardHtml || '<tr><td colspan="10" style="text-align:center;color:rgba(237,229,216,0.25);">No data</td></tr>';
+  cardBody.innerHTML = cardHtml || '<tr><td colspan="9" style="text-align:center;color:rgba(237,229,216,0.25);">No data</td></tr>';
 
   // Turns analysis histogram
   (function() {
@@ -4165,15 +4334,15 @@ function simTest3() {
   const logLines = [];
   const agg = { total:0, p1wins:0, p2wins:0, draws:0, totalTurns:0,
     fm: {
-      p1: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
-      p2: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0} },
+      p1: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0} },
+      p2: { first:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0}, second:{wins:0,draws:0,turns:0,games:0,l2:0,l3:0,rawDmg:0,usefulDmg:0,oppRawDmg:0,oppUsefulDmg:0,lifeGain:0} },
     },
     cards: {},
     firstCards: {},
     turnDist: {p1wins: {}, p2wins: {}, draws: {}},
   };
 
-  for(let g = 1; g <= 3; g++) {
+  for(let g = 1; g <= 50; g++) {
     // Run game with logging enabled (G_sim=false inside)
     const result = simTest3RunOneGame(p1Deck, p2Deck, p1Difficulty, p2Difficulty);
 
@@ -4206,6 +4375,14 @@ function simTest3() {
       else if(result.winner === 'draw') fm.draws++;
       const lv = pid === 'p1' ? result.p1L : result.p2L;
       fm.l2 += lv.l2; fm.l3 += lv.l3;
+      const myRaw = pid === 'p1' ? result.p1Raw : result.p2Raw;
+      const myUseful = pid === 'p1' ? result.p1Useful : result.p2Useful;
+      const oppRaw = pid === 'p1' ? result.p2Raw : result.p1Raw;
+      const oppUseful = pid === 'p1' ? result.p2Useful : result.p1Useful;
+      fm.rawDmg += myRaw || 0; fm.usefulDmg += myUseful || 0;
+      fm.oppRawDmg += oppRaw || 0; fm.oppUsefulDmg += oppUseful || 0;
+      const myLife = pid === 'p1' ? result.p1Life : result.p2Life;
+      fm.lifeGain += myLife || 0;
     });
 
     if(result.firstCard) {
@@ -4217,7 +4394,7 @@ function simTest3() {
     }
 
     Object.entries(result.cardStats).forEach(([name, s]) => {
-      if(!agg.cards[name]) agg.cards[name] = {deployGames:0,totalDeploys:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0};
+      if(!agg.cards[name]) agg.cards[name] = {deployGames:0,totalDeploys:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
       const a = agg.cards[name];
       if(s.deployCount > 0) a.deployGames++;
       a.totalDeploys += s.deployCount;
@@ -4228,6 +4405,9 @@ function simTest3() {
       a.totalLifeHarvest += s.totalLifeHarvest || 0;
       a.totalHealthBuff += s.totalHealthBuff || 0;
         a.totalDmgBlocked += s.totalDmgBlocked || 0;
+        a.totalRawDmg += s.totalRawDmg || 0;
+        a.totalL2 += s.totalL2 || 0;
+        a.totalL3 += s.totalL3 || 0;
     });
   }
 
@@ -4235,7 +4415,7 @@ function simTest3() {
   window._simAgg = agg;
   document.getElementById('ss-p1label').textContent = p1Label + ' WINS';
   document.getElementById('ss-p2label').textContent = p2Label + ' WINS';
-  simRenderResults(agg, p1Faction, p2Faction, p1Difficulty, p2Difficulty, 3);
+  simRenderResults(agg, p1Faction, p2Faction, p1Difficulty, p2Difficulty, 50);
 
   // Update progress bar
   document.getElementById('sim-progress-bar').style.width = '100%';
@@ -4245,7 +4425,7 @@ function simTest3() {
   const logText = logLines.join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(logText);
-  a.download = 'test3_games_log.txt';
+  a.download = 'test50_replace_log.txt';
   a.click();
 }
 
@@ -4288,7 +4468,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 
     const cardStats = {};
     function ensureCard(name) {
-      if(!cardStats[name]) cardStats[name] = {deployCount:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0};
+      if(!cardStats[name]) cardStats[name] = {deployCount:0,winGames:0,mvpCount:0,mvpWinCount:0,totalEffDmg:0,totalHQDmg:0,totalLifeHarvest:0,totalHealthBuff:0, totalDmgBlocked:0, totalRawDmg:0, totalL2:0, totalL3:0};
     }
     const p1Deploys = {}, p2Deploys = {};
     const p1L = {l2:0,l3:0}, p2L = {l2:0,l3:0};
@@ -4301,23 +4481,106 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 
       // Play cards — eval with G_sim=true, execute playToLane with G_sim=false for logging
       while(G.playsLeft > 0 && G[pid].hand.length > 0 && G.phase !== 'over') {
-        const marginBefore = pid === 'p1'
-          ? G.p1.player_health - G.p2.player_health
-          : G.p2.player_health - G.p1.player_health;
-        const combos = cpuEnumerateCombos(pid);
-        const scored = [];
-        for(const combo of combos) {
-          scored.push({ combo, score: cpuEvaluateCombo(combo, marginBefore, pid) });
-        }
-        scored.sort((a,b) => b.score - a.score);
+        window._replaceDebug = [];
+        window._replaceScores = [];
         const diff = pid === 'p1' ? p1Diff : p2Diff;
-        const topN = diff === 'standard' ? STANDARD_TOP_N : 1;
-        const pool = scored.slice(0, Math.min(topN, scored.length));
-        const bestCombo = pool[Math.floor(Math.random() * pool.length)].combo;
+        const result = cpuSelectCombo(pid, diff);
+        const bestCombo = result.combo;
+        const scored = result.scored;
+        const marginBefore = result.marginBefore;
+
+        // Log T1 candidates
+        if(G.absoluteTurn === 1) {
+          const handScores = {};
+          scored.forEach(s => {
+            s.combo.forEach(p => {
+              const card = G[pid].hand.find(c => c.instanceId === p.instanceId);
+              if(card && (!handScores[card.name] || s.score > handScores[card.name])) {
+                handScores[card.name] = s.score;
+              }
+            });
+          });
+          log(`  🎲 T1 HAND (${G[pid].hand.length} cards):`);
+          Object.entries(handScores)
+            .sort((a,b) => b[1] - a[1])
+            .forEach(([name, score]) => {
+              log(`    ${name}: ${score.toFixed(1)}`);
+            });
+          // Log lottery result
+          const pickedName = bestCombo.map(p => {
+            const c = G[pid].hand.find(c => c.instanceId === p.instanceId);
+            return c ? c.name : '?';
+          }).join(' + ') || '(pass)';
+          log(`  🎰 T1 LOTTERY picked: ${pickedName}`);
+        }
 
         if(bestCombo.length === 0) {
           G.playsLeft = 0;
         } else {
+          // Detect replace combos and log alternatives
+          if(bestCombo.length === 2 && bestCombo[0].lane === bestCombo[1].lane) {
+            const nameA = G[pid].hand.find(c => c.instanceId === bestCombo[0].instanceId);
+            const nameB = G[pid].hand.find(c => c.instanceId === bestCombo[1].instanceId);
+            // Only warn if card A doesn't have hand_off
+            if(!nameA || nameA.ability !== 'hand_off') {
+              // Log friendly and opponent board state
+              const boardState = G[pid].field.map((c, i) => c ? `L${i+1}:${c.name}(${c.currentPower}/${c.currentHealth})` : `L${i+1}:empty`).join(' | ');
+              const oppPid2 = pid === 'p1' ? 'p2' : 'p1';
+              const oppBoard = G[oppPid2].field.map((c, i) => c ? `L${i+1}:${c.name}(${c.currentPower}/${c.currentHealth})` : `L${i+1}:empty`).join(' | ');
+              const bothEmpty = !G[pid].field.some(c => c) && !G[oppPid2].field.some(c => c);
+              log(`  ⚠️ REPLACE COMBO: ${nameA?nameA.name:'?'} → ${nameB?nameB.name:'?'} both lane ${bestCombo[0].lane+1}, score: ${scored[0].score.toFixed(1)}`);
+              // Dump phantom card debug - find entry matching the winning combo
+              if(window._replaceDebug && window._replaceDebug.length > 0) {
+                const winIds = bestCombo.map(p => p.instanceId).join(',');
+                const winLanes = bestCombo.map(p => p.lane).join(',');
+                const d = window._replaceDebug.find(x => x.comboIds === winIds && x.comboLanes === winLanes);
+                if(d) {
+                  // Find the returned score from cpuSelectCombo loop
+                  const winIds = bestCombo.map(p => p.instanceId).join(',');
+                  const winLanes = bestCombo.map(p => p.lane).join(',');
+                  const rs = window._replaceScores ? window._replaceScores.find(x => x.ids === winIds && x.lanes === winLanes) : null;
+                  log(`  🔍 PHANTOM CHECK:`);
+                  log(`    Ally field (${d.allyCount}): [${d.allyCards.join(', ')}]`);
+                  log(`    Opp field (${d.oppCount}): [${d.oppCards.join(', ')}]`);
+                  log(`    Internal score: ${d.score.toFixed(1)} = ΔHP:${d.deltaHealth.toFixed(1)} -Opp:${d.survivingOppThreat.toFixed(1)} +Ally:${d.survivingAllyThreat.toFixed(1)} +Plan:${d.planning.toFixed(1)} +T1:${d.firstTurnBonus} +LA:${d.lookAheadBonus.toFixed(1)}`);
+                  log(`    Returned score: ${rs ? rs.returnedScore.toFixed(1) : 'NOT FOUND'}`);
+                  log(`    Scored[0] score: ${scored[0].score.toFixed(1)}`);
+                  log(`    Hand remaining: ${d.handRemaining}, Discard: ${d.discardCount}, PlaysLeft: ${d.playsLeft}`);
+                } else {
+                  log(`  🔍 PHANTOM CHECK: no matching debug entry found (${window._replaceDebug.length} entries)`);
+                }
+              }
+              window._replaceDebug = [];
+              log(`  BothBoardsEmpty: ${bothEmpty}`);
+              log(`  Hand: ${G[pid].hand.map(c => c.name).join(', ')}`);
+              log(`  Friendly: ${boardState}`);
+              log(`  Opponent: ${oppBoard}`);
+              // Run eval on the replace combo to get breakdown
+              const _savedTest3b = G_test3; G_test3 = true;
+              window._lastEvalBreakdown = null;
+              cpuEvaluateCombo(bestCombo, result.marginBefore, pid);
+              G_test3 = _savedTest3b;
+              // Also run eval on the best non-replace alternative
+              const nonReplace = scored.find(s => s.combo.length === 2 && s.combo[0].lane !== s.combo[1].lane);
+              if(nonReplace) {
+                const nrNames = nonReplace.combo.map(p => {
+                  const c = G[pid].hand.find(c => c.instanceId === p.instanceId);
+                  return c ? c.name : '?';
+                }).join(' + ');
+                log(`  Best non-replace: ${nrNames} lanes ${nonReplace.combo.map(p=>p.lane+1).join(',')} = ${nonReplace.score.toFixed(1)}`);
+              }
+              log(`  Top 5 alternatives:`);
+              scored.slice(0, 5).forEach((s, rank) => {
+                const names = s.combo.map(p => {
+                  const c = G[pid].hand.find(c => c.instanceId === p.instanceId);
+                  return c ? c.name : '?';
+                }).join(' + ') || '(pass)';
+                const lanes = s.combo.map(p => p.lane + 1).join(',');
+                log(`    #${rank+1}: ${names} lanes ${lanes} = ${s.score.toFixed(1)}`);
+              });
+            }
+          }
+
           // Re-evaluate winning combo to capture breakdown for logging
           window._lastEvalBreakdown = null;
           const _savedTest3 = G_test3; G_test3 = true;
@@ -4331,17 +4594,19 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
             const cardName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
             ensureCard(cardName);
             cardStats[cardName].deployCount++;
+            if(card.level >= 2) cardStats[cardName].totalL2++;
+            if(card.level >= 3) cardStats[cardName].totalL3++;
             if(!firstCard) firstCard = cardName;
             if(pid === 'p1') { p1Deploys[cardName]=(p1Deploys[cardName]||0)+1; if(card.level>=2)p1L.l2++; if(card.level>=3)p1L.l3++; }
             else             { p2Deploys[cardName]=(p2Deploys[cardName]||0)+1; if(card.level>=2)p2L.l2++; if(card.level>=3)p2L.l3++; }
-            G._evalTargetLane = play.target;
+            G._evalTargetLane = (play.target != null) ? play.target : undefined;
             playToLane(play.lane, play.instanceId);
             G._evalTargetLane = undefined;
           }
           // Log eval breakdown
           if(window._lastEvalBreakdown) {
             const b = window._lastEvalBreakdown;
-            log(`  📊 CPUEval: ${b.total.toFixed(1)} = ΔHP:${b.deltaHealth.toFixed(1)} -OppThreat:${b.survivingOppThreat.toFixed(1)} +AllyThreat:${b.survivingAllyThreat.toFixed(1)} +Plan:${b.planning.toFixed(1)} +T1:${b.firstTurnBonus} +LA:${b.lookAheadBonus.toFixed(1)}`);
+            log(`  📊 CPUEval: ${b.total.toFixed(1)} = ΔHP:${b.deltaHealth.toFixed(1)} -OppThreat:${b.survivingOppThreat.toFixed(1)} +AllyThreat:${b.survivingAllyThreat.toFixed(1)} +Plan:${b.planning.toFixed(1)} +T1:${b.firstTurnBonus} +LA:${b.lookAheadBonus.toFixed(1)} [field:${b.allyFieldCount}]`);
           }
         }
       }
@@ -4394,10 +4659,22 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
         cardStats[name].totalLifeHarvest += c._statLifeHarvest || 0;
         cardStats[name].totalHealthBuff += c._statHealthBuff || 0;
         cardStats[name].totalDmgBlocked += c._statDmgBlocked || 0;
+        cardStats[name].totalRawDmg += c._statRawDmg || 0;
+      cardStats[name].totalL2 += c._statL2 || 0;
+      cardStats[name].totalL3 += c._statL3 || 0;
       });
     });
 
-    return { winner, first, turns: G.turn, cardStats, p1L, p2L, firstCard, log: G.log.slice() };
+    // Per-side damage totals for efficiency
+    const cardFactionMap = {};
+    Object.values(CARDS).forEach(c => { cardFactionMap[c.name] = c.faction; });
+    let p1Raw = 0, p1Useful = 0, p2Raw = 0, p2Useful = 0, p1Life = 0, p2Life = 0;
+    Object.entries(cardStats).forEach(([name, s]) => {
+      if(cardFactionMap[name] === G.p1.faction) { p1Raw += s.totalRawDmg; p1Useful += s.totalEffDmg + s.totalHQDmg; p1Life += s.totalLifeHarvest; }
+      else { p2Raw += s.totalRawDmg; p2Useful += s.totalEffDmg + s.totalHQDmg; p2Life += s.totalLifeHarvest; }
+    });
+
+    return { winner, first, turns: G.turn, cardStats, p1L, p2L, firstCard, log: G.log.slice(), p1Raw, p1Useful, p2Raw, p2Useful, p1Life, p2Life };
 
   } finally {
     G_sim   = savedGsim;
@@ -4412,7 +4689,7 @@ function simTest3RunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
 function simExportCSV() {
   const agg = window._simAgg;
   if(!agg) { alert('Run simulation first.'); return; }
-  const rows = [['Card','Avg Plays','Win Rate','MVP Rate','MVP Win Rate','Eff Dmg','HQ Dmg','Life','H Buff','Blocked']];
+  const rows = [['Card','Avg Plays','Win Rate','MVP Rate','MVP Win Rate','Eff Dmg','HQ Dmg','Life','H Buff']];
   Object.entries(agg.cards).forEach(([name, s]) => {
     const n = agg.total;
     rows.push([
@@ -4425,7 +4702,6 @@ function simExportCSV() {
       s.totalDeploys>0 ? (s.totalHQDmg/s.totalDeploys).toFixed(1) : '—',
       s.totalDeploys>0 ? (s.totalLifeHarvest/s.totalDeploys).toFixed(1) : '—',
       s.totalDeploys>0 ? (s.totalHealthBuff/s.totalDeploys).toFixed(1) : '—',
-      s.totalDeploys>0 ? (s.totalDmgBlocked/s.totalDeploys).toFixed(1) : '—',
     ]);
   });
   const csv = rows.map(r => r.join(',')).join('\n');
@@ -4466,27 +4742,25 @@ function simPrintLog() {
   // First mover
   lines.push('FIRST MOVER ADVANTAGE');
   lines.push('─────────────────────────────────────────────────────');
-  lines.push(`${'Deck'.padEnd(20)} ${'Goes First'.padEnd(38)} Goes Second`);
+  lines.push(`${'Deck'.padEnd(20)} ${'Goes First'.padEnd(24)} Goes Second`);
   lines.push(`${''.padEnd(20)} ${'Win'.padEnd(8)} ${'Draw'.padEnd(8)} ${'Turns'.padEnd(8)} ${'Games'.padEnd(8)} ${'Win'.padEnd(8)} ${'Draw'.padEnd(8)} ${'Turns'.padEnd(8)} Games`);
   ['p1','p2'].forEach(pid => {
     const label = (pid === 'p1' ? p1Label : p2Label).padEnd(20);
     const f = agg.fm[pid].first, s = agg.fm[pid].second;
     const fw  = (f.games > 0 ? pct(f.wins/f.games)  : '—').padEnd(8);
-    const fd  = (f.games > 0 ? pct(f.draws/f.games) : '—').padEnd(8);
     const ft  = avg(f.turns, f.games).padEnd(8);
     const fg  = String(f.games).padEnd(8);
     const sw  = (s.games > 0 ? pct(s.wins/s.games)  : '—').padEnd(8);
-    const sd  = (s.games > 0 ? pct(s.draws/s.games) : '—').padEnd(8);
     const st  = avg(s.turns, s.games).padEnd(8);
     const sg  = String(s.games);
-    lines.push(`${label} ${fw}${fd}${ft}${fg}${sw}${sd}${st}${sg}`);
+    lines.push(`${label} ${fw}${ft}${fg}${sw}${st}${sg}`);
   });
   lines.push('');
 
   // Card performance
   lines.push('CARD PERFORMANCE');
   lines.push('─────────────────────────────────────────────────────');
-  lines.push(`${'Card'.padEnd(22)} ${'Avg Plays'.padEnd(11)} ${'Win Rate'.padEnd(11)} ${'MVP Rate'.padEnd(11)} ${'MVP Win'.padEnd(11)} ${'Eff Dmg'.padEnd(9)} ${'HQ Dmg'.padEnd(9)} ${'Life'.padEnd(9)} ${'H Buff'.padEnd(9)} Blocked`);
+  lines.push(`${'Card'.padEnd(22)} ${'Avg Plays'.padEnd(11)} ${'Win Rate'.padEnd(11)} ${'MVP Rate'.padEnd(11)} ${'MVP Win'.padEnd(11)} ${'Eff Dmg'.padEnd(9)} ${'HQ Dmg'.padEnd(9)} ${'Life'.padEnd(9)} H Buff`);
   const cardFaction = {};
   Object.values(CARDS).forEach(c => { cardFaction[c.name] = c.faction; });
   const cards = Object.entries(agg.cards).sort((a,b) => b[1].totalDeploys - a[1].totalDeploys);
@@ -4500,9 +4774,8 @@ function simPrintLog() {
     const col5 = (s.totalDeploys > 0 ? (s.totalEffDmg/s.totalDeploys).toFixed(1) : '—').padEnd(9);
     const col6 = (s.totalDeploys > 0 ? (s.totalHQDmg/s.totalDeploys).toFixed(1) : '—').padEnd(9);
     const col7 = (s.totalDeploys > 0 ? (s.totalLifeHarvest/s.totalDeploys).toFixed(1) : '—').padEnd(9);
-    const col8 = (s.totalDeploys > 0 ? (s.totalHealthBuff/s.totalDeploys).toFixed(1) : '—').padEnd(9);
-    const col9 = s.totalDeploys > 0 ? (s.totalDmgBlocked/s.totalDeploys).toFixed(1) : '—';
-    lines.push(`${col0} ${col1}${col2}${col3}${col4}${col5}${col6}${col7}${col8}${col9}`);
+    const col8 = s.totalDeploys > 0 ? (s.totalHealthBuff/s.totalDeploys).toFixed(1) : '—';
+    lines.push(`${col0} ${col1}${col2}${col3}${col4}${col5}${col6}${col7}${col8}`);
   });
   lines.push('');
 
@@ -4575,10 +4848,6 @@ function init() {
 
 function deal(p, n) {
   for(let i=0;i<n;i++){
-    if(!p.deck.length){
-      p.deck = shuffle(p.discard); p.discard = [];
-      if(p.deck.length) log(`♻ ${p.name} discard reshuffled into deck.`,'imp');
-    }
     if(p.deck.length) {
       p.hand.push(p.deck.shift());
       if(!G_sim && !(MODE === 'cpu' && p.id === 'p2')) { const _d = i; setTimeout(() => playSFX('carddraw'), _d * 120); }
@@ -4711,6 +4980,7 @@ function playToLane(lane, cardInstanceId = null) {
   if(!G_sim && card.cardId === 'SPR4') playSFX('ballin');
   if(!G_sim && card.cardId === 'SPR2') playSFX('flamethrower');
   if(!G_sim && card.cardId === 'SPR3') playSFX('siennablaze');
+  if(!G_sim && card.cardId === 'SPR8') playSFX('kamikaze');
   // Play testing: track deploys
   if(_ptAwaitingResult && !G_sim) {
     const _ptName = CARDS[card.cardId] ? CARDS[card.cardId].name : card.name;
@@ -4796,6 +5066,8 @@ function battle() {
         const effDmgB = Math.min(dA, a.currentHealth + dA); // effective damage dealt by b
         a._statEffDmg = (a._statEffDmg || 0) + effDmgA;
         b._statEffDmg = (b._statEffDmg || 0) + effDmgB;
+        a._statRawDmg = (a._statRawDmg || 0) + a.currentPower; // raw power committed by a
+        b._statRawDmg = (b._statRawDmg || 0) + b.currentPower; // raw power committed by b
         a._statDmgBlocked = (a._statDmgBlocked || 0) + dA;
         b._statDmgBlocked = (b._statDmgBlocked || 0) + dB;
       }
@@ -4844,6 +5116,7 @@ function battle() {
         G.p2.player_health -= a.currentPower;
         _dmgOnlyToP2 += a.currentPower;
         if(G._trackStats) a._statHQDmg = (a._statHQDmg || 0) + a.currentPower;
+        if(G._trackStats) a._statRawDmg = (a._statRawDmg || 0) + a.currentPower;
         if(a.ability === 'on_compromise_prowess') a._growEarned = (a._growEarned || 0) + a.abilityX;
         if(a.lifelink) { G.p1.player_health += a.currentPower; if(G._trackStats) a._statLifeHarvest = (a._statLifeHarvest || 0) + a.currentPower; log(`  LIFELINK — ${a.name} grants +${a.currentPower} Player_Health to P1!`,'abi'); }
         if(a.poisoned > 0) { G.p2.player_health -= a.poisoned; log(`Lane ${i+1}: ${a.name} COMPROMISES OPPONENT — P2 -${a.currentPower} Player_Health + ${a.poisoned} Traced.`,'inf'); }
@@ -4856,6 +5129,7 @@ function battle() {
         G.p1.player_health -= b.currentPower;
         _dmgOnlyToP1 += b.currentPower;
         if(G._trackStats) b._statHQDmg = (b._statHQDmg || 0) + b.currentPower;
+        if(G._trackStats) b._statRawDmg = (b._statRawDmg || 0) + b.currentPower;
         if(b.ability === 'on_compromise_prowess') b._growEarned = (b._growEarned || 0) + b.abilityX;
         if(b.lifelink) { G.p2.player_health += b.currentPower; if(G._trackStats) b._statLifeHarvest = (b._statLifeHarvest || 0) + b.currentPower; log(`  LIFELINK — ${b.name} grants +${b.currentPower} Player_Health to P2!`,'abi'); }
         if(b.poisoned > 0) { G.p1.player_health -= b.poisoned; log(`Lane ${i+1}: ${b.name} COMPROMISES OPPONENT — P1 -${b.currentPower} Player_Health + ${b.poisoned} Traced.`,'inf'); }
@@ -4915,7 +5189,7 @@ function battle() {
   // COMBAT_CLEANUP — check for post-battle abilities (Grow etc.)
   G.phase = 'combat_cleanup_passive';
   let hasCombatCleanup = ['p1','p2'].some(pid =>
-    G[pid].field.some(c => c && c._growEarned)
+    G[pid].field.some(c => c && (c._growEarned || c.ability === 'kamikaze'))
   );
 
   const _hasDeaths = _deadIids.length > 0;
@@ -4949,8 +5223,33 @@ function battle() {
         render();
         setTimeout(() => {
           resolveActions('combat_cleanup_passive', G.active);
-          enterEndturnPlay();
-        }, 1000);
+
+          // Apply kamikaze vanish animation directly to DOM
+          ['p1','p2'].forEach(pid => {
+            G[pid].field.forEach(c => {
+              if(c && c._kamikazeVanishing) {
+                const el = document.querySelector(`.fcard[data-iid="${c.instanceId}"]`);
+                if(el) el.classList.add('kamikaze-vanish');
+              }
+            });
+          });
+
+          // Dynamic delay: 3s for kamikaze vanish, 1s for other cleanup (grow flash)
+          const hasKamikaze = ['p1','p2'].some(pid =>
+            G[pid].field.some(c => c && c._kamikazeVanishing)
+          );
+          const cleanupDelay = hasKamikaze ? 3000 : 1000;
+
+          setTimeout(() => {
+            // Remove any kamikaze-vanishing cards from field
+            ['p1','p2'].forEach(pid => {
+              G[pid].field.forEach((c, i) => {
+                if(c && c._kamikazeVanishing) G[pid].field[i] = null;
+              });
+            });
+            enterEndturnPlay();
+          }, cleanupDelay);
+        }, 200);
       } else {
         enterEndturnPlay();
       }
@@ -5033,9 +5332,13 @@ function flashCard(instanceId) {
   if(G_sim) return;
   if(!G._flashIds) G._flashIds = new Set();
   G._flashIds.add(instanceId);
+  // Apply directly to DOM so it works without a render() call
+  const el = document.querySelector(`.fcard[data-iid="${instanceId}"]`);
+  if(el) el.classList.add('card-flash');
   // Clear after animation completes
   setTimeout(() => {
     if(G._flashIds) G._flashIds.delete(instanceId);
+    if(el) el.classList.remove('card-flash');
   }, 650);
 }
 
@@ -5260,29 +5563,21 @@ function applyPresenceBuffs(pid) {
 // Map game abilities to template badge images
 
 function getLevelImg(faction, level) {
-  if (faction === 'sol') return CARD_ASSETS[`g_level_${level}`] || CARD_ASSETS.g_level_1;
-  return CARD_ASSETS[`level_${level}`] || CARD_ASSETS.level_1;
+  if (level === 1) return faction === 'sol' ? CARD_ASSETS.g_level_1 : CARD_ASSETS.level_1;
+  return CARD_ASSETS[`badge_level${level}`] || CARD_ASSETS.badge_level2;
 }
 function getTemplateBadges(card, context) {
   // context: 'hand', 'justDeployed', 'field'
-  const faction = card.faction || '';
-  const isGuardian = faction === 'sol';
-  const b = isGuardian ? {
-    haste:        CARD_ASSETS.g_badge_haste        || CARD_ASSETS.badge_haste,
-    breakthrough: CARD_ASSETS.g_badge_breakthrough  || CARD_ASSETS.badge_breakthrough,
-    lifelink:     CARD_ASSETS.g_badge_lifelink      || CARD_ASSETS.badge_lifelink,
-    mobility:     CARD_ASSETS.g_badge_mobility      || CARD_ASSETS.badge_mobility,
-    special:      CARD_ASSETS.badge_special,
-  } : {
-    haste:        CARD_ASSETS.badge_haste,
-    breakthrough: CARD_ASSETS.badge_breakthrough,
-    lifelink:     CARD_ASSETS.badge_lifelink,
-    mobility:     CARD_ASSETS.badge_mobility,
-    special:      CARD_ASSETS.badge_special,
+  const b = {
+    haste:    CARD_ASSETS.badge_haste,
+    smash:    CARD_ASSETS.badge_smash,
+    lifelink: CARD_ASSETS.badge_lifelink,
+    mobility: CARD_ASSETS.badge_mobility,
+    special:  CARD_ASSETS.badge_special,
   };
 
   const specialAbilities = ['healer','hand_off','deploy_twin_flames','deploy_extra_cover',
-    'deploy_siphon','move_and_cover','move_and_cover_all','tribal_prowess',
+    'deploy_siphon','deploy_fuse','karma','kamikaze','move_and_cover','move_and_cover_all','tribal_prowess',
     'adjacent_prowess','adjacent_swift_prowess','on_compromise_prowess'];
   const isSpecial = specialAbilities.includes(card.ability);
   const isDeployAbility = (card.ability || '').startsWith('deploy_');
@@ -5294,8 +5589,8 @@ function getTemplateBadges(card, context) {
   // Haste — only in hand and justDeployed, not settled field
   if (card.manic && !isSettled) badges.push({ img: b.haste });
 
-  // Breach
-  if (card.smash) badges.push({ img: b.breakthrough });
+  // Smash/Breach
+  if (card.smash) badges.push({ img: b.smash });
 
   // Elusive
   if (card.slippery > 0) badges.push({ img: b.mobility });
@@ -5309,9 +5604,9 @@ function getTemplateBadges(card, context) {
   return badges;
 }
 
-// Get level badge image
-function getTemplateLevelBadge(level) {
-  return CARD_ASSETS[`level_${level}`] || CARD_ASSETS.level_1;
+// Get level badge image (alias for getLevelImg)
+function getTemplateLevelBadge(faction, level) {
+  return getLevelImg(faction, level);
 }
 
 
@@ -5664,16 +5959,15 @@ function showZoom(cardId, level, poisoned) {
       </div>
     </div>`;
 
-  const isGuardian = t.faction === 'sol';
   // Build keyword rows — badge + name + description
   const KEYWORD_DEFS = [
-    { key: 'manic',     check: live.manic && zoomContext !== 'field', badge: isGuardian ? CARD_ASSETS.g_badge_haste        : CARD_ASSETS.badge_haste,
+    { key: 'manic',     check: live.manic && zoomContext !== 'field', badge: CARD_ASSETS.badge_haste,
       name: 'Manic',      desc: `Agent may attack the same turn it enters the field.` },
-    { key: 'breach',   check: live.smash,  badge: isGuardian ? CARD_ASSETS.g_badge_breakthrough  : CARD_ASSETS.badge_breakthrough,
+    { key: 'breach',   check: live.smash,  badge: CARD_ASSETS.badge_smash,
       name: 'Smash',     desc: `Excess damage carries through to damage the enemy HQ.` },
-    { key: 'elusive',  check: live.slippery>0, badge: isGuardian ? CARD_ASSETS.g_badge_mobility      : CARD_ASSETS.badge_mobility,
+    { key: 'elusive',  check: live.slippery>0, badge: CARD_ASSETS.badge_mobility,
       name: 'Elusive',   desc: `Once per turn, agent may move ${liveCard ? live.elusive : s.slippery} space${(liveCard ? live.elusive : s.slippery)>1?'s':''}, before or after combat.` },
-    { key: 'lifelink',  check: live.lifelink,     badge: isGuardian ? CARD_ASSETS.g_badge_lifelink       : CARD_ASSETS.badge_lifelink,
+    { key: 'lifelink',  check: live.lifelink,     badge: CARD_ASSETS.badge_lifelink,
       name: 'Harvest',   desc: `Increase your HQ health equal to the damage dealt by this agent.` },
   ];
 
@@ -5685,6 +5979,7 @@ function showZoom(cardId, level, poisoned) {
     deploy_fuse:                    `On Deploy, copy the Power and Health of an adjacent Agent.`,
     kickback:                       `At the end of each of your turns, grant a target Agent +X/+X equal to the damage this Agent dealt to the enemy Agent.`,
     karma:                          `When this Agent blocks on your turn, it harvests the damage it takes and gives it to a target Agent as +X/+X. This triggers at the end of your turn.`,
+    kamikaze:                       `This Agent vanishes after combat.`,
     deploy_extra_cover:      `On Deploy, give a target Agent +${s.abilityX} Health.`,
     healer:                  `At the end of each of your turns, give a target Agent +${s.abilityX}/+${s.abilityX}.`,
     deploy_siphon:           `On Deploy, give a target Agent Harvest.`,
