@@ -164,7 +164,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 }
 
 /* ── SHELL ── */
-#game { position:fixed; inset:0; display:flex; flex-direction:row; background-size:cover; background-position:top center; }
+#game { position:fixed; inset:0; display:flex; flex-direction:row; background-color:#04040c; background-size:cover; background-position:top center; }
 
 /* ── LEFT: BATTLEFIELD ── */
 #battlefield { flex:none; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
@@ -189,8 +189,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   padding:6px 10px; gap:8px; background:rgba(0,0,0,0.55);
   border-top:1px solid rgba(201,168,76,0.18); overflow-x:auto;
 }
-#hand-row::-webkit-scrollbar { height:2px; }
+#hand-row::-webkit-scrollbar { height:0px; display:none; }
 #hand-row::-webkit-scrollbar-thumb { background:var(--gold); }
+#hand-row { scrollbar-width:none; }
 #action-bar {
   flex:0 0 auto; display:flex; align-items:center; justify-content:space-between;
   padding:4px 12px; padding-bottom:max(12px, env(safe-area-inset-bottom, 12px));
@@ -210,7 +211,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 /* ── RIGHT PANEL ── */
 #right-panel {
   flex:1 1 0; display:flex; flex-direction:column; min-width:140px; max-width:400px;
-  background:transparent; border-left:1px solid var(--border);
+  background:#04040c; border-left:1px solid var(--border);
 }
 .player-block {
   flex:1 1 0; display:flex; flex-direction:column;
@@ -313,8 +314,8 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   background:linear-gradient(0deg,rgba(0,0,0,0.95) 55%,transparent);
   border-radius:0 0 6px 6px;
 }
-.fa { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#e74c3c; text-shadow:0 0 10px rgba(231,76,60,0.9); line-height:1; }
-.fc { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#2ecc71; text-shadow:0 0 10px rgba(46,204,113,0.9); line-height:1; }
+.fa { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#D9D8D4; text-shadow:0 0 10px rgba(217,216,212,0.5); line-height:1; }
+.fc { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#D9D8D4; text-shadow:0 0 10px rgba(217,216,212,0.5); line-height:1; }
 .fc.dmg{color:var(--orange);} .fc.crit{color:var(--red);}
 
 /* ── EMPTY SLOT ── */
@@ -390,33 +391,12 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 
 /* Card name - sits in the title banner at top */
 .tpl-name {
-  position: absolute;
-  top: 2%; left: 0; right: 0;
-  height: 6%;
-  z-index: 6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel', serif;
-  font-size: min(1.4vw, 10px);
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #3a1a00;
-  text-shadow: none;
-  padding: 0 18%;  /* avoid overlapping level badge */
+  display: none;
 }
 
 /* Level badge - top right corner, circular image */
 .tpl-level {
-  position: absolute;
-  top: 0%;
-  right: 0%;
-  width: 20%;
-  aspect-ratio: 1;
-  z-index: 7;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  display: none;
 }
 
 /* Keyword badge - mirrors level badge position, top-left of card */
@@ -482,16 +462,16 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
   font-family: 'Cinzel', serif;
   font-size: min(4.5vw, 36px);
   font-weight: 700;
-  color: #e8d4b0;
-  text-shadow: 0 1px 2px rgba(80,40,20,0.8), 0 0 6px rgba(201,168,76,0.5), 0 2px 8px rgba(0,0,0,0.9);
+  color: #D9D8D4;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(217,216,212,0.3), 0 2px 8px rgba(0,0,0,0.9);
   line-height: 1;
 }
 .tpl-health {
   font-family: 'Cinzel', serif;
   font-size: min(4.5vw, 36px);
   font-weight: 700;
-  color: #e8d4b0;
-  text-shadow: 0 1px 2px rgba(80,40,20,0.8), 0 0 6px rgba(201,168,76,0.5), 0 2px 8px rgba(0,0,0,0.9);
+  color: #D9D8D4;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(217,216,212,0.3), 0 2px 8px rgba(0,0,0,0.9);
   line-height: 1;
 }
 .tpl-health.dmg  { color: #e67e22; text-shadow: 0 0 8px rgba(230,126,34,0.9), 0 2px 4px rgba(0,0,0,0.8); }
@@ -696,7 +676,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 /* ── ZOOM ── */
 .zoverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
 .zoverlay.open{display:flex;}
-.zoom-block{display:flex;flex-direction:column;align-items:center;gap:24px;}
+.zoom-block{display:flex;flex-direction:column;align-items:center;gap:24px;position:relative;}
 .zoom-row{display:flex;flex-direction:row;align-items:center;gap:20px;}
 .zoom-arrow{font-size:64px;background:none;border:none;color:rgba(201,168,76,0.8);cursor:pointer;padding:0 8px;line-height:1;transition:color 0.2s;}
 .zoom-arrow:hover{color:#c9a84c;}
@@ -861,19 +841,19 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
 </div>
 <div id="splash">
   <div id="splash-bg"></div>
-  <div id="splash-content">
-    <button id="splash-enter" onclick="splashPlay()" ontouchend="splashPlay()" style="min-width:160px;min-height:50px;-webkit-tap-highlight-color:rgba(0,0,0,0);">PLAY</button>
+  <div id="splash-content" onclick="event.stopPropagation()">
+    <button id="splash-enter" onclick="splashPlay()" style="min-width:160px;min-height:50px;-webkit-tap-highlight-color:rgba(0,0,0,0);">PLAY</button>
     <div id="splash-difficulty" style="display:flex;flex-direction:column;gap:6px;">
-      <button id="diff-standard" onclick="setDifficulty('standard')" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.4);background:transparent;color:rgba(237,229,216,0.5);transition:all 0.2s;">STANDARD</button>
-      <button id="diff-hard"     onclick="setDifficulty('hard')"     style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.7);background:rgba(201,168,76,0.15);color:rgba(237,229,216,0.9);transition:all 0.2s;">HARD</button>
+      <button id="diff-standard" onclick="event.stopPropagation();setDifficulty('standard')" ontouchend="event.stopPropagation();" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.4);background:transparent;color:rgba(237,229,216,0.5);transition:all 0.2s;">STANDARD</button>
+      <button id="diff-hard"     onclick="event.stopPropagation();setDifficulty('hard')" ontouchend="event.stopPropagation();"     style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:5px 14px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,168,76,0.7);background:rgba(201,168,76,0.15);color:rgba(237,229,216,0.9);transition:all 0.2s;">HARD</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;">
-      <button onclick="openSim()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚙ Dev Tools</button>
-      <button onclick="tutorialStart()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
+      <button onclick="event.stopPropagation();openSim()" ontouchend="event.stopPropagation();" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">⚙ Dev Tools</button>
+      <button onclick="event.stopPropagation();tutorialStart()" ontouchend="event.stopPropagation();" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(237,229,216,0.35);background:transparent;border:1px solid rgba(237,229,216,0.12);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.3)'" onmouseout="this.style.color='rgba(237,229,216,0.35)';this.style.borderColor='rgba(237,229,216,0.12)'">📖 Tutorial</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
       <div style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.45);">db-v335</div>
-      <button onclick="clearImageCache()" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Cache</button>
+      <button onclick="event.stopPropagation();clearImageCache()" ontouchend="event.stopPropagation();" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(237,229,216,0.3);background:transparent;border:1px solid rgba(237,229,216,0.15);border-radius:3px;padding:5px 12px;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='rgba(237,229,216,0.7)';this.style.borderColor='rgba(237,229,216,0.4)'" onmouseout="this.style.color='rgba(237,229,216,0.3)';this.style.borderColor='rgba(237,229,216,0.15)'">🗑 Clear Cache</button>
     </div>
   </div>
 </div>
@@ -902,6 +882,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:rgba(237,229,216,0.5);">GAMES</label>
           <select id="sim-count" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
+            <option value="20">20</option>
             <option value="100">100</option>
             <option value="250">250</option>
             <option value="500" selected>500</option>
@@ -913,17 +894,25 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
           <select id="sim-p1-deck" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
             <option value="spr_hard">Sparks — Hard</option>
             <option value="spr_standard">Sparks — Standard</option>
-            <option value="sol_hard">Guardians — Hard</option>
-            <option value="sol_standard">Guardians — Standard</option>
+            <option value="sol_hard">Saints — Hard</option>
+            <option value="sol_standard">Saints — Standard</option>
+            <option value="sol_ds_hard">Saints Doc&Stitch — Hard</option>
+            <option value="sol_ds_standard">Saints Doc&Stitch — Standard</option>
+            <option value="mix_hard">Random Mixed — Hard</option>
+            <option value="mix_standard">Random Mixed — Standard</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:rgba(237,229,216,0.5);">P2 DECK</label>
           <select id="sim-p2-deck" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
-            <option value="sol_hard" selected>Guardians — Hard</option>
-            <option value="sol_standard">Guardians — Standard</option>
+            <option value="sol_hard" selected>Saints — Hard</option>
+            <option value="sol_standard">Saints — Standard</option>
+            <option value="sol_ds_hard">Saints Doc&Stitch — Hard</option>
+            <option value="sol_ds_standard">Saints Doc&Stitch — Standard</option>
             <option value="spr_hard">Sparks — Hard</option>
             <option value="spr_standard">Sparks — Standard</option>
+            <option value="mix_hard">Random Mixed — Hard</option>
+            <option value="mix_standard">Random Mixed — Standard</option>
           </select>
         </div>
         <!-- Progress -->
@@ -947,19 +936,23 @@ html,body { width:100%; height:100%; overflow:hidden; background:#04040c; }
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:rgba(237,229,216,0.5);">MY FACTION</label>
           <select id="pt-my-deck" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
-            <option value="spr_hard">Sparks — Hard</option>
-            <option value="spr_standard">Sparks — Standard</option>
-            <option value="sol_hard">Guardians — Hard</option>
-            <option value="sol_standard">Guardians — Standard</option>
+            <option value="spr_hard">Sparks</option>
+            <option value="sol_hard">Saints</option>
+            <option value="sol_ds_hard">Saints Doc&Stitch</option>
+            <option value="mix_hard">Random Mixed</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:rgba(237,229,216,0.5);">CPU FACTION</label>
           <select id="pt-cpu-deck" style="font-family:'Cinzel',serif;font-size:12px;background:#0d0d1a;color:#ede5d8;border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:7px 10px;">
-            <option value="sol_hard" selected>Guardians — Hard</option>
-            <option value="sol_standard">Guardians — Standard</option>
+            <option value="sol_hard" selected>Saints — Hard</option>
+            <option value="sol_standard">Saints — Standard</option>
+            <option value="sol_ds_hard">Saints Doc&Stitch — Hard</option>
+            <option value="sol_ds_standard">Saints Doc&Stitch — Standard</option>
             <option value="spr_hard">Sparks — Hard</option>
             <option value="spr_standard">Sparks — Standard</option>
+            <option value="mix_hard">Random Mixed — Hard</option>
+            <option value="mix_standard">Random Mixed — Standard</option>
           </select>
         </div>
         <!-- W/L/D record -->
@@ -1604,20 +1597,66 @@ const CARD_ASSETS = {
   hq_sparks: 'https://dantzelevitch.github.io/Tcg/images/hq_sparks.jpeg',
   hq_guardians: 'https://dantzelevitch.github.io/Tcg/images/hq_guardians.jpeg',
   art_spr1: 'https://dantzelevitch.github.io/Tcg/images/spr_pink_explosion.png',
+  art_spr1_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_betty_boom_L1.jpeg',
+  art_spr1_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_betty_boom_L2.jpeg',
+  art_spr1_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_betty_boom_L3.jpeg',
   art_spr2: 'https://dantzelevitch.github.io/Tcg/images/spr_flamethrower.png',
+  art_spr2_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_flamethrower_L1.jpeg',
+  art_spr2_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_flamethrower_L2.jpeg',
+  art_spr2_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_flamethrower_L3.jpeg',
   art_spr3: 'https://dantzelevitch.github.io/Tcg/images/spr_tailgate.png',
+  art_spr3_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_sienna_blaze_L1.jpeg',
+  art_spr3_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_sienna_blaze_L2.jpeg',
+  art_spr3_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_sienna_blaze_L3.jpeg',
   art_spr4: 'https://dantzelevitch.github.io/Tcg/images/spr_basketball.png',
+  art_spr4_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_ballin_L1.jpeg',
+  art_spr4_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_ballin_L2.jpeg',
+  art_spr4_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_ballin_L3.jpeg',
   art_spr5: 'https://dantzelevitch.github.io/Tcg/images/spr_motorcycle.png',
+  art_spr5_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_johnny_rocket_L1.jpeg',
+  art_spr5_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_johnny_rocket_L2.jpeg',
+  art_spr5_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_johnny_rocket_L3.jpeg',
   art_spr6: 'https://dantzelevitch.github.io/Tcg/images/spr_flamingqueen.png',
+  art_spr6_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_pair_of_queens_L1.jpeg',
+  art_spr6_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_pair_of_queens_L2.jpeg',
+  art_spr6_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_pair_of_queens_L3.jpeg',
   art_spr7: 'https://dantzelevitch.github.io/Tcg/images/spr_fuse.jpeg',
   art_spr8: 'https://dantzelevitch.github.io/Tcg/images/spr_kamikaze.jpeg',
+  art_spr8_L1: 'https://dantzelevitch.github.io/Tcg/images/spr_kamikaze_L1.jpeg',
+  art_spr8_L2: 'https://dantzelevitch.github.io/Tcg/images/spr_kamikaze_L2.jpeg',
+  art_spr8_L3: 'https://dantzelevitch.github.io/Tcg/images/spr_kamikaze_L3.jpeg',
   art_sol1: 'https://dantzelevitch.github.io/Tcg/images/grd_bow_arrow.png',
+  art_sol1_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_archer_L1.jpeg',
+  art_sol1_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_archer_L2.jpeg',
+  art_sol1_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_archer_L3.jpeg',
   art_sol2: 'https://dantzelevitch.github.io/Tcg/images/grd_goldenhat.png',
+  art_sol2_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_harvest_L1.jpeg',
+  art_sol2_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_harvest_L2.jpeg',
+  art_sol2_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_harvest_L3.jpeg',
   art_sol3: 'https://dantzelevitch.github.io/Tcg/images/grd_forcefield.png',
+  art_sol3_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_picnic_L1.jpeg',
+  art_sol3_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_picnic_L2.jpeg',
+  art_sol3_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_picnic_L3.jpeg',
   art_sol4: 'https://dantzelevitch.github.io/Tcg/images/grd_maledoctor.png',
+  art_sol4_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_doctor_L1.jpeg',
+  art_sol4_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_doctor_L2.jpeg',
+  art_sol4_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_doctor_L3.jpeg',
   art_sol5: 'https://dantzelevitch.github.io/Tcg/images/grd_pixiedust.png',
+  art_sol5_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_pixie_L1.jpeg',
+  art_sol5_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_pixie_L2.jpeg',
+  art_sol5_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_pixie_L3.jpeg',
   art_sol6: 'https://dantzelevitch.github.io/Tcg/images/grd_safehouse.png',
+  art_sol6_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_safe_house_L1.jpeg',
+  art_sol6_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_safe_house_L2.jpeg',
+  art_sol6_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_safe_house_L3.jpeg',
   art_sol7: 'https://dantzelevitch.github.io/Tcg/images/grd_karate.jpeg',
+  art_sol7_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_karma_L1.jpeg',
+  art_sol7_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_karma_L2.jpeg',
+  art_sol7_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_karma_L3.jpeg',
+  art_sol8: 'https://dantzelevitch.github.io/Tcg/images/sai_stitch_L1.jpeg',
+  art_sol8_L1: 'https://dantzelevitch.github.io/Tcg/images/sai_stitch_L1.jpeg',
+  art_sol8_L2: 'https://dantzelevitch.github.io/Tcg/images/sai_stitch_L2.jpeg',
+  art_sol8_L3: 'https://dantzelevitch.github.io/Tcg/images/sai_stitch_L3.jpeg',
   badge_dormant: 'https://dantzelevitch.github.io/Tcg/images/badge_dormant.png',
 };
 //
@@ -1681,7 +1720,7 @@ const STARTING_HEALTH = 60;
 // Rates any agent (friendly or opponent) as a field threat.
 // Used for: RemovalBonus (opponent cards killed) + SurvivingAllyThreat (our cards alive)
 // Formula: power + passive buffing potential + growth risk + ongoing + lifelink
-function agentFieldThreat(card, lane) {
+function agentFieldThreat(card, lane, pid) {
   if(!card) return 0;
   const id  = card.deckId ? card.deckId.split('_')[0] : '';
   const pow = card.currentPower || card.basePower || 0;
@@ -1689,11 +1728,22 @@ function agentFieldThreat(card, lane) {
 
   const attack  = pow;
   const jrMult = (lane === 0 || lane === 4) ? 0.5 : 1.2;
-  const abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.2
+  let abilityBonus = (id === 'SPR3' ? (card.abilityX || 0) * 2.2
                       : id === 'SPR5' ? (card.abilityX || 0) * jrMult
                       : id === 'SPR4' ? (card.abilityX || 0) * 2
                       : 0)
                      + (id === 'SOL4' ? (card.abilityX || 0) * 2.2 : 0)
+                     + (id === 'SOL8' ? (function() {
+                         let b = (card.abilityX || 0) * 0.5;
+                         if(pid) {
+                           const field = G[pid].field;
+                           let docs = 0;
+                           if(lane > 0 && field[lane-1] && field[lane-1].cardId === 'SOL4') docs++;
+                           if(lane < 4 && field[lane+1] && field[lane+1].cardId === 'SOL4') docs++;
+                           b += (card.abilityX || 0) * 0.3 * docs;
+                         }
+                         return b;
+                       })() : 0)
                      + (card.lifelink ? pow * 0.4 + hp * 0.3 : 0);
   const activeBonus = !card.dormant ? attack * 0.25 : 0;
   const durability = hp * 0.4;
@@ -1877,6 +1927,18 @@ function planningBonus(pid, deployedIds) {
     for(let i = 1; i <= 3; i++) {
       if(field[i]) bonus += 0.1;
     }
+    // Sidekick adjacency tiebreaker: +0.01 per empty space next to Doctor or Stitch
+    // Only applies if Stitch is in this player's deck
+    if(G[pid]._deckHasStitch) {
+      field.forEach((c, i) => {
+        if(!c) return;
+        const cid = c.deckId ? c.deckId.split('_')[0] : '';
+        if(cid === 'SOL4' || cid === 'SOL8') {
+          if(i > 0 && !field[i-1]) bonus += 0.01;
+          if(i < 4 && !field[i+1]) bonus += 0.01;
+        }
+      });
+    }
   }
 
   return bonus;
@@ -1923,10 +1985,8 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
       const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
       if(!occupied.length) return;
-      // Determine buff amount based on ability type
-      const buffAmt = c.ability === 'karma' ? (c._combatDmgTaken || 0)
-                    : c.ability === 'healer' ? (c.abilityX || 0)
-                    : 0;
+      // Determine buff amount based on ability
+      const buffAmt = ab.buffAmount ? ab.buffAmount(c, pid) : 0;
       let best;
       if(buffAmt > 0) {
         // Evaluate each ally with buff applied
@@ -1956,13 +2016,13 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
     // SurvivingOppThreat: penalize for opponent cards still alive
     let survivingOppThreat = 0;
     G[oppPid].field.forEach((card, lane) => {
-      if(card) survivingOppThreat += agentFieldThreat(card, lane);
+      if(card) survivingOppThreat += agentFieldThreat(card, lane, oppPid);
     });
 
     // SurvivingAllyThreat
     let survivingAllyThreat = 0;
     G[pid].field.forEach((card, lane) => {
-      if(card) survivingAllyThreat += agentFieldThreat(card, lane);
+      if(card) survivingAllyThreat += agentFieldThreat(card, lane, pid);
     });
 
     // ── Look-ahead: second combat ──────────────────────────────────────
@@ -1983,9 +2043,8 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
         if(!ab || ab.trigger !== 'combat_cleanup_targeted') return;
         const occupied = G[pid].field.map((fc, i) => fc ? i : null).filter(i => i !== null);
         if(!occupied.length) return;
-        const buffAmt = c.ability === 'karma' ? (c._combatDmgTaken || 0)
-                      : c.ability === 'healer' ? (c.abilityX || 0)
-                      : 0;
+        // Determine buff amount based on ability
+        const buffAmt = ab.buffAmount ? ab.buffAmount(c, pid) : 0;
         let best;
         if(buffAmt > 0) {
           let bestThreat = -Infinity;
@@ -2025,7 +2084,7 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       const oppThreatBefore = {};
       for(const i of contestedLanes) {
         const oc = G[oppPid].field[i];
-        if(oc) oppThreatBefore[i] = agentFieldThreat(oc, i);
+        if(oc) oppThreatBefore[i] = agentFieldThreat(oc, i, oppPid);
       }
 
       // Run second battle (contested lanes only)
@@ -2037,9 +2096,9 @@ function cpuEvaluateCombo(combo, marginBefore, pid) {
       let oppThreatLH = 0;
       let finishBonus = 0;
       for(const i of contestedLanes) {
-        if(G[pid].field[i]) allyThreatLH += agentFieldThreat(G[pid].field[i], i);
+        if(G[pid].field[i]) allyThreatLH += agentFieldThreat(G[pid].field[i], i, pid);
         if(G[oppPid].field[i]) {
-          oppThreatLH += agentFieldThreat(G[oppPid].field[i], i);
+          oppThreatLH += agentFieldThreat(G[oppPid].field[i], i, oppPid);
         } else if(oppThreatBefore[i]) {
           // Opponent card destroyed in second battle — reward 50% of its threat
           finishBonus += oppThreatBefore[i] * 0.5;
@@ -2173,7 +2232,18 @@ function cpuSelectCombo(pid, difficulty) {
       const faction = G[pid].faction;
       const weights = faction === 'sol' ? [30, 30, 20, 20] : [30, 30, 25, 15];
       const positive = scored.filter(s => s.score > 0);
-      const pool = positive.slice(0, Math.min(weights.length, positive.length));
+
+      // Deduplicate by card — keep only the best lane for each unique card
+      const bestByCard = {};
+      positive.forEach(s => {
+        const cardKey = s.combo.map(p => p.cardId).sort().join(',');
+        if(!bestByCard[cardKey] || s.score > bestByCard[cardKey].score) {
+          bestByCard[cardKey] = s;
+        }
+      });
+      const deduped = Object.values(bestByCard).sort((a, b) => b.score - a.score);
+
+      const pool = deduped.slice(0, Math.min(weights.length, deduped.length));
       if(pool.length > 0) {
         const totalWeight = pool.reduce((sum, _, i) => sum + weights[i], 0);
         let roll = Math.random() * totalWeight;
@@ -2373,6 +2443,7 @@ const CARDS = {
   // ── SPR3: Buffy ── Uncommon ×2
   // Swift, Elusive 1, Tribal: all OTHER friendly Sparks agents get +X Power (presence)
   SPR3:{id:'SPR3',faction:'spr',name:'Sienna Blaze',art:'🌟',rarity:'Uncommon',cardArt:'art_spr3',
+    flavorText:'Three tailgates. Three fires. Campus security stopped calling it a coincidence.',
     L1:{power:4, health:4, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'tribal_prowess', abilityX:3},
     L2:{power:6, health:6, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'tribal_prowess', abilityX:4},
     L3:{power:8, health:8, manic:true, slippery:0, veil:0, recover:0, smash:false, ability:'tribal_prowess', abilityX:6},
@@ -2428,9 +2499,10 @@ const CARDS = {
     L3:{power:10, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false},
   },
 
-  // ── SOL2: Siphoner ── Common ×2
+  // ── SOL2: Harvest ── Common ×2
   // Lifelink: when this agent compromises the opponent, gain +X Health
-  SOL2:{id:'SOL2',faction:'sol',name:'Siphoner',art:'🌙',rarity:'Common',cardArt:'art_sol2',
+  SOL2:{id:'SOL2',faction:'sol',name:'Harvest',art:'🌙',rarity:'Common',cardArt:'art_sol2',
+    flavorText:'Codename: Harvest. Field report: Subject stood in a clearing for twelve minutes. Seventeen species arrived. We stopped counting.',
     L1:{power:4, health:7,  manic:false, slippery:0, veil:0, recover:0, smash:false, lifelink:true},
     L2:{power:5, health:12, manic:false, slippery:0, veil:0, recover:0, smash:false, lifelink:true},
     L3:{power:6, health:18, manic:false, slippery:0, veil:0, recover:0, smash:false, lifelink:true},
@@ -2438,7 +2510,7 @@ const CARDS = {
 
   // ── SOL3: Extra Health ── Uncommon ×2
   // On deploy: target a friendly agent → grant +X Health permanently
-  SOL3:{id:'SOL3',faction:'sol',name:'Chardonnay',art:'🛡️',rarity:'Uncommon',cardArt:'art_sol3',
+  SOL3:{id:'SOL3',faction:'sol',name:'Picnic',art:'🛡️',rarity:'Uncommon',cardArt:'art_sol3',
     L1:{power:3, health:6,  manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:3},
     L2:{power:5, health:10, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:5},
     L3:{power:6, health:13, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'deploy_extra_cover', abilityX:7},
@@ -2476,6 +2548,15 @@ const CARDS = {
     L3:{power:4, health:13, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'karma', abilityX:1},
   },
 
+  // ── SOL8: Stitch ── Rare ×2
+  // Adjacent agents named "Doctor" have +X/+X
+  SOL8:{id:'SOL8',faction:'sol',name:'Stitch',art:'🪡',rarity:'Rare',cardArt:'art_sol8',
+    flavorText:'She showed up at the clinic with no resume. The patients started healing faster anyway.',
+    L1:{power:2, health:8,  manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'sidekick_doctor', abilityX:4},
+    L2:{power:4, health:12, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'sidekick_doctor', abilityX:7},
+    L3:{power:6, health:18, manic:false, slippery:0, veil:0, recover:0, smash:false, ability:'sidekick_doctor', abilityX:9},
+  },
+
   // ── GLM1: Move and Health ── Rare ×0 (Glam — future deck)
   GLM1:{id:'GLM1',faction:'glm',name:'Move and Health',art:'🌊',rarity:'Rare',
     L1:{power:2, health:7,  manic:false, slippery:1, veil:0, recover:0, smash:false, ability:'move_and_cover_all', abilityX:3},
@@ -2501,6 +2582,7 @@ const NEXT = {
   'SOL5_L1':'SOL5_L2','SOL5_L2':'SOL5_L3',
   'SOL6_L1':'SOL6_L2','SOL6_L2':'SOL6_L3',
   'SOL7_L1':'SOL7_L2','SOL7_L2':'SOL7_L3',
+  'SOL8_L1':'SOL8_L2','SOL8_L2':'SOL8_L3',
   'GLM1_L1':'GLM1_L2','GLM1_L2':'GLM1_L3',
 };
 
@@ -2525,6 +2607,36 @@ const SOL_DECK = [
   'SOL6_L1','SOL6_L1',
   'SOL7_L1','SOL7_L1',
 ];
+
+// Saints — Doc and Stitch: 15 cards
+const SOL_DS_DECK = [
+  'SOL4_L1','SOL4_L1','SOL4_L1',
+  'SOL8_L1','SOL8_L1','SOL8_L1',
+  'SOL5_L1','SOL5_L1','SOL5_L1',
+  'SOL2_L1','SOL2_L1',
+  'SOL1_L1','SOL1_L1',
+  'SOL6_L1','SOL6_L1',
+];
+
+// Random Mixed deck: 15 cards from both factions (excluding SPR7/Fuse and GLM1)
+const MIX_POOL = [
+  'SPR1_L1','SPR2_L1','SPR3_L1','SPR4_L1','SPR5_L1','SPR6_L1','SPR8_L1',
+  'SOL1_L1','SOL2_L1','SOL3_L1','SOL4_L1','SOL5_L1','SOL6_L1','SOL7_L1',
+];
+function buildMixedDeck() {
+  const deck = [];
+  for(let i = 0; i < 15; i++) {
+    deck.push(MIX_POOL[Math.floor(Math.random() * MIX_POOL.length)]);
+  }
+  return deck;
+}
+function getMixedFaction(deck) {
+  let spr = 0, sol = 0;
+  deck.forEach(id => { if(id.startsWith('SPR')) spr++; else sol++; });
+  if(spr > sol) return 'spr';
+  if(sol > spr) return 'sol';
+  return Math.random() < 0.5 ? 'spr' : 'sol';
+}
 
 // ════════════════════════════════════════════════
 // TARGETING SYSTEM
@@ -2568,6 +2680,7 @@ function startTargeting(mode, pid, sourceCard, callback, injectedTargetLane = un
     'kickback_buff':     `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard._combatDmgDealt || 0}/+${sourceCard._combatDmgDealt || 0}`,
     'karma_buff':        `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant +${sourceCard._combatDmgTaken || 0}/+${sourceCard._combatDmgTaken || 0}`,
     'deploy_siphon':     `${sourceCard.name.toUpperCase()} — Select a friendly agent to grant Lifelink`,
+    'sidekick_heal':     `${sourceCard.name.toUpperCase()} (SIDEKICK) — Select a friendly agent to grant +${sourceCard.abilityX}/+${sourceCard.abilityX}`,
   }[mode] || 'SELECT A TARGET';
   document.getElementById('target-msg').textContent = msg;
   document.getElementById('target-banner').classList.add('open');
@@ -2703,7 +2816,7 @@ function isTargetEligible(laneIdx, pid) {
   if(mode === 'extra_cover' || mode === 'deploy_siphon') {
     return p.field[laneIdx] !== null;
   }
-  if(mode === 'healer_recover' || mode === 'kickback_buff' || mode === 'karma_buff') {
+  if(mode === 'healer_recover' || mode === 'kickback_buff' || mode === 'karma_buff' || mode === 'sidekick_heal') {
     // Any friendly agent on field
     return p.field[laneIdx] !== null;
   }
@@ -2883,6 +2996,7 @@ const ABILITIES = {
 
   healer: {
     trigger: 'combat_cleanup_targeted',
+    buffAmount(card) { return card.abilityX || 0; },
     resolve(card, pid, context = {}) {
       let { onDone } = context;
       let p = G[pid];
@@ -2957,6 +3071,7 @@ const ABILITIES = {
 
   karma: {
     trigger: 'combat_cleanup_targeted',
+    buffAmount(card) { return card._combatDmgTaken || 0; },
     resolve(card, pid, context = {}) {
       let { onDone } = context;
       let p = G[pid];
@@ -3040,6 +3155,62 @@ const ABILITIES = {
   tribal_prowess: { trigger: 'passive_presence', resolve: null }, // handled in applyPresenceBuffs
   adjacent_prowess: { trigger: 'passive_presence', resolve: null }, // handled in applyPresenceBuffs
   adjacent_swift_prowess: { trigger: 'passive_presence', resolve: null }, // handled in applyPresenceBuffs
+  sidekick_doctor: { trigger: 'passive_presence', resolve: null }, // handled in applyPresenceBuffs
+
+  /*
+  sidekick_heal: {
+    trigger: 'combat_cleanup_targeted',
+    buffAmount(card, pid) {
+      if(!pid) return 0;
+      const myLane = G[pid].field.indexOf(card);
+      if(myLane === -1) return 0;
+      const adj = [myLane - 1, myLane + 1].filter(l => l >= 0 && l < 5);
+      return adj.some(l => G[pid].field[l] && G[pid].field[l].cardId === 'SOL4') ? (card.abilityX || 0) : 0;
+    },
+    resolve(card, pid, context = {}) {
+      let { onDone } = context;
+      let p = G[pid];
+      // Only fires if adjacent to a Doctor
+      const myLane = p.field.indexOf(card);
+      if(myLane === -1) { if(onDone) onDone(); return; }
+      const adjLanes = [myLane - 1, myLane + 1].filter(l => l >= 0 && l < 5);
+      const hasDoctor = adjLanes.some(l => p.field[l] && p.field[l].cardId === 'SOL4');
+      if(!hasDoctor) { if(onDone) onDone(); return; }
+      if(!p.field.some(c => c !== null)) { if(onDone) onDone(); return; }
+
+      if(!G_sim) playSFX('triggerDoctor');
+
+      // Sim/CPU mode: use targetLane directly
+      if(context.targetLane !== undefined) {
+        let target = G[pid].field[context.targetLane];
+        if(target) {
+          target.basePower += card.abilityX;
+          target.currentPower += card.abilityX;
+          target.currentHealth += card.abilityX;
+          target.maxHealth += card.abilityX;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
+          log(`${card.name} (Sidekick) — ${target.name} gains +${card.abilityX}/+${card.abilityX} permanently.`,'abi');
+        }
+        if(onDone) onDone();
+        return;
+      }
+
+      // UI mode: player picks target
+      startTargeting('sidekick_heal', pid, card, (targetLane) => {
+        let target = G[pid].field[targetLane];
+        if(target) {
+          target.basePower += card.abilityX;
+          target.currentPower += card.abilityX;
+          target.currentHealth += card.abilityX;
+          target.maxHealth += card.abilityX;
+          if(G._trackStats) card._statHealthBuff = (card._statHealthBuff || 0) + card.abilityX;
+          log(`${card.name} (Sidekick) — ${target.name} gains +${card.abilityX}/+${card.abilityX} permanently.`,'abi');
+        }
+        onDone();
+      });
+    }
+  },
+  */
 };
 
 // ════════════════════════════════════════════════
@@ -3143,7 +3314,7 @@ function renderImpactScores() {
       currentPower: s.power, basePower: s.power,
       currentHealth: s.health, baseCover: s.health,
       abilityX: s.abilityX || 0,
-      lifelink: def.id === 'SOL2', // Siphoner has native lifelink
+      lifelink: def.id === 'SOL2', // Harvest has native lifelink
       manic: s.manic || false,
       dormant: !(s.manic || false),
       ability: s.ability || null,
@@ -3222,10 +3393,15 @@ function ptPlay(firstMode) {
   // Determine decks
   const myVal  = document.getElementById('pt-my-deck').value;
   const cpuVal = document.getElementById('pt-cpu-deck').value;
-  const myFaction  = myVal.startsWith('spr')  ? 'spr' : 'sol';
-  const cpuFaction = cpuVal.startsWith('spr') ? 'spr' : 'sol';
   const myDiff  = myVal.endsWith('standard')  ? 'standard' : 'hard';
   const cpuDiff = cpuVal.endsWith('standard') ? 'standard' : 'hard';
+
+  const myMixed  = myVal.startsWith('mix');
+  const cpuMixed = cpuVal.startsWith('mix');
+  const p1Deck = myMixed  ? buildMixedDeck() : myVal.startsWith('sol_ds') ? SOL_DS_DECK : (myVal.startsWith('spr')  ? SPR_DECK : SOL_DECK);
+  const p2Deck = cpuMixed ? buildMixedDeck() : cpuVal.startsWith('sol_ds') ? SOL_DS_DECK : (cpuVal.startsWith('spr') ? SPR_DECK : SOL_DECK);
+  const myFaction  = myMixed  ? getMixedFaction(p1Deck) : (myVal.startsWith('spr')  ? 'spr' : 'sol');
+  const cpuFaction = cpuMixed ? getMixedFaction(p2Deck) : (cpuVal.startsWith('spr') ? 'spr' : 'sol');
 
   // p1 = me, p2 = CPU
   // Determine who goes first
@@ -3237,9 +3413,6 @@ function ptPlay(firstMode) {
   // Set game mode and factions
   MODE = 'cpu';
   CPU_DIFFICULTY = cpuDiff;
-
-  const p1Deck = myFaction  === 'spr' ? SPR_DECK : SOL_DECK;
-  const p2Deck = cpuFaction === 'spr' ? SPR_DECK : SOL_DECK;
 
   // Close sim screen, init game
   document.getElementById('sim-screen').style.display = 'none';
@@ -3253,6 +3426,7 @@ function ptPlay(firstMode) {
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
   G._glowTargetId = null; G._p1HadTurn1 = false;
+  setDeckAttributes();
   document.getElementById('target-banner').classList.remove('open');
   deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
@@ -3266,12 +3440,15 @@ function ptPlay(firstMode) {
   _ptAwaitingResult = true;
   _ptResultRecorded = false;
 
+  const myFactionLabel  = myMixed  ? 'mix' : myFaction;
+  const cpuFactionLabel = cpuMixed ? 'mix' : cpuFaction;
+
   // Init session agg on first game, or reset if faction/difficulty changed
-  if(_ptAgg && (_ptAgg._p1Faction !== myFaction || _ptAgg._p2Faction !== cpuFaction || _ptAgg._p1Diff !== myDiff || _ptAgg._p2Diff !== cpuDiff)) {
+  if(_ptAgg && (_ptAgg._p1Faction !== myFactionLabel || _ptAgg._p2Faction !== cpuFactionLabel || _ptAgg._p1Diff !== myDiff || _ptAgg._p2Diff !== cpuDiff)) {
     _ptAgg = null;
     _ptRecord = { wins:0, losses:0, draws:0, totalTurns:0, games:0 };
   }
-  if(!_ptAgg) ptInitAgg(myFaction, cpuFaction, myDiff, cpuDiff);
+  if(!_ptAgg) ptInitAgg(myFactionLabel, cpuFactionLabel, myDiff, cpuDiff);
   render();
   startBGM();
   if(MODE === 'cpu' && G.active === 'p2') setTimeout(cpuTakeTurn, CPU_DELAY);
@@ -3353,6 +3530,7 @@ function pvptPlay() {
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
   G._p1HadTurn1 = false;
+  setDeckAttributes();
   document.getElementById('target-banner').classList.remove('open');
   deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
@@ -3644,7 +3822,7 @@ function closeSim() {
 // ── simRunOneGame ─────────────────────────────────────────────────────────
 // Runs a single complete game headlessly using the existing engine.
 // Returns result object with winner, turns, first player, and card stats.
-function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
+function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff, deckAttrs) {
   const savedG   = G;
   const savedMode = MODE;
   G_sim = true;
@@ -3664,10 +3842,16 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
     };
     G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null; G._p1HadTurn1 = false;
     G_target = null;
+    if(deckAttrs) {
+      G.p1._deckHasStitch = deckAttrs.p1HasStitch;
+      G.p2._deckHasStitch = deckAttrs.p2HasStitch;
+    } else {
+      setDeckAttributes();
+    }
 
     // Fix faction from deck
-    G.p1.faction = p1DeckIds[0].startsWith('SPR') ? 'spr' : 'sol';
-    G.p2.faction = p2DeckIds[0].startsWith('SPR') ? 'spr' : 'sol';
+    G.p1.faction = getMixedFaction(p1DeckIds);
+    G.p2.faction = getMixedFaction(p2DeckIds);
 
     deal(G[first], 5);
 
@@ -3746,6 +3930,19 @@ function simRunOneGame(p1DeckIds, p2DeckIds, p1Diff, p2Diff) {
           // combat_leftover_play with no plays left — end the turn
           // doSkipToDebrief handles debrief/cleanup/finalizeTurn synchronously
           doSkipToDebrief();
+
+          // Resolve any pending targeting from cleanup abilities (e.g. Stitch sidekick)
+          while(G_target) {
+            const p = G[G_target.pid];
+            const occ = p.field.map((c,i)=>c?i:null).filter(i=>i!==null);
+            const eligible = occ.filter(i => p.field[i].instanceId !== (G_target.sourceCard && G_target.sourceCard.instanceId));
+            const targetPool = eligible.length ? eligible : occ;
+            if(targetPool.length) {
+              const best = targetPool.reduce((b,i)=>agentFieldThreat(p.field[i],i)>agentFieldThreat(p.field[b],b)?i:b, targetPool[0]);
+              const cb = G_target.callback; G_target = null; cb(best);
+            } else { G_target = null; }
+          }
+
           // After doSkipToDebrief, engine advances to next turn's combat_play
           // or 'over' — loop will catch it
         }
@@ -3919,12 +4116,14 @@ function simRun() {
   const total    = parseInt(document.getElementById('sim-count').value);
   const p1Val = document.getElementById('sim-p1-deck').value;
   const p2Val = document.getElementById('sim-p2-deck').value;
-  const p1Faction   = p1Val.startsWith('spr') ? 'spr' : 'sol';
-  const p2Faction   = p2Val.startsWith('spr') ? 'spr' : 'sol';
+  const p1Mixed = p1Val.startsWith('mix');
+  const p2Mixed = p2Val.startsWith('mix');
   const p1Difficulty = p1Val.endsWith('standard') ? 'standard' : 'hard';
   const p2Difficulty = p2Val.endsWith('standard') ? 'standard' : 'hard';
-  const p1Deck = p1Faction === 'spr' ? SPR_DECK : SOL_DECK;
-  const p2Deck = p2Faction === 'spr' ? SPR_DECK : SOL_DECK;
+
+  // Pre-compute deck attributes once for the entire sim run
+  const p1HasStitch = p1Mixed ? MIX_POOL.includes('SOL8_L1') : (p1Val.startsWith('sol_ds') ? true : (p1Val.startsWith('spr') ? false : SOL_DECK.some(id => id.startsWith('SOL8'))));
+  const p2HasStitch = p2Mixed ? MIX_POOL.includes('SOL8_L1') : (p2Val.startsWith('sol_ds') ? true : (p2Val.startsWith('spr') ? false : SOL_DECK.some(id => id.startsWith('SOL8'))));
 
   // Aggregated stats
   const agg = {
@@ -3940,6 +4139,8 @@ function simRun() {
   };
 
   // Store for CSV export
+  const p1Faction = p1Mixed ? 'mix' : (p1Val.startsWith('spr') ? 'spr' : 'sol');
+  const p2Faction = p2Mixed ? 'mix' : (p2Val.startsWith('spr') ? 'spr' : 'sol');
   window._simAgg = agg;
   window._simFactions = { p1: p1Faction, p2: p2Faction, p1diff: p1Difficulty, p2diff: p2Difficulty };
 
@@ -3949,8 +4150,10 @@ function simRun() {
   function runBatch() {
     const batchEnd = Math.min(done + BATCH, total);
     for(let i = done; i < batchEnd; i++) {
+      const gp1Deck = p1Mixed ? buildMixedDeck() : p1Val.startsWith('sol_ds') ? SOL_DS_DECK : (p1Val.startsWith('spr') ? SPR_DECK : SOL_DECK);
+      const gp2Deck = p2Mixed ? buildMixedDeck() : p2Val.startsWith('sol_ds') ? SOL_DS_DECK : (p2Val.startsWith('spr') ? SPR_DECK : SOL_DECK);
       let result;
-      try { result = simRunOneGame(p1Deck, p2Deck, p1Difficulty, p2Difficulty); }
+      try { result = simRunOneGame(gp1Deck, gp2Deck, p1Difficulty, p2Difficulty, { p1HasStitch, p2HasStitch }); }
       catch(e) { console.error('simRunOneGame error:', e); document.getElementById('sim-progress-label').textContent = 'Error: ' + e.message; return; }
       agg.total++;
       agg.totalTurns += result.turns;
@@ -4817,6 +5020,14 @@ function simPrintLog() {
 // ════════════════════════════════════════════════
 let G = {};
 
+// Set deck attribute flags once at game start — avoids repeated lookups
+function setDeckAttributes() {
+  ['p1','p2'].forEach(pid => {
+    const allCards = [...G[pid].deck, ...G[pid].hand, ...G[pid].discard, ...G[pid].field.filter(c=>c)];
+    G[pid]._deckHasStitch = allCards.some(c => c.cardId === 'SOL8');
+  });
+}
+
 function init() {
   let first = Math.random() < 0.5 ? 'p1' : 'p2';
   // In CPU mode, randomize which faction each player gets
@@ -4839,6 +5050,7 @@ function init() {
   G._glowTargetId = null;
   G._glowTargetId = null;
   G._p1HadTurn1 = false;
+  setDeckAttributes();
   document.getElementById('target-banner').classList.remove('open');
   deal(G[first], 5);
   log(`⚜ Operation begins — ${first === 'p1' ? 'Player 1' : 'Player 2'} goes first. Play 1 card.`,'imp');
@@ -4959,8 +5171,13 @@ function playToLane(lane, cardInstanceId = null) {
   p.field[lane] = card;
   p.hand = p.hand.filter(c => c.instanceId !== card.instanceId);
 
-  // Level up
-  let nxt = NEXT[card.deckId]; if(nxt) p.discard.push(makeCard(nxt));
+  // Level up — or recycle L3
+  let nxt = NEXT[card.deckId];
+  if(nxt) {
+    p.discard.push(makeCard(nxt));
+  } else if(card.level === 3) {
+    p.discard.push(makeCard(card.deckId));
+  }
 
   log(`${p.name} deployed ${card.name} L${card.level} → lane ${lane+1}.`);
   // Track cumulative deploys per card per level
@@ -5432,9 +5649,38 @@ function runTargetedCleanup(cards, idx, ap, op) {
   let card = cards[idx];
   let ab = ABILITIES[card.ability];
   flashCard(card.instanceId);
-  ab.resolve(card, ap.id, {
-    onDone: () => runTargetedCleanup(cards, idx + 1, ap, op)
-  });
+
+  if(G_sim) {
+    // Sim mode: pre-compute target lane
+    const occupied = ap.field.map((c, i) => c ? i : null).filter(i => i !== null);
+    const buffAmt = ab.buffAmount ? ab.buffAmount(card, ap.id) : 0;
+    let best;
+    if(buffAmt > 0 && occupied.length) {
+      let bestThreat = -Infinity;
+      best = occupied[0];
+      for(const i of occupied) {
+        const ally = ap.field[i];
+        ally.currentPower += buffAmt; ally.basePower += buffAmt;
+        ally.currentHealth += buffAmt; ally.maxHealth += buffAmt;
+        const threat = agentFieldThreat(ally, i, ap.id);
+        ally.currentPower -= buffAmt; ally.basePower -= buffAmt;
+        ally.currentHealth -= buffAmt; ally.maxHealth -= buffAmt;
+        if(threat > bestThreat) { bestThreat = threat; best = i; }
+      }
+    } else if(occupied.length) {
+      best = occupied.reduce((b, i) =>
+        agentFieldThreat(ap.field[i], i, ap.id) > agentFieldThreat(ap.field[b], b, ap.id) ? i : b,
+        occupied[0]);
+    }
+    ab.resolve(card, ap.id, {
+      targetLane: best,
+      onDone: () => runTargetedCleanup(cards, idx + 1, ap, op)
+    });
+  } else {
+    ab.resolve(card, ap.id, {
+      onDone: () => runTargetedCleanup(cards, idx + 1, ap, op)
+    });
+  }
   render();
 }
 
@@ -5526,14 +5772,14 @@ function finalizeTurn(ap, op) {
 function applyPresenceBuffs(pid) {
   let p = G[pid];
   // Step 1: Reset all presence buffs to zero
-  p.field.forEach(c => { if(c) { c.buffProwess = 0; c.grantedSwift = false; } });
+  p.field.forEach(c => { if(c) { c.buffProwess = 0; c.grantedSwift = false; c.buffSidekickHP = 0; } });
 
-  // Step 2: Buffy tribal_prowess — all OTHER friendly Sparks agents get +X
+  // Step 2: Buffy tribal_prowess — all OTHER friendly agents get +X
   p.field.forEach((buffy, bi) => {
     if(!buffy || buffy.ability !== 'tribal_prowess') return;
     p.field.forEach((c, ci) => {
       if(!c || ci === bi) return;
-      if(c.faction === 'spr') c.buffProwess += buffy.abilityX;
+      c.buffProwess += buffy.abilityX;
     });
   });
 
@@ -5544,14 +5790,46 @@ function applyPresenceBuffs(pid) {
       let ni = si + offset;
       if(ni >= 0 && ni < 5 && p.field[ni]) {
         p.field[ni].buffProwess += booster.abilityX;
-        if(booster.ability === 'adjacent_swift_prowess') p.field[ni].grantedSwift = true;
+        if(booster.ability === 'adjacent_swift_prowess') {
+          p.field[ni].grantedSwift = true;
+          if(p.field[ni].dormant) p.field[ni].dormant = false;
+        }
       }
     });
   });
 
-  // Step 4: Apply buffProwess to currentPower
-  p.field.forEach(c => {
-    if(c) c.currentPower = c.basePower + c.buffProwess;
+  // Step 3.5: Stitch sidekick_doctor — adjacent Doctors get +X/+X
+  p.field.forEach((stitch, si) => {
+    if(!stitch || stitch.ability !== 'sidekick_doctor') return;
+    [-1, 1].forEach(offset => {
+      let ni = si + offset;
+      if(ni >= 0 && ni < 5 && p.field[ni] && p.field[ni].cardId === 'SOL4') {
+        p.field[ni].buffProwess += stitch.abilityX;
+        p.field[ni].buffSidekickHP = (p.field[ni].buffSidekickHP || 0) + stitch.abilityX;
+      }
+    });
+  });
+
+  // Step 4: Apply buffProwess to currentPower, buffSidekickHP to health
+  p.field.forEach((c, i) => {
+    if(c) {
+      c.currentPower = c.basePower + c.buffProwess;
+      if(c.buffSidekickHP > 0) {
+        c.currentHealth = (c.currentHealth - (c._prevSidekickHP || 0)) + c.buffSidekickHP;
+        c.maxHealth = (c.maxHealth - (c._prevSidekickHP || 0)) + c.buffSidekickHP;
+        c._prevSidekickHP = c.buffSidekickHP;
+      } else if(c._prevSidekickHP > 0) {
+        c.currentHealth -= c._prevSidekickHP;
+        c.maxHealth -= c._prevSidekickHP;
+        c._prevSidekickHP = 0;
+        // Kill card if health drops to 0 or below
+        if(c.currentHealth <= 0) {
+          log(`${c.name} collapses without Stitch's support.`,'bat');
+          if(p._deadCards) p._deadCards.push(c);
+          p.field[i] = null;
+        }
+      }
+    }
   });
 }
 
@@ -5578,7 +5856,7 @@ function getTemplateBadges(card, context) {
 
   const specialAbilities = ['healer','hand_off','deploy_twin_flames','deploy_extra_cover',
     'deploy_siphon','deploy_fuse','karma','kamikaze','move_and_cover','move_and_cover_all','tribal_prowess',
-    'adjacent_prowess','adjacent_swift_prowess','on_compromise_prowess'];
+    'adjacent_prowess','adjacent_swift_prowess','on_compromise_prowess','sidekick_doctor'];
   const isSpecial = specialAbilities.includes(card.ability);
   const isDeployAbility = (card.ability || '').startsWith('deploy_');
 
@@ -5649,9 +5927,15 @@ function fieldCardHTML(card, laneIdx, isOpp, canReplace, isMoveTarget, isElusive
   return templateFieldCard(card, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess);
 }
 
+// ── Per-level card art helper ──────────────────────────────────────────
+function getCardArt(cardArtKey, level) {
+  const lvlKey = cardArtKey + '_L' + (level || 1);
+  return CARD_ASSETS[lvlKey] || CARD_ASSETS[cardArtKey];
+}
+
 // ── Template-mode field card renderer ──────────────────────────────────
 function templateFieldCard(card, uc, repCls, dormantCls, elusiveSelCls, moveTargetCls, targetCls, clickFn, dblClickFn, longPressAttr, displayProwess) {
-  const frameImg = CARD_ASSETS[card.cardArt];
+  const frameImg = getCardArt(card.cardArt, card.level);
   const levelImg = getLevelImg(card.faction, card.level);
 
   const ctx = card.justDeployed ? 'justDeployed' : 'field';
@@ -5678,6 +5962,7 @@ function templateFieldCard(card, uc, repCls, dormantCls, elusiveSelCls, moveTarg
     const glowTargetCls = (G._glowTargetId && G._glowTargetId === card.instanceId) ? ' card-glow-target' : '';
   return `<div class="fcard tpl${repCls}${dormantCls}${elusiveSelCls}${moveTargetCls}${targetCls}${flashCls}${glowCls}${glowTargetCls}"
       data-iid="${card.instanceId}"
+      data-name="${card.name}"
       onclick="${clickFn}"
       ondblclick="${dblClickFn}"
       ${longPressAttr}
@@ -5704,7 +5989,7 @@ function handCardHTML(card, pid) {
 
 // ── Template-mode hand card renderer ───────────────────────────────────
 function templateHandCard(card, pid, uc, isSel) {
-  const frameImg = CARD_ASSETS[card.cardArt];
+  const frameImg = getCardArt(card.cardArt, card.level);
   const levelImg = getLevelImg(card.faction, card.level);
 
   const kbadges  = getTemplateBadges(card, 'hand');
@@ -5719,6 +6004,7 @@ function templateHandCard(card, pid, uc, isSel) {
   ).join('');
 
   return `<div class="hcard-tpl${selCls}"
+      data-name="${card.name}"
       onclick="selCard('${pid}','${card.instanceId}')"
       ondblclick="showZoom('${card.cardId}',${card.level},${card.poisoned||0})"
       style="background-image:url('${frameImg}');">
@@ -5929,7 +6215,7 @@ function showZoom(cardId, level, poisoned) {
   const live = liveCard ? liveCard : {...s, faction:t.faction};
 
   // Build large template card
-  const frameImg = CARD_ASSETS[t.cardArt];
+  const frameImg = getCardArt(t.cardArt, _zoomLevel);
   const levelImg = getLevelImg(t.faction, _zoomLevel);
   const zoomContext = !liveCard ? 'hand' : (liveCard.justDeployed ? 'justDeployed' : 'field');
   const kbadges  = getTemplateBadges(live, zoomContext);
@@ -5972,13 +6258,15 @@ function showZoom(cardId, level, poisoned) {
   ];
 
   const ABILITY_DESCS = {
-    tribal_prowess:          `All other friendly Sparks have +${s.abilityX} Attack.`,
+    tribal_prowess:          `All other friendly agents have +${s.abilityX} Attack.`,
     on_compromise_prowess:   `Whenever this agent deals damage to the enemy HQ, it gains +${s.abilityX} Attack.`,
     adjacent_swift_prowess:  `Agents in adjacent Lanes have Manic and +${s.abilityX} Attack.`,
     deploy_twin_flames:             `On Deploy, Copy this Agent to an adjacent Lane.`,
     deploy_fuse:                    `On Deploy, copy the Power and Health of an adjacent Agent.`,
     kickback:                       `At the end of each of your turns, grant a target Agent +X/+X equal to the damage this Agent dealt to the enemy Agent.`,
     karma:                          `When this Agent blocks on your turn, it harvests the damage it takes and gives it to a target Agent as +X/+X. This triggers at the end of your turn.`,
+    sidekick_heal:                  `On deploy, may attach to an adjacent Doctor. At the end of each of your turns, if attached, grant a target Agent +${s.abilityX}/+${s.abilityX}.`,
+    sidekick_doctor:                `Adjacent agents named Doctor have +${s.abilityX}/+${s.abilityX}.`,
     kamikaze:                       `This Agent vanishes after combat.`,
     deploy_extra_cover:      `On Deploy, give a target Agent +${s.abilityX} Health.`,
     healer:                  `At the end of each of your turns, give a target Agent +${s.abilityX}/+${s.abilityX}.`,
@@ -6009,6 +6297,17 @@ function showZoom(cardId, level, poisoned) {
         <div class="zkw-ability-text">${abilityDesc}</div>
       </div>
     </div>`;
+  }
+
+  // Flavor text — rendered separately below the zoom content
+  const flavorEl = document.querySelector('.zflavor');
+  if (flavorEl) flavorEl.remove();
+  if (t.flavorText) {
+    const fdiv = document.createElement('div');
+    fdiv.className = 'zflavor';
+    fdiv.style.cssText = 'position:absolute;bottom:12px;right:40px;font-family:Crimson Text,serif;font-size:15px;font-style:italic;color:rgba(237,229,216,0.35);line-height:1.4;text-align:left;letter-spacing:0.3px;max-width:320px;';
+    fdiv.textContent = `"${t.flavorText}"`;
+    document.querySelector('.zoom-block').appendChild(fdiv);
   }
 
   document.getElementById('zKeywords').innerHTML = kwRows || '<div class="zkw-text" style="color:var(--dim);font-style:italic;">No special abilities.</div>';
@@ -6145,7 +6444,7 @@ const TUTORIAL_SCRIPT = [
     cta: "LET'S GO"
   },
 
-  // ── PLAYER TURN 1: Block with Doctor, then play Siphoner ──
+  // ── PLAYER TURN 1: Block with Doctor, then play Harvest ──
   {
     action: 'waitForPlay',
     lane: 0,
@@ -6164,17 +6463,17 @@ const TUTORIAL_SCRIPT = [
   },
   {
     action: 'waitForZoom',
-    cardName: 'Siphoner',
+    cardName: 'Harvest',
     target: null,
     arrow: 'none',
     opaque: true,
-    text: "Let's take a closer look at Siphoner. Double click on Siphoner."
+    text: "Let's take a closer look at Harvest. Double click on Harvest."
   },
   {
     action: 'bubbleInZoom',
     target: null,
     arrow: 'none',
-    text: "Siphoner is in The Guardians faction, known for vitality and healing. Read about Siphoner's HARVEST ability.",
+    text: "Harvest is in The Saints faction, known for vitality and healing. Read about Harvest's HARVEST ability.",
     cta: 'DONE READING'
   },
   {
@@ -6213,10 +6512,10 @@ const TUTORIAL_SCRIPT = [
   {
     action: 'waitForPlay',
     lane: 4,
-    cardName: 'Siphoner',
+    cardName: 'Harvest',
     target: null,
     arrow: 'none',
-    text: "Let's play Siphoner to lane 5."
+    text: "Let's play Harvest to lane 5."
   },
 
   // ── COMBAT ──
@@ -6252,7 +6551,7 @@ const TUTORIAL_SCRIPT = [
     action: 'fakeCombat',
     // Doctor(2) vs Flamethrower(7): both survive
     // Doctor takes 7 dmg (8-7=1 health), Flamethrower takes 2 dmg (7-2=5 health)
-    // Siphoner dormant — no attack, no damage
+    // Harvest dormant — no attack, no damage
     cardUpdates: [
       { pid: 'p1', lane: 0, health: 1 },
       { pid: 'p2', lane: 0, health: 5 },
@@ -6270,7 +6569,7 @@ const TUTORIAL_SCRIPT = [
     action: 'bubble',
     target: null,
     arrow: 'none',
-    text: "Notice Siphoner did not attack.<br><br>Agents always enter the field dormant for a full turn while they prepare for the mission.",
+    text: "Notice Harvest did not attack.<br><br>Agents always enter the field dormant for a full turn while they prepare for the mission.",
     cta: "OH, WHY DIDN'T THE OPPONENT'S FLAMETHROWER ENTER DORMANT?"
   },
   {
@@ -6314,11 +6613,11 @@ const TUTORIAL_SCRIPT = [
   },
   {
     action: 'waitForFieldSelect',
-    cardName: 'Siphoner',
+    cardName: 'Harvest',
     pid: 'p1',
     target: null,
     arrow: 'none',
-    text: "Go ahead and give the +1/+1 to Siphoner.",
+    text: "Go ahead and give the +1/+1 to Harvest.",
     onSelect: { powerAdd: 1, healthAdd: 1 },
   },
   {
@@ -6329,7 +6628,7 @@ const TUTORIAL_SCRIPT = [
     buttonSel: '.btn-red',
     target: null,
     arrow: 'none',
-    text: "Wonderful. Siphoner is now a bit stronger and we're ready for the next turn.<br><br>Press End Turn.",
+    text: "Wonderful. Harvest is now a bit stronger and we're ready for the next turn.<br><br>Press End Turn.",
   },
   {
     action: 'dealToHand',
@@ -6420,7 +6719,7 @@ const TUTORIAL_SCRIPT = [
     action: 'bubble',
     target: null,
     arrow: 'none',
-    text: "And our Siphoner dealt 5 damage to the opponent's HQ, while at the same time, lifting our HQ health by 5, thanks to her Harvest ability.",
+    text: "And our Harvest dealt 5 damage to the opponent's HQ, while at the same time, lifting our HQ health by 5, thanks to her Harvest ability.",
     cta: "I'LL TAKE IT"
   },
   {
@@ -6454,6 +6753,7 @@ function tutorialStart() {
   G_target = null;
   G._flashIds = new Set(); G._glowIds = new Set(); G._glowTargetId = null;
   G._p1HadTurn1 = false;
+  setDeckAttributes();
   document.getElementById('target-banner').classList.remove('open');
   render();
   // Delay start to let fullscreen layout settle
@@ -6622,8 +6922,7 @@ function tutorialRunStep() {
         if(fieldEl) {
           const fcards = fieldEl.querySelectorAll('.fcard, .fcard.tpl');
           fcards.forEach(el => {
-            const nameEl = el.querySelector('.fname, .tpl-name');
-            if(nameEl && nameEl.textContent.trim().toUpperCase().includes(_wfsName.toUpperCase())) {
+            if(_tutCardNameMatch(el, _wfsName)) {
               el.classList.add('tut-card-highlight');
             }
           });
@@ -6637,8 +6936,7 @@ function tutorialRunStep() {
       _tutClickHandler = function(e) {
         const fcard = e.target.closest('.fcard');
         if(!fcard) { e.stopPropagation(); e.preventDefault(); return; }
-        const nameEl = fcard.querySelector('.fname, .tpl-name');
-        const isTarget = nameEl && nameEl.textContent.trim().toUpperCase().includes(_wfsName.toUpperCase());
+        const isTarget = _tutCardNameMatch(fcard, _wfsName);
         if(!isTarget) { e.stopPropagation(); e.preventDefault(); return; }
 
         e.stopPropagation();
@@ -6709,8 +7007,7 @@ function tutorialRunStep() {
         const fieldEl = document.querySelector(_wfzPid === 'p1' ? '#my-lanes' : '#opp-lanes');
         if(fieldEl) {
           fieldEl.querySelectorAll('.fcard, .fcard.tpl').forEach(el => {
-            const nameEl = el.querySelector('.fname, .tpl-name');
-            if(nameEl && nameEl.textContent.trim().toUpperCase().includes(_wfzName.toUpperCase())) {
+            if(_tutCardNameMatch(el, _wfzName)) {
               el.classList.add('tut-card-highlight');
             }
           });
@@ -6727,8 +7024,7 @@ function tutorialRunStep() {
       _tutDblHandler = function(e) {
         const fcard = e.target.closest('.fcard');
         if(fcard) {
-          const nameEl = fcard.querySelector('.fname, .tpl-name');
-          if(nameEl && nameEl.textContent.trim().toUpperCase().includes(_wfzName.toUpperCase())) {
+          if(_tutCardNameMatch(fcard, _wfzName)) {
             // Find the card data and open zoom
             const card = G[_wfzPid].field.find(c => c && c.name === _wfzName);
             if(card) showZoom(card.cardId, card.level, card.poisoned || 0);
@@ -6818,8 +7114,7 @@ function tutorialRunStep() {
       _tutClickHandler = function(e) {
         const hcard = e.target.closest('.hcard, .hcard-tpl');
         if(!hcard) { e.stopPropagation(); e.preventDefault(); return; }
-        const nameEl = hcard.querySelector('.fname, .tpl-name');
-        const isTarget = nameEl && nameEl.textContent.trim().toUpperCase().includes(_tutWaitForSelect.toUpperCase());
+        const isTarget = _tutCardNameMatch(hcard, _tutWaitForSelect);
         if(!isTarget) { e.stopPropagation(); e.preventDefault(); return; }
         // Correct card clicked
         e.stopPropagation();
@@ -6867,8 +7162,7 @@ function tutorialRunStep() {
           // Block wrong hand cards
           const hcard = e.target.closest('.hcard, .hcard-tpl');
           if(hcard && _wpRestrict) {
-            const nameEl = hcard.querySelector('.fname, .tpl-name');
-            const isTarget = nameEl && nameEl.textContent.trim().toUpperCase().includes(_wpRestrict.toUpperCase());
+            const isTarget = _tutCardNameMatch(hcard, _wpRestrict);
             if(!isTarget) {
               e.stopPropagation();
               e.preventDefault();
@@ -6937,8 +7231,7 @@ function tutorialRunStep() {
       _tutDblHandler = function(e) {
         const hcard = e.target.closest('.hcard, .hcard-tpl');
         if(hcard) {
-          const nameEl = hcard.querySelector('.fname, .tpl-name');
-          const isTarget = nameEl && nameEl.textContent.trim().toUpperCase().includes(_tutWaitForZoom.toUpperCase());
+          const isTarget = _tutCardNameMatch(hcard, _tutWaitForZoom);
           if(isTarget) {
             // Allow this dblclick — temporarily remove click blocker, trigger zoom
             document.removeEventListener('click', _tutClickHandler, true);
@@ -6989,6 +7282,13 @@ function tutorialRunStep() {
 let _tutClickHandler = null;
 let _tutPollTimer = null;
 
+function _tutCardNameMatch(el, targetName) {
+  const dataName = el.getAttribute('data-name') || '';
+  if(dataName.toUpperCase().includes(targetName.toUpperCase())) return true;
+  const nameEl = el.querySelector('.fname, .tpl-name');
+  return nameEl && nameEl.textContent.trim().toUpperCase().includes(targetName.toUpperCase());
+}
+
 function _tutHighlightCard(cardName) {
   // Find hand card elements and highlight the one matching cardName
   setTimeout(() => {
@@ -6996,8 +7296,7 @@ function _tutHighlightCard(cardName) {
     if(!handEl) return;
     const cards = handEl.querySelectorAll('.hcard, .hcard-tpl');
     cards.forEach(el => {
-      const nameEl = el.querySelector('.fname, .tpl-name');
-      if(nameEl && nameEl.textContent.trim().toUpperCase().includes(cardName.toUpperCase())) {
+      if(_tutCardNameMatch(el, cardName)) {
         el.classList.add('tut-card-highlight');
       }
     });
